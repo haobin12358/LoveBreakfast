@@ -1,0 +1,20 @@
+<template>
+  <view class="container">
+
+  </view>
+</template>
+<script >
+  import wepy from 'wepy';
+  export default class Register extends wepy.page{
+    config = {
+      navigationBarTitleText: '注册'
+    }
+    data = {
+
+    }
+    methods = {
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+</style>

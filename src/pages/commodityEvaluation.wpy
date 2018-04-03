@@ -1,0 +1,20 @@
+<template>
+  <view class="container">
+
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  export default class CommondityEvaluation extends wepy.page{
+    config = {
+      navigationBarTitleText: ''
+    }
+    data = {
+
+    }
+    methods = {
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+</style>

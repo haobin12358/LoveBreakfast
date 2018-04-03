@@ -1,0 +1,20 @@
+<template>
+  <view class="container">
+
+  </view>
+</template>
+<script >
+  import wepy from 'wepy';
+  export default class MyOrder extends wepy.page{
+    config = {
+      navigationBarTitleText: '订单'
+    }
+    data = {
+
+    }
+    methods = {
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+</style>

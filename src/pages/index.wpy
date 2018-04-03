@@ -1,0 +1,44 @@
+<style scoped lang="less" rel="stylesheet/less">
+.m-btn{
+  font-size: 32rpx;
+  color: #1AAD19;
+}
+</style>
+<template>
+  <view class="container">
+    <view>首页</view>
+    <view @tap="tap" class="m-btn">登录</view>
+
+  </view>
+</template>
+
+<script >
+  import wepy from 'wepy';
+
+
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '商品'
+    }
+    components = {
+
+    }
+
+    data = {
+
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+      tap(){
+        wx.navigateTo({
+          url: '/pages/login'
+        })
+      }
+    }
+  }
+</script>
