@@ -13,8 +13,12 @@ class AUsers(Resource):
             "register":"control_user.register()",
             "login":"control_user.login()",
             "add_info":"control_user.add_info()",
-            "update_info":"control_user.update_info()"
+            "update_info":"control_user.update_info()",
+            "update_pwd":"control_user.update_pwd()"
         }
+
+        if users in apis:
+            return eval(apis[users])
 
         return
 
