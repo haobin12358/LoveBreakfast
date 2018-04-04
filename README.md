@@ -1,4 +1,4 @@
-# LoveBreakfast
+﻿# LoveBreakfast
 An appointment and distribution breakfast system
 运行：
 该代码在编译器中编写，最后实时编译后在微信开发工具上看效果
@@ -27,3 +27,6 @@ An appointment and distribution breakfast system
         wxRequest.js//请求封装
       app.wpy
         
+
+图标库
+http://www.iconfont.cn/collections/detail?cid=4655
