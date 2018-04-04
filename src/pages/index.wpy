@@ -1,12 +1,130 @@
 <style scoped lang="less" rel="stylesheet/less">
+  @import "../styles/common";
 .m-btn{
   font-size: 32rpx;
   color: #1AAD19;
 }
+  .m-location-box{
+    width: 100%;
+    height: 92rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    margin-bottom: @margin-interval;
+    .m-location{
+      font-size: 32rpx;
+      margin: 20rpx;
+      padding: 10rpx 20rpx;
+      color: @grey-font;
+      border: 1px solid @border-color;
+      border-radius: 5px;
+      display: flex;
+      flex-flow: row;
+      justify-content: space-between;
+      &:hover{
+        color: @common-color;
+        border-color: @common-color;
+      }
+      .m-location-icon{
+        width: 42rpx;
+        height: 42rpx;
+        margin-left: 20rpx;
+        align-items: center;
+      }
+    }
+    .m-search-box{
+      width: 60%;
+      margin-right: @margin-interval;
+      .m-search-input{
+        width: 90%;
+        padding: 0 @margin-interval  ;
+        border: 1px solid @border-color;
+        border-radius: 20px;
+        color: @border-color;
+      }
+    }
+  }
+
+  .m-business-list{
+    width: 100%;
+    margin-top: @margin-interval ;
+    background-color: white;
+    padding-left: 70rpx;
+    .m-one-business{
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      padding:@margin-interval;
+      padding-left: 0;
+      border-bottom: 1px solid @border-color;
+      .m-business-img{
+        background-color: #bfbfbf;
+        margin-right:@margin-interval;
+      }
+      .m-business-info{
+        font-size: 32rpx;
+        line-height: 60rpx;
+        width: 100%;
+        padding-right: @margin-interval;
+        .m-business-loc{
+          width: 100%;
+          font-size: 28rpx;
+          color: @grey-font;
+          display: flex;
+          flex-flow: row;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
 </style>
 <template>
   <view class="container">
-    <view>首页</view>
+    <view class="m-location-box">
+      <view class="m-location">
+        <view>定位</view>
+        <image class="m-location-icon" src="/images/icon_location.png" />
+      </view>
+      <view class="m-search-box">
+        <input type="text" class="m-search-input" placeholder="搜索商家、商品名称">
+        <view class="m-icon-search"></view>
+      </view>
+    </view>
+    <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" style="height:500rpx;width: 750rpx;">
+      <block wx:for="{{imgUrls}}" wx:key="{{imgUrls}}">
+        <swiper-item >
+          <image src="{{item}}" class="slide-image" style="width:750rpx;height:500rpx;" />
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <view class="m-business-list">
+      <view class="m-title">推荐商家</view>
+      <view class="m-one-business">
+        <image class="m-business-img" src="/images/error.png" style="width: 200rpx;height: 200rpx;"/>
+        <view class="m-business-info">
+          <view class="m-business-name">粥名字</view>
+          <view class="m-business-star">5555</view>
+          <view class="m-business-loc">
+            <view>粥</view>
+            <view>钱江行程</view>
+          </view>
+        </view>
+      </view>
+      <view class="m-one-business">
+        <image class="m-business-img" src="/images/error.png" style="width: 200rpx;height: 200rpx;"/>
+        <view class="m-business-info">
+          <view class="m-business-name">粥名字</view>
+          <view class="m-business-star">5555</view>
+          <view class="m-business-loc">
+            <view>粥</view>
+            <view>钱江行程</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
     <view @tap="tap" class="m-btn">登录</view>
 
   </view>
@@ -26,7 +144,15 @@
     }
 
     data = {
-
+      imgUrls: [
+        '../images/banner/banner.jpg',
+        '../images/banner/swiper01.png',
+        '../images/banner/swiper02.png'
+      ],
+      indicatorDots: true,
+      autoplay: true,
+      interval: 3500,
+      duration: 500
     }
 
     computed = {
