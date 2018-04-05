@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  background-color: #EDECE8;
+  background-color: #f8f8f8;
   font-size: 32rpx;
 }
 </style>
