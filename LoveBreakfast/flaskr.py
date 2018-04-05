@@ -8,6 +8,7 @@ app = Flask(__name__)
 api = flask_restful.Api(app)
 
 api.add_resource(AUsers, "/love/breakfast/users/<string:users>")
+api.add_resource(AProduct, "/love/breakfast/product/<string:product>")
 
 if __name__ == '__main__':
     app.run('0.0.0.0', 7443, debug=True)
