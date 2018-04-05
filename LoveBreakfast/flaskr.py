@@ -2,6 +2,7 @@
 from flask import Flask
 import flask_restful
 from apis.AUsers import AUsers
+from apis.AProduct import AProduct
 
 
 app = Flask(__name__)

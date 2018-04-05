@@ -6,11 +6,8 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, create_engine, Integer, String, Text, Float
 from config import dbconfig as cfg
-<<<<<<< HEAD
 from sqlalchemy.orm import sessionmaker
-=======
 import pymysql
->>>>>>> 99deafebef0171883d520b6ca86040379cd2b8ce
 
 DB_PARAMS = "{0}://{1}:{2}@{3}/{4}?charset={5}".format(
     cfg.sqlenginename, cfg.username, cfg.password, cfg.host, cfg.database, cfg.charset)

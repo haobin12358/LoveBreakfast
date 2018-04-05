@@ -3,11 +3,8 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd())) # 增加系统路径
-<<<<<<< HEAD
 from models import models
-=======
-from models import model
->>>>>>> 99deafebef0171883d520b6ca86040379cd2b8ce
+
 
 
 # 装饰器，用来解析数据库获取的内容，将获取到的对象转置为dict，将获取到的单个数据的tuple里的数据解析出来
@@ -23,7 +20,7 @@ def trans_params(func):
                     if isinstance(data,unicode):
                         data = data.encode("utf8")
                     result.append(data)
-                elif isinstance(param, model.Base):
+                elif isinstance(param, models.Base):
                     param_dict = param.__dict__
                     for param_key in param_dict:
                         # 所有的model的dict里都有这个不需要的参数，所以删除掉
