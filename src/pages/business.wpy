@@ -21,7 +21,7 @@
         </ul>
       </view>
       <view class="m-products-right">
-        <view class="m-one-product">
+        <view class="m-one-product" @tap="productTap">
           <image class="m-product-img" src="/images/test.jpeg" style="width: 200rpx;height: 200rpx;"/>
           <view class="m-product-info">
             <view class="m-product-name">粥名字</view>
@@ -64,6 +64,43 @@
 
     }
     methods = {
+        productTap(){
+          wx.navigateTo({
+            url: '/pages/product'
+          })
+        }
+//      data:[
+//        {name:'分类1',
+//        data:[
+//          {name:'品类1',
+//          price:'',
+//          src:'',
+//            info:''},
+//          {name:'品类2',
+//            price:'',
+//            src:'',
+//            info:''},
+//          {name:'品类3',
+//            price:'',
+//            src:'',
+//            info:''}
+//        ]},
+//        {name:'分类2',
+//          data:[
+//            {name:'品类1',
+//              price:'',
+//              src:'',
+//              info:''},
+//            {name:'品类2',
+//              price:'',
+//              src:'',
+//              info:''},
+//            {name:'品类3',
+//              price:'',
+//              src:'',
+//              info:''}
+//          ]}
+//      ]
     }
   }
 </script>

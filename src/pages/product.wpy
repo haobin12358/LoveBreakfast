@@ -1,0 +1,32 @@
+<template>
+    <view class="m-product-content">
+      <image src="/images/test.jpeg" style="width: 750rpx;height:500rpx;"></image>
+      <view class="m-product">
+        <view class="m-product-name">zhuan</view>
+        <view class="m-product-info m-grey">aaaaa</view>
+        <view class="m-product-foot">
+          <view class="m-price">￥122</view>
+          <view style="width: 60rpx;height: 60rpx;"><image src="/images/add.png" style="width: 60rpx;height: 60rpx;"></image></view>
+        </view>
+      </view>
+    </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  export default class Product extends wepy.page{
+    config = {
+      navigationBarTitleText: ''
+    }
+    data = {
+
+    }
+    methods = {
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../styles/common";
+  .m-product-content{
+    width: 100%;
+  }
+</style>

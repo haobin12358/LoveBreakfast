@@ -1,10 +1,97 @@
 <template>
-    <view>
-
+  <view class="list" @tap = "bindTap">
+    <image class="m-business-img" src="/images/test.jpeg" style="width: 200rpx;height: 200rpx;"/>
+    <view class="m-business-info">
+      <view class="m-first">
+        <view class="m-first-left">
+          <view class="m-name">粥名字</view>
+          <view class="m-time m-grey">2018-01-29</view>
+        </view>
+        <view class="m-first-right">已完成</view>
+      </view>
+      <view class="m-business-star">5555</view>
+      <view class="m-business-loc">
+        <view>粥</view>
+        <view class="m-add-cut">
+          <image src="/images/cut.png" style="width: 48rpx;height: 48rpx;" />
+          <input type="number" />
+          <image src="/images/add.png" style="width: 48rpx;height: 48rpx;" />
+        </view>
+      </view>
     </view>
+  </view>
 </template>
 <script>
+  import wepy from 'wepy';
+  export default class List extends wepy.component{
+    props = {
 
+    }
+    data = {
+
+    }
+    methods = {
+    }
+  }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .list{
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    padding: @margin-interval;
+    padding-left: 0;
+    border-bottom: 1px solid @border-color;
+    .m-business-img{
+      background-color: #bfbfbf;
+      margin-right: @margin-interval;
+    }
+    .m-business-info{
+      font-size: 32rpx;
+      line-height: 60rpx;
+      width: 100%;
+      padding-right: @margin-interval;
+      .m-first{
+        width: 100%;
+        display: flex;
+        flex-flow: row;
+        justify-content: space-between;
+        align-items: center;
+        .m-first-left{
+          width: 70%;
+          .m-name{
+            font-size: 32rpx;
+            line-height: 32rpx;
+          }
+          .m-time{
+            font-size: 26rpx;
+            line-height: 26rpx;
+          }
+        }
+        .m-business-star{
+
+        }
+
+      }
+    }
+    .m-business-loc{
+       width: 100%;
+       font-size: 28rpx;
+       color: @grey-font;
+       display: flex;
+       flex-flow: row;
+       justify-content: space-between;
+     }
+    .m-add-cut{
+      /*width: 30%;*/
+      display: flex;
+      flex-flow: row;
+      input{
+        width: 60rpx;
+        /*border: 1px solid @border-color;*/
+        text-align: center;
+      }
+    }
+  }
 </style>
