@@ -36,7 +36,7 @@ class AOrders(Resource):
         control_order = COrders()
         apis = {
             "make_main_order":"control_order.make_main_order()",
-            "add_order_item":"control_order.add_order_item()",
+            "add_order_items":"control_order.add_order_items()",
             "update_order_info":'control_order.update_order_info()',
             "update_order_status":"control_order.update_order_status()"
         }

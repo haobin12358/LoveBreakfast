@@ -32,3 +32,13 @@ class SProduct():
             self.session.close()
         return pid_list
 
+    def get_pprice_by_pid(self, pid):
+        pprice = None
+        try:
+            pprice = self.session.query(models.Products.Pprice).filter_by(Pid=pid).scalar()
+        except Exception as e:
+            print(e.message)
+        finally:
+            self.session.close()
+        return pprice
+
