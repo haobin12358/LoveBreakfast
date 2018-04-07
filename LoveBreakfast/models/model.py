@@ -36,15 +36,26 @@ class Products(Base):
     Pname = Column(String(64), nullable=False)
     Pprice = Column(Float, nullable=False)
     Sid = Column(String(64), nullable=False)
-    Pabo = Column(Text)
-    Plevel = Column(Float)
+    Cid = Column(String(64), nullable=False)
+    Pstatus = Column(String(64), nullable=False)
+    Pimage = Column(String(64), nullable=False)
+    Pinfo = Column(Text)
+    Preview = Column(Text)
+    P_buyrecords = Column(Integer, nullable=False)
 
-class Sellers(Base):
-    __tablename__ = "Sellers"
+class Category(Base):
+    __tablename__ = "Category"
+    Cid = Column(String(64), primary_key=True)
+    Cname = Column(String(64), nullable=False)
+    Cstatus = Column(String(64), nullable=False)
+
+class Shops(Base):
+    __tablename__ = "Shops"
     Sid = Column(String(64), primary_key=True)
     Sname = Column(String(64), nullable=False)
-    Slevel = Column(Integer)
-    Sabo = Column(Text)
+    Sreview = Column(Integer, nullable=True)
+    Sdetail = Column(Text, nullable=True)
+    Simage = Column(String(64), nullable=False)
     Stel = Column(String(14))
 
 class Ordermain(Base):
@@ -108,6 +119,7 @@ def drop():
     databse_deal().drop_database()
 
 
+
 if __name__ == "__main__":
     '''
     运行该文件就可以在对应的数据库里生成本文件声明的所有table
@@ -117,5 +129,6 @@ if __name__ == "__main__":
     action = raw_input("create database?")
     if "drop" in action:
         drop()
+
     else:
         create()
