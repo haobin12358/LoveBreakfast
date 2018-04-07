@@ -1,5 +1,5 @@
 <style scoped lang="less" rel="stylesheet/less">
-
+  @import 'styles/common';
 .container {
   height: 100%;
   display: flex;
@@ -7,6 +7,8 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
+  background-color: #f8f8f8;
+  font-size: 32rpx;
 }
 </style>
 
@@ -32,13 +34,14 @@ export default class extends wepy.app {
       'pages/placeAnOrder',
       'pages/business',
       'pages/commodityDetails',
-      'pages/commodityEvaluation'
+      'pages/commodityEvaluation',
+      'pages/product'
     ],
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
+      navigationBarBackgroundColor: '#00A0EC',
       navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
+      navigationBarTextStyle: 'white'
     },
     "tabBar": {
       "color": "#bfbfbf",

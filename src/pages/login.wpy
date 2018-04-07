@@ -1,7 +1,73 @@
+<style scoped lang="less" rel="stylesheet/less">
+@import "../styles/common.less";
+  .m-section {
+    margin: 80rpx 40rpx;
+    display: flex;
+    align-items: center;
+    padding: 20rpx 30rpx;
+    border-bottom: 1px solid #dbdbdb;
+    background: #fff;
+    width: 550rpx;
+      .m-icon {
+        width: 50rpx;
+        height: 50rpx;
+        padding-right: 30rpx;
+      }
+      .m-section_title {
+        color: @grey-font;
+        width: 160rpx;
+        font-size: 36rpx;
+      }
+      .m-phone {
+        font-size: 30rpx;
+      }
+      .m-code {
+        font-size: 30rpx;
+      }
+  }
+  .m-btn_confirm {
+    margin-top: 64rpx;
+    padding: 0 24rpx;
+    border-radius: 100px;
+  }
+    .m-button {
+      background-color: @common-button;
+      color: #ffffff;
+    }
+    .m-btn {
+      border: 1px solid #fff;
+      width: 250rpx;
+      height: 100rpx;
+      font-size: 35rpx;
+      margin: 458rpx 35rpx 80rpx;
+      display: inline-block;
+      justify-content: space-around;
+      color: @common-button;
+
+    }
+</style>
 <template>
-  <view class="container">
-    登录
+<view class="container">
+  <form bindsubmit="formSubmit">
+    <view class="m-section">
+      <image class="m-icon" src='/images/phone.png'></image>
+      <view class="m-section_title">手机号 :</view>
+      <input class="m-phone" name="m-phone" type="number" bindinput="phoneInput" placeholder="请输入手机号码" maxlength="11" focus="true" />
+    </view>
+    <view class="m-section">
+      <image class="m-icon" src='/images/password.png'></image>
+      <view class="m-section_title">密码 :</view>
+      <input class="m-code" name="m-code" type="number" placeholder="请输入密码" />
+    </view>
+    <view class="m-btn_confirm">
+      <button class="m-button" formType="submit">登录</button>
+    </view>
+  </form>
+  <view class="m-others">
+    <button class="m-btn authorize" @tap="authorizeTap">微信授权</button>
+    <button class="m-btn register" @tap="registerTap">注册</button>
   </view>
+</view>
 </template>
 <script >
   import wepy from 'wepy';
@@ -13,6 +79,13 @@
 
     }
     methods = {
+    registerTap(){
+     wx.navigateTo({
+              url: '/pages/register'
+     })
+     },
+     authorizeTap(){
+     }
     }
   }
 </script>
