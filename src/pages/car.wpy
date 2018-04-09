@@ -1,0 +1,125 @@
+<template>
+  <view class="m-business-content">
+
+    <view class="m-all-products">
+      <repeat for="{{list_data}}" key="index" index="index" item="item">
+        <List :list="item" page="car" @listTap.user="productTap"></List>
+      </repeat>
+    </view>
+    <foot class="m-foot">
+      <view class="m-car">
+        <!--<image src="/images/car.png" style="width: 100rpx;height: 100rpx;"></image>-->
+        <!--<view class="m-num">2</view>-->
+        <view>合计：<text class="m-price">￥123</text></view>
+      </view>
+      <view class="m-btn m-active">下单</view>
+    </foot>
+  </view>
+</template>
+<script >
+  import wepy from 'wepy';
+  import List from '../components/common/list'
+  export default class Business extends wepy.page{
+    config = {
+      navigationBarTitleText: '购物车'
+    }
+    components = {
+      List:List
+    }
+    data = {
+      list_data:[
+        {
+          name:'粥',
+          src:'../images/test.jpeg',
+          sales_volume:'100',
+          score:'98',
+          price:'12.3',
+          id:'01',
+          remarks:'',
+          number:1
+        },
+        {
+          name:'包子',
+          src:'../images/test.jpeg',
+          sales_volume:'100',
+          score:'98',
+          price:'12.3',
+          id:'02',
+          remarks:'',
+          number:1
+        },
+        {
+          name:'油条',
+          src:'../images/test.jpeg',
+          sales_volume:'100',
+          score:'98',
+          price:'12.3',
+          id:'03',
+          remarks:'',
+          number:1
+        }
+      ]
+    }
+    methods = {
+      productTap(){
+        wx.navigateTo({
+          url: '/pages/product'
+        })
+      }
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../styles/common";
+  .m-business-content{
+    .m-all-products{
+      .list{
+        padding: 0 20rpx;
+      }
+    }
+  }
+  .m-foot{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 20rpx;
+    border-top: 1px solid @border-color;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+    /*background-color: rgba(0,0,0,0.5);*/
+    .m-car{
+      position: relative;
+      .m-num{
+        position: absolute;
+        right: -5rpx;
+        top: -10rpx;
+        width: 40rpx;
+        height: 40rpx;
+        font-size: 20rpx;
+        text-align: center;
+        color: #ffffff;
+        line-height: 40rpx;
+        border-radius: 50%;
+        background-color: #f4690c;
+      }
+    }
+    .m-btn{
+      width: 150rpx;
+      height: 80rpx;
+      line-height: 80rpx;
+      margin-right: 40rpx;
+      border: 1px solid @border-color;
+      border-radius: 20px;
+      text-align: center;
+      background-color: #f8f8f8;
+      &.m-active{
+        background-color: @common-color;
+        color: #ffffff;
+        border-color: #ffffff;
+      }
+    }
+  }
+</style>
+

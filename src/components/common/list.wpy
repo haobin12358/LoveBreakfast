@@ -1,21 +1,23 @@
 <template>
-  <view class="list" @tap = "bindTap">
-    <image class="m-business-img" src="/images/test.jpeg" style="width: 200rpx;height: 200rpx;"/>
+  <view class="list" @tap = "bindTap({{list}})" wx:if="{{page != 'car' || (page == 'car' && list.number != 0)}}">
+    <image class="m-business-img" src="/images/test.jpeg" wx:if="{{page != 'product_info'}}"  style="width: 200rpx;height: 200rpx;"/>
     <view class="m-business-info">
       <view class="m-first">
         <view class="m-first-left">
-          <view class="m-name">粥名字</view>
-          <view class="m-time m-grey">2018-01-29</view>
+          <view class="m-name">{{list.name}}</view>
+          <view class="m-time m-grey" wx:if="{{list.time && list.time != ''}}">{{list.time}}</view>
         </view>
-        <view class="m-first-right">已完成</view>
+        <view class="m-first-right {{list.label == '推荐'? 'm-recommend':''}} {{list.label == '配送中'? 'm-distribution':''}} {{list.label == '已完成'? 'm-completed':''}}" wx:if="{{list.label && list.label != ''}}">{{list.label}}</view>
       </view>
-      <view class="m-business-star">5555</view>
+      <view class="m-business-star score-grey" wx:if="{{list.sales_volume && list.score}}">月销{{list.sales_volume}}份 好评率{{list.score}}%</view>
+      <view class="m-business-star m-grey" wx:if="{{list.remarks}}">{{list.remarks}}</view>
+      <view class="m-business-star m-grey" wx:if="{{page == 'myOrder'}}">数量：{{list.number}}</view>
       <view class="m-business-loc">
-        <view>粥</view>
-        <view class="m-add-cut">
-          <image src="/images/cut.png" style="width: 48rpx;height: 48rpx;" />
-          <input type="number" />
-          <image src="/images/add.png" style="width: 48rpx;height: 48rpx;" />
+        <view class="m-price">￥{{list.price}}</view>
+        <view class="m-add-cut" wx:if="{{page != 'myOrder' && list.number != undefined }}">
+          <image src="/images/cut.png" style="width: 48rpx;height: 48rpx;" wx:if="{{list.number > 0}}" @tap.stop="cutTap({{list.number}})"/>
+          <input type="number" value="{{list.number}}" wx:if="{{list.number > 0}}"/>
+          <image src="/images/add.png" style="width: 48rpx;height: 48rpx;" @tap.stop="addTap({{list.number}})"/>
         </view>
       </view>
     </view>
@@ -25,12 +27,50 @@
   import wepy from 'wepy';
   export default class List extends wepy.component{
     props = {
-
+      list:Object,
+      page:String
     }
     data = {
-
+        number:0
     }
+    onLoad(){
+        console.log(this.page)
+    }
+
     methods = {
+      bindTap(v){
+        this.$emit('listTap',v)
+      },
+      cutTap(v){
+        if(this.page == 'car' && v == 1){
+          let _that = this;
+          wx.showModal({
+            title:'提示',
+            content:'确定要删除该商品吗？',
+            success:function (res) {
+              if(res.confirm){
+                console.log(res.confirm)
+                _that.list.number = v-1;
+                _that.$apply();
+              }else if(res.cancel){
+              }
+            }
+          })
+        }else{
+          v>0 && (v = v-1)
+          this.list.number = v;
+          this.$apply();
+        }
+
+
+
+      },
+      addTap(v){
+
+        v = v+1;
+        this.list.number = v;
+        this.$apply();
+      }
     }
   }
 </script>
@@ -40,8 +80,9 @@
     display: flex;
     flex-flow: row;
     align-items: center;
-    padding: @margin-interval;
+    padding: @margin-interval ;
     padding-left: 0;
+    padding-right: 40rpx;
     border-bottom: 1px solid @border-color;
     .m-business-img{
       background-color: #bfbfbf;
@@ -69,8 +110,20 @@
             line-height: 26rpx;
           }
         }
-        .m-business-star{
-
+        .m-first-right{
+          font-size: 28rpx;
+          &.m-recommend{
+            color: #f4690c;
+            border: 1px solid #f4690c;
+            padding: 0 20rpx;
+            border-radius: 20px;
+          }
+          &.m-distribution{
+            color: red;
+          }
+          &.m-completed{
+            color: #5fc16c;
+          }
         }
 
       }
@@ -87,6 +140,8 @@
       /*width: 30%;*/
       display: flex;
       flex-flow: row;
+      align-items: center;
+
       input{
         width: 60rpx;
         /*border: 1px solid @border-color;*/

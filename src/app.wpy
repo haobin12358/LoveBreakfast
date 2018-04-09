@@ -35,7 +35,8 @@ export default class extends wepy.app {
       'pages/business',
       'pages/commodityDetails',
       'pages/commodityEvaluation',
-      'pages/product'
+      'pages/product',
+      'pages/car'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -58,7 +59,13 @@ export default class extends wepy.app {
         "text": "订单",
         "iconPath": "images/icon_order.png",
         "selectedIconPath": "images/icon_order_active.png"
-      }, {
+      },
+        {
+          "pagePath": "pages/car",
+          "text": "购物车",
+          "iconPath": "images/icon_car.png",
+          "selectedIconPath": "images/icon_car_active.png"
+        },{
         "pagePath": "pages/personal",
         "text": "我的",
         "iconPath": "images/icon_person.png",

@@ -1,20 +1,99 @@
 <template>
-  <view class="myOrder">
-
+  <view class="m-business-content">
+    <view class="m-order-tab-box">
+      <view class="m-order-tab m-active">全部</view>
+      <view class="m-order-tab">配送中</view>
+      <view class="m-order-tab">退订</view>
+    </view>
+    <view class="m-all-products">
+      <repeat for="{{list_data}}" key="index" index="index" item="item">
+        <List :list="item" page="myOrder" @listTap.user="productTap"></List>
+      </repeat>
+    </view>
   </view>
 </template>
 <script >
   import wepy from 'wepy';
-  export default class MyOrder extends wepy.page{
+  import List from '../components/common/list'
+  export default class Business extends wepy.page{
     config = {
-      navigationBarTitleText: '订单'
+      navigationBarTitleText: '我的订单'
+    }
+    components = {
+      List:List
     }
     data = {
-
+      list_data:[
+        {
+          name:'粥',
+          src:'../images/test.jpeg',
+          sales_volume:'100',
+          score:'98',
+          price:'12.3',
+          id:'01',
+          remarks:'',
+          time:'2018-04-03012:55:12',
+          label:'配送中',
+          number:1
+        },
+        {
+          name:'包子',
+          src:'../images/test.jpeg',
+          time:'2018-04-03012:55:12',
+          sales_volume:'100',
+          score:'98',
+          price:'12.3',
+          id:'02',
+          remarks:'',
+          label:'配送中',
+          number:1
+        },
+        {
+          name:'油条',
+          src:'../images/test.jpeg',
+          time:'2018-04-03012:55:12',
+          sales_volume:'100',
+          score:'98',
+          price:'12.3',
+          id:'03',
+          remarks:'',
+          label:'已完成',
+          number:1
+        }
+      ]
     }
     methods = {
+      productTap(){
+        wx.navigateTo({
+          url: '/pages/product'
+        })
+      }
     }
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
+  @import "../styles/common";
+  .m-business-content{
+    .m-order-tab-box{
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+      padding: 20rpx 0;
+      .m-order-tab{
+        color: @grey-font;
+        &.m-active{
+          color: #000;
+        }
+      }
+    }
+    .m-all-products{
+      .list{
+        padding: 0 20rpx;
+      }
+    }
+  }
 </style>
+
+

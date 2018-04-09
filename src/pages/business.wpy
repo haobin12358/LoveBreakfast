@@ -56,6 +56,7 @@
 </template>
 <script >
   import wepy from 'wepy';
+  import List from '../components/common/list'
   export default class Business extends wepy.page{
     config = {
       navigationBarTitleText: '商家'
@@ -69,38 +70,6 @@
             url: '/pages/product'
           })
         }
-//      data:[
-//        {name:'分类1',
-//        data:[
-//          {name:'品类1',
-//          price:'',
-//          src:'',
-//            info:''},
-//          {name:'品类2',
-//            price:'',
-//            src:'',
-//            info:''},
-//          {name:'品类3',
-//            price:'',
-//            src:'',
-//            info:''}
-//        ]},
-//        {name:'分类2',
-//          data:[
-//            {name:'品类1',
-//              price:'',
-//              src:'',
-//              info:''},
-//            {name:'品类2',
-//              price:'',
-//              src:'',
-//              info:''},
-//            {name:'品类3',
-//              price:'',
-//              src:'',
-//              info:''}
-//          ]}
-//      ]
     }
   }
 </script>
