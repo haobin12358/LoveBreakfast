@@ -29,7 +29,7 @@ class AProduct(Resource):
         print(PRINT_API_NAME.format(product))
 
         apis = {
-            "get_info": "self.control_product.get_info()",
+            "get_info_by_id": "self.control_product.get_info_by_id()",
             "get_all": "self.control_product.get_all()"
         }
         if product in apis:
