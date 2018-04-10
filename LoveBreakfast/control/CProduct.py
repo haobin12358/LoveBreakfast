@@ -16,10 +16,20 @@ from services.SCategory import SCategory
 class CProduct():
     def __init__(self):
         self.service_product = SProduct()
-        self.service_cotegory =SCotegory()
+        self.service_category =SCategory()
+
+    #  获取全部商品列表
+    def get_all(self):
+        pro_list_of_control = self.service_product.get_all()
+        print pro_list_of_control
+        return {
+            "message": "get pro_list success !",
+            "status": 200,
+            "data":pro_list_of_control
+        }
 
     #  根据商品id获取商品详情
-    def get_info(self,pid):
+    def get_info(self, pid):
         args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
         # 判断url参数是否异常
         if len(args) != 1 or "Pid" not in args.keys():

@@ -35,13 +35,21 @@ class Products(Base):
     Pid = Column(String(64), primary_key=True)
     Pname = Column(String(64), nullable=False)
     Pprice = Column(Float, nullable=False)
-    Sid = Column(String(64), nullable=False)
-    Cid = Column(String(64), nullable=False)
-    Pstatus = Column(String(64), nullable=False)
+    Sid = Column(String(64), nullable=True, default="0")
+    Cid = Column(String(64), nullable=True, default="0")
+    Pstatus = Column(String(64), nullable=False)  # 商品状态，分为on_sale和off_sale
     Pimage = Column(String(64), nullable=False)
-    Pinfo = Column(Text)
-    Preview = Column(Text)
-    P_buyrecords = Column(Integer, nullable=False)
+    Pinfo = Column(Text)  # 商品介绍
+    P_sales_volume = Column(Integer, nullable=False)  # 商品销量
+    Pscore = Column(Integer, nullable=True)  # 商品评分
+
+class Review(Base):
+    __tablename__ = "Review"
+    Rid = Column(String(64), primary_key=True)
+    Oid = Column(String(64), primary_key=True)  # 对应的订单编号
+    Pid = Column(String(64), primary_key=True)  # 对应的商品编号
+    Rscore = Column(Integer, nullable=True)  # 对应的商品评分
+    Rcontent = Column(Text)  # 评价内容
 
 class Category(Base):
     __tablename__ = "Category"

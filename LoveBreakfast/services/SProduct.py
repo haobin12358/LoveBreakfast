@@ -20,8 +20,20 @@ class SProduct():
         self.session, self.status = DBSession.get_session()
         pass
 
-    # 根据店铺信息获取所有的商品分类
-
+    # 获取所有商品信息
+    def get_all(self):
+        pro_list_of_service = None
+        try:
+            pro_list_of_service = self.session.query(model.Products.Pid, model.Products.Pname,
+                                                     model.Products.Pprice,model.Products.Pimage,
+                                                     model.Products.P_sales_volume,model.Products.Pscore
+                                                     ).filter_by(Pstatus="on_sale").all()
+        except Exception as e:
+            print e.message
+        finally:
+            self.session.close()
+        print(pro_list_of_service)
+        return pro_list_of_service
 
 
 
@@ -49,4 +61,14 @@ class SProduct():
         finally:
             self.session.close()
         return proid_list
+
+    #向数据库中插入数据，用于初始化数据
+    def add_product(self, product):
+        try:
+            self.session.add(product)
+            self.session.commit()
+        except Exception as e:
+            print(e.message)
+        finally:
+            self.session.close()
 
