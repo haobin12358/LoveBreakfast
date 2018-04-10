@@ -9,7 +9,7 @@
       <repeat for="{{list_data}}" key="index" index="index" item="item">
         <List :list="item" page="myOrder" @listTap.user="productTap"></List>
       </repeat>
-    </view>
+  </view>
   </view>
 </template>
 <script >
@@ -90,7 +90,7 @@
     }
     .m-all-products{
       .list{
-        padding: 0 20rpx;
+        padding: 10rpx 20rpx;
       }
     }
   }

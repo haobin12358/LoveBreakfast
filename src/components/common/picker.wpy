@@ -1,0 +1,54 @@
+<template>
+    <view class="m-li">
+      <picker bindchange="bindPickerChange" value="{{picker.index}}" range="{{picker.array}}">
+        <view class="picker">
+          {{picker.sort}}：<image src="/images/icon-more.png" style="width: 42rpx;height: 36rpx;float: right"></image><i class="m-select">{{picker.array[picker.index]}}</i>
+        </view>
+      </picker>
+    </view>
+</template>
+<script>
+  import wepy from 'wepy';
+
+  export default class Picker extends wepy.page{
+    props = {
+      picker:Object
+    }
+    data = {
+
+    }
+    methods = {
+      bindPickerChange: function(e) {
+        this.setData({
+          index: e.detail.value
+        })
+      },
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+
+    .m-li{
+      font-size: 30rpx;
+      padding: 30rpx 0;
+      border-bottom: 1px solid #dfdfdf;
+      /*&:last-child{*/
+        /*border-bottom: none;*/
+      /*}*/
+      .picker{
+        .m-select{
+          font-style: normal;
+          color: @common-color;
+          float: right;
+          &:before{
+            content: '';
+            display: block;
+            clear: both;
+          }
+        }
+      }
+    }
+
+
+</style>

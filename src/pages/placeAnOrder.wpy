@@ -1,20 +1,222 @@
 <template>
-  <view class="container">
-
+  <view class="m-place-order">
+    <head class="m-head">
+      <view class="m-head-back"></view>
+      <view class="m-head-content">
+        <repeat for="{{all_picker}}" key="index" index="index" item="item">
+          <Pick :picker="item"></Pick>
+        </repeat>
+        <view class="m-li-more">联系人：yayay</view>
+        <view class="m-li-more">联系方式：1223164654</view>
+      </view>
+    </head>
+    <view class="m-content">
+      <repeat for="{{all_order}}" key="index" index="index" item="item">
+        <Order :order="item"></Order>
+      </repeat>
+      <view class="m-li-more">合计：<i class="m-price">123</i></view>
+    </view>
+    <view class="m-remark">
+      <repeat for="{{all_remark}}" key="index" index="index" item="item">
+        <Pick :picker="item"></Pick>
+      </repeat>
+    </view>
+    <foot class="m-foot">
+      <view class="m-car">
+        <!--<image src="/images/car.png" style="width: 100rpx;height: 100rpx;"></image>-->
+        <!--<view class="m-num">2</view>-->
+        <view>合计：<text class="m-price">￥123</text></view>
+      </view>
+      <view class="m-btn m-active" @tap="placeAnOrder">支付</view>
+    </foot>
   </view>
 </template>
 <script >
   import wepy from 'wepy';
+  import Pick from '../components/common/picker'
+  import Order from '../components/common/order'
+
   export default class PlaceAnOrder extends wepy.page{
     config = {
       navigationBarTitleText: ''
     }
+    components = {
+      Pick:Pick,
+      Order:Order
+    }
     data = {
+      all_picker:[
+        {
+          sort:'选择取餐站点',
+          array: ['江陵路', '近江', '西兴', '滨和路'],
+          index:0,
+        },
+        {
+          sort:'选择出站口',
+          array: ['A', 'B', 'C', 'D'],
+          index:0,
+        },
+        {
+          sort:'时间',
+          array: ['A', 'B', 'C', 'D'],
+          index:0,
+        },
+      ],
+      all_order:[
+        {
+          name:'粥',
+          number:1,
+          price:12
+        },
+        {
+          name:'粥',
+          number:1,
+          price:12
+        },
+        {
+          name:'粥',
+          number:1,
+          price:12
+        }
+      ],
+      all_remark:[
+        {
+          sort:'支付方式',
+          array: ['微信支付', '近江', '西兴', '滨和路'],
+          index:0,
+        },
+        {
+          sort:'用餐人数',
+          array: ['A', 'B', 'C', 'D'],
+          index:0,
+        },
+        {
+          sort:'备注',
+          array: ['A', 'B', 'C', 'D'],
+          index:0,
+        },
+      ],
 
+
+      list_data:[
+        {
+          name: '粥',
+          price: '12.3',
+          id: '01',
+          remarks: '',
+          number: 1
+        },
+        {
+          name: '粥',
+          price: '12.3',
+          id: '01',
+          remarks: '',
+          number: 1
+        }
+      ]
     }
     methods = {
+
     }
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
+  @import "../styles/common";
+  .m-place-order{
+    width: 100%;
+    background-color: #f8f8f8;
+    .m-head{
+      width: 100%;
+      height: 400rpx;
+      .m-head-back{
+        background-color: @common-color;
+        height: 200rpx;
+        width: 100%;
+      }
+      .m-head-content{
+        position: absolute;
+        top: 0;
+        left: 40rpx;
+        width: 630rpx;
+        height: 450rpx;
+        background-color: #fff;
+        border-radius: 2px;
+        padding: 0 20rpx;
+        border: 1px solid #f8f8f8;
+        .m-li-more{
+          font-size: 30rpx;
+          /*margin: 0 20rpx;*/
+          padding: 20rpx 0;
+          border-bottom: 1px solid @border-color;
+          &:last-child{
+            border-bottom: none;
+          }
+        }
+      }
+    }
+    .m-content{
+      margin: 270rpx 40rpx 40rpx 40rpx;
+      background-color: #fff;
+      border: 1px solid #f8f8f8;
+      .m-li-more{
+        font-size: 30rpx;
+        margin: 0 20rpx;
+        padding: 20rpx;
+        text-align: right;
+      }
+    }
+    .m-remark{
+      margin: 0 40rpx 140rpx 40rpx;
+      background-color: #fff;
+      border: 1px solid #f8f8f8;
+      padding: 0 20rpx;
+      .m-li:last-child{
+        border-bottom: none;
+      }
+    }
+    .m-foot{
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      padding: 20rpx;
+      border-top: 1px solid @border-color;
+      background-color: #fff;
+      display: flex;
+      flex-flow: row;
+      justify-content: space-between;
+      align-items: center;
+      /*background-color: rgba(0,0,0,0.5);*/
+      .m-car{
+        position: relative;
+        .m-num{
+          position: absolute;
+          right: -5rpx;
+          top: -10rpx;
+          width: 40rpx;
+          height: 40rpx;
+          font-size: 20rpx;
+          text-align: center;
+          color: #ffffff;
+          line-height: 40rpx;
+          border-radius: 50%;
+          background-color: #f4690c;
+        }
+      }
+      .m-btn{
+        width: 150rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        margin-right: 40rpx;
+        border: 1px solid @border-color;
+        border-radius: 20px;
+        text-align: center;
+        background-color: #f8f8f8;
+        &.m-active{
+          background-color: @common-color;
+          color: #ffffff;
+          border-color: #ffffff;
+        }
+      }
+    }
+  }
 </style>
