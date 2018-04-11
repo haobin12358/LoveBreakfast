@@ -11,6 +11,7 @@ api = flask_restful.Api(app)
 
 api.add_resource(AUsers, "/love/breakfast/users/<string:users>")
 api.add_resource(AProduct, "/love/breakfast/product/<string:product>")
+api.add_resource(AReview, "/love/breakfast/review/<string:review>")
 api.add_resource(ACategory, "/love/breakfast/category/<string:category>")
 api.add_resource(AShop, "/love/breakfast/shop/<string:shop>")
 
