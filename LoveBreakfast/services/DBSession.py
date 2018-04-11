@@ -8,15 +8,10 @@ from sqlalchemy.orm import sessionmaker
 # 引用项目类
 from models import model
 
-
-<<<<<<< HEAD
-db_session = sessionmaker(bind=models.mysql_engine)
-
-=======
+db_session = sessionmaker(bind=model.mysql_engine)
 # 实例化session
 db_session = sessionmaker(bind=model.mysql_engine)
 #db_log_session = sessionmaker(bind=log_model.mysql_engine)
->>>>>>> feng
 
 
 # 获取数据库连接session

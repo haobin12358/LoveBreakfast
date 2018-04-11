@@ -3,12 +3,8 @@ from flask import Flask
 import flask_restful
 from apis.AUsers import AUsers
 from apis.AProduct import AProduct
-<<<<<<< HEAD
-
-=======
 from apis.ACategory import ACategory
 from apis.AShop import AShop
->>>>>>> feng
 
 app = Flask(__name__)
 api = flask_restful.Api(app)

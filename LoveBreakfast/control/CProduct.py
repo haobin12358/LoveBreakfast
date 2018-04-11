@@ -21,7 +21,10 @@ class CProduct():
     #  获取全部商品列表
     def get_all(self):
         pro_list_of_control = self.service_product.get_all()
-        print pro_list_of_control
+        print(pro_list_of_control)
+        # for i in range(pro_list_of_control):
+
+
         return {
             "message": "get pro_list success !",
             "status": 200,
@@ -102,7 +105,6 @@ class CProduct():
             proabo_of_controller["Pabo"] = proabo_of_service.Pabo
             proabo_of_controller["Pstatus"] = proabo_of_service.Pstatus
             pro_info_list.append(proabo_of_controller)
-            print(a)
         return {
             "status": 200,
             "message": "get pro_list success !",

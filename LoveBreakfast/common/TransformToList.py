@@ -2,14 +2,9 @@
 # 兼容linux系统
 import sys
 import os
-<<<<<<< HEAD
-sys.path.append(os.path.dirname(os.getcwd())) # 增加系统路径
-from models import models
-
-=======
+sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
 sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
 import models.model as models
->>>>>>> feng
 
 
 # 装饰器，用来解析数据库获取的内容，将获取到的对象转置为dict，将获取到的单个数据的tuple里的数据解析出来
