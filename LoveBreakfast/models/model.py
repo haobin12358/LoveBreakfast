@@ -36,16 +36,35 @@ class Products(Base):
     Pid = Column(String(64), primary_key=True)
     Pname = Column(String(64), nullable=False)
     Pprice = Column(Float, nullable=False)
-    Sid = Column(String(64), nullable=False)
-    Pabo = Column(Text)
-    Plevel = Column(Float)
+    Sid = Column(String(64), nullable=True, default="0")
+    Cid = Column(String(64), nullable=True, default="0")
+    Pstatus = Column(String(64), nullable=False)  # 商品状态，分为on_sale和off_sale
+    Pimage = Column(String(64), nullable=False)
+    Pinfo = Column(Text)  # 商品介绍
+    P_sales_volume = Column(Integer, nullable=False)  # 商品销量
+    Pscore = Column(Integer, nullable=True)  # 商品评分
 
-class Sellers(Base):
-    __tablename__ = "Sellers"
+class Review(Base):
+    __tablename__ = "Review"
+    Rid = Column(String(64), primary_key=True)
+    Oid = Column(String(64), primary_key=True)  # 对应的订单编号
+    Pid = Column(String(64), primary_key=True)  # 对应的商品编号
+    Rscore = Column(Integer, nullable=True)  # 对应的商品评分
+    Rcontent = Column(Text)  # 评价内容
+
+class Category(Base):
+    __tablename__ = "Category"
+    Cid = Column(String(64), primary_key=True)
+    Cname = Column(String(64), nullable=False)
+    Cstatus = Column(String(64), nullable=False)
+
+class Shops(Base):
+    __tablename__ = "Shops"
     Sid = Column(String(64), primary_key=True)
     Sname = Column(String(64), nullable=False)
-    Slevel = Column(Integer)
-    Sabo = Column(Text)
+    Sreview = Column(Integer, nullable=True)
+    Sdetail = Column(Text, nullable=True)
+    Simage = Column(String(64), nullable=False)
     Stel = Column(String(14))
 
 class Ordermain(Base):
@@ -117,6 +136,7 @@ def drop():
     databse_deal().drop_database()
 
 
+
 if __name__ == "__main__":
     '''
     运行该文件就可以在对应的数据库里生成本文件声明的所有table
@@ -126,5 +146,6 @@ if __name__ == "__main__":
     action = raw_input("create database?")
     if "drop" in action:
         drop()
+
     else:
         create()

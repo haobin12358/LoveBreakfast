@@ -5,19 +5,17 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
 from config.Logs import PRINT_API_NAME
 from control.CProduct import CProduct
+from control.CReview import CReview
 
-class AProduct(Resource):
+class AReview(Resource):
     def __init__(self):
-        self.control_product = CProduct()
+        self.control_review = CReview()
 
     def post(self, product):
         print(PRINT_API_NAME.format(product))
 
         apis = {
-            "create_pro": "control_product.create_pro()",
-            "update_pro_info": "control_product.update_pro_info()",
-            "put_on_sale": "control_product.put_on_sale()",
-            "put_off_sale": "control_product.put_off_sale()"
+            "create_review": "control_product.create_review()"
         }
 
         if product in apis:
@@ -29,8 +27,8 @@ class AProduct(Resource):
         print(PRINT_API_NAME.format(product))
 
         apis = {
-            "get_info_by_id": "self.control_product.get_info_by_id()",
-            "get_all": "self.control_product.get_all()"
+            "get_user_review": "self.control_product.get_user_review()",
+            "get_product_review": "self.control_product.get_product_review()"
         }
         if product in apis:
             return eval(apis[product])

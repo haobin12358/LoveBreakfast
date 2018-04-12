@@ -11,7 +11,7 @@ from common.TransformToList import trans_params
 
 
 # 操作user表的相关方法
-class SProduct():
+class SReview():
     def __init__(self):
         """
         self.session 数据库连接会话

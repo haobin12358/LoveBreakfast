@@ -12,14 +12,27 @@ from services.SProduct import SProduct
 from common.get_str import get_str
 from common.import_status import import_status
 from services.SCategory import SCategory
+from services.SReview import SReview
+from control.COrders import COrders
 
-class CProduct():
+class CReview():
     def __init__(self):
         self.service_product = SProduct()
-        self.service_category =SCategory()
+        self.service_review = SReview()
+        self.control_order = COrders()
 
-    #  获取全部商品列表
-    def get_all(self):
+    #  创建评论
+    def create_review(self):
+        args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
+        # 判断url参数是否异常
+        if len(args) != 1 or "Oid" not in args.keys():
+            message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
+            return {
+                "message": message,
+                "status": status,
+                "statuscode": statuscode,
+            }
+
         pro_list_of_control = self.service_product.get_all()
         print(pro_list_of_control)
         # for i in range(pro_list_of_control):
