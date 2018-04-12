@@ -52,6 +52,7 @@ class Review(Base):
     Rpimage = Column(String(64), primary_key=True)  # 对应的商品图片
     Rscore = Column(Integer, nullable=True)  # 对应的商品评分
     Rcontent = Column(Text)  # 评价内容
+    Rstatus = Column(String(64), primary_key=True)  # 对应的评价状态.分为on和off
 
 class Category(Base):
     __tablename__ = "Category"

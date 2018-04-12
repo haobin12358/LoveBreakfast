@@ -33,7 +33,7 @@ class SReview():
     def get_user_review(self, uid):
         try:
             review_of_service = self.session.query(model.Review.Rid, model.Review.Rscore, model.Review.Rpname, model.Review.Rpimage,
-                                                   model.Review.Rcontent).filter_by(Uid=uid).all()
+                                                   model.Review.Rcontent).filter_by(Uid=uid, Rstatus="on").all()
         except Exception as e:
             print e.message
         finally:
@@ -49,3 +49,11 @@ class SReview():
         finally:
             self.session.close()
         return review_list
+
+    def delete_user_review(self, rid):
+        try:
+            self.session.query(model.Review).filter_by(Rid=rid).update(Rstatus="off")
+        except Exception as e:
+            print e.message
+        finally:
+            self.session.close()

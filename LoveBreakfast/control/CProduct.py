@@ -20,11 +20,15 @@ class CProduct():
 
     #  获取全部商品列表
     def get_all(self):
-        pro_list_of_control = self.service_product.get_all()
+        pro_list_of_service = self.service_product.get_all()
+
+        pro_list_of_control  = []
+        for i in range(len(pro_list_of_control)):
+            dic_of_pro = {}
+            dic_of_pro["Pid"] = pro_list_of_service["pid"]
+            pro_list_of_control.append(dic_of_pro)
+
         print(pro_list_of_control)
-        # for i in range(pro_list_of_control):
-
-
         return {
             "message": "get pro_list success !",
             "status": 200,

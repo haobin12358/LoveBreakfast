@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 import uuid
 import DBSession
-from models import models
+import models
 from common.TransformToList import trans_params
 
 class SUsers():

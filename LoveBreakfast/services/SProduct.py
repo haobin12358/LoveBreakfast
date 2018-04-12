@@ -22,7 +22,7 @@ class SProduct():
 
     # 获取所有商品信息
     def get_all(self):
-        pro_list_of_service = None
+        pro_list_of_service = []
         try:
             pro_list_of_service = self.session.query(model.Products.Pid, model.Products.Pname,
                                                      model.Products.Pprice,model.Products.Pimage,
@@ -43,7 +43,7 @@ class SProduct():
         pro_abo = None
         try:
             pro_abo = self.session.query(model.Products.Pname, model.Products.Pprice,
-                                         model.Products.Pimage,).filter_by(Pid=pid, Pststus="on_sale").first()
+                                         model.Products.Pimage,).filter_by(Pid=pid).first()
         except Exception as e:
             print e.message
         finally:
@@ -75,7 +75,7 @@ class SProduct():
     def get_pprice_by_pid(self, pid):
         pprice = None
         try:
-            pprice = self.session.query(models.Products.Pprice).filter_by(Pid=pid).scalar()
+            pprice = self.session.query(model.Products.Pprice).filter_by(Pid=pid).scalar()
         except Exception as e:
             print(e.message)
         finally:

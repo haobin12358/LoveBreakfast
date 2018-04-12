@@ -118,9 +118,15 @@ class CReview():
         rid_to_str = get_str(args, "Rid")
         rid_list = self.service_review.get_rid_by_uid(uid_to_str)
         if rid_to_str not in rid_list:
-            message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
+            message, status, statuscode = import_status("NO_THIS_REVIEW", "response_error", "NO_THIS_REVIEW")
             return {
                 "message": message,
                 "status": status,
                 "statuscode": statuscode,
             }
+        result = self.service_review.delete_user_review(rid_to_str)
+        print(request)
+        return {
+            "message": "delete review success !",
+            "status": 200,
+        }

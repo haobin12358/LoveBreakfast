@@ -5,6 +5,7 @@ from apis.AUsers import AUsers
 from apis.AProduct import AProduct
 from apis.ACategory import ACategory
 from apis.AShop import AShop
+from apis.AReview import AReview
 
 app = Flask(__name__)
 api = flask_restful.Api(app)
