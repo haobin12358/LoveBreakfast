@@ -15,7 +15,8 @@ class AReview(Resource):
         print(PRINT_API_NAME.format(product))
 
         apis = {
-            "create_review": "control_product.create_review()"
+            "create_review": "control_product.create_review()",
+            "delete_user_review": "control_product.delete_user_review()"
         }
 
         if product in apis:

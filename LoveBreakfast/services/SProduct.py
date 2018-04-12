@@ -43,7 +43,7 @@ class SProduct():
         pro_abo = None
         try:
             pro_abo = self.session.query(model.Products.Pname, model.Products.Pprice,
-                                         model.Products.Pimage,).filter_by(Pid=pid).first()
+                                         model.Products.Pimage,).filter_by(Pid=pid, Pststus="on_sale").first()
         except Exception as e:
             print e.message
         finally:

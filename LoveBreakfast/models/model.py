@@ -48,6 +48,8 @@ class Review(Base):
     Rid = Column(String(64), primary_key=True)
     Oid = Column(String(64), primary_key=True)  # 对应的订单编号
     Pid = Column(String(64), primary_key=True)  # 对应的商品编号
+    Rpname = Column(String(64), primary_key=True)  # 对应的商品名称
+    Rpimage = Column(String(64), primary_key=True)  # 对应的商品图片
     Rscore = Column(Integer, nullable=True)  # 对应的商品评分
     Rcontent = Column(Text)  # 评价内容
 
