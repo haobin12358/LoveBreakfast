@@ -107,7 +107,7 @@
       </repeat>
     </view>
 
-    <view @tap="tap" class="m-btn">登录</view>
+    <!--<view @tap="tap" class="m-btn">登录</view>-->
 
   </view>
 </template>
