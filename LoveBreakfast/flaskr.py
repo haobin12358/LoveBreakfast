@@ -6,6 +6,7 @@ from apis.AProduct import AProduct
 from apis.ACarts import ACarts
 from apis.ACategory import ACategory
 from apis.AShop import AShop
+from apis.AReview import AReview
 
 app = Flask(__name__)
 api = flask_restful.Api(app)
@@ -25,6 +26,3 @@ def catchException(error):
     from flask import jsonify
     response = dict(status=0, message="500 Error")
     return jsonify(response), 400
-
-
-

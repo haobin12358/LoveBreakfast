@@ -75,10 +75,29 @@ class SProduct():
     def get_pprice_by_pid(self, pid):
         pprice = None
         try:
-            pprice = self.session.query(models.Products.Pprice).filter_by(Pid=pid).scalar()
+            pprice = self.session.query(model.Products.Pprice).filter_by(Pid=pid).scalar()
         except Exception as e:
             print(e.message)
         finally:
             self.session.close()
         return pprice
 
+    @trans_params
+    def get_all_pro_fro_carts(self, pid):
+        """
+        通过pid搜索project信息
+        :param pid:
+        :return:
+        """
+        try:
+            return self.session.query(
+                model.Products.Pid, model.Products.Pimage,
+                model.Products.Pname, model.Products.Pstatus,
+                model.Products.P_sales_volume, model.Products.Pprice,
+                model.Products.Pscore
+            ).filter(model.Products.Pid == pid).all()
+        except Exception as e:
+            self.session.rollback()
+            raise e
+        finally:
+            self.session.close()
