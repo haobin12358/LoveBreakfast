@@ -10,7 +10,7 @@ from common.get_model_return_list import get_model_return_list
 
 
 class CCarts():
-    def __int__(self):
+    def __init__(self):
         from config.status import response_error
         from config.status_code import error_param_miss
         from config.messages import error_messages_param_miss
@@ -57,7 +57,8 @@ class CCarts():
 
     def add_or_update_cart(self):
         args = request.args.to_dict()
-        data = request.data
+        data = json.loads(request.data)
+
         if "token" not in args:
             return self.param_miss
         uid = args.get("token")
@@ -85,7 +86,7 @@ class CCarts():
 
     def del_cart(self):
         args = request.args.to_dict()
-        data = request.data
+        data = json.loads(request.data)
         if "token" not in args:
             return self.system_error
         uid = args.get("token")
