@@ -43,7 +43,7 @@ class CCarts():
             cart_info_list = []
             cart_list = get_model_return_list(self.scart.get_carts_by_Uid(uid))
             for cart in cart_list:
-                self.spro.get_all_pid
+                self.spro.
             res_get_all["data"] =
         except Exception as e:
 
