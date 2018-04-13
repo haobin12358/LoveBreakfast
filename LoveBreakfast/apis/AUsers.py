@@ -11,7 +11,7 @@ from control.CUsers import CUsers
 
 class AUsers(Resource):
     def __int__(self):
-        self.apis_wrong = []
+        self.apis_wrong = {}
         self.apis_wrong["status"] = response_system_error
         self.apis_wrong["status_code"] = error_wrong_apis
         self.apis_wrong["messages"] = error_messages_wrong_api

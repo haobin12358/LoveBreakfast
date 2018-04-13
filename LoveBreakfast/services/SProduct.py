@@ -77,6 +77,7 @@ class SProduct():
             self.session.commit()
         except Exception as e:
             print(e.message)
+            self.session.rollback()
         finally:
             self.session.close()
 
@@ -86,7 +87,39 @@ class SProduct():
             pprice = self.session.query(model.Products.Pprice).filter_by(Pid=pid).scalar()
         except Exception as e:
             print(e.message)
+            self.session.rollback()
         finally:
             self.session.close()
         return pprice
 
+    def get_product_all_by_pid(self, pid):
+        product = None
+        try:
+            product = self.session.query(model.Products.Pname, model.Products.P_sales_volume, model.Products.Pscore,
+                                         model.Products.Pprice).filter_by(Pid = pid).first()
+        except Exception as e:
+            print(e.message)
+            self.session.rollback()
+        finally:
+            self.session.close()
+        return product
+
+    def get_all_pro_fro_carts(self, pid):
+        """
+        通过pid搜索project信息
+        :param pid:
+        :return:
+        """
+        try:
+            res = self.session.query(
+                model.Products.Pid, model.Products.Pimage,
+                model.Products.Pname, model.Products.Pstatus,
+                model.Products.P_sales_volume, model.Products.Pprice,
+                model.Products.Pscore
+            ).filter_by(Pid=pid).all()
+            return res
+        except Exception as e:
+            self.session.rollback()
+            raise e
+        finally:
+            self.session.close()

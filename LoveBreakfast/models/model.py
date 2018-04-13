@@ -8,6 +8,7 @@ from sqlalchemy import Column, create_engine, Integer, String, Text, Float
 from config import dbconfig as cfg
 from sqlalchemy.orm import sessionmaker
 import pymysql
+from sqlalchemy.dialects.mysql import INTEGER
 
 DB_PARAMS = "{0}://{1}:{2}@{3}/{4}?charset={5}".format(
     cfg.sqlenginename, cfg.username, cfg.password, cfg.host, cfg.database, cfg.charset)
@@ -21,10 +22,13 @@ class Users(Base):
     Upwd = Column(String(32), nullable=False)
     Uname = Column(String(64))
     Usex = Column(Integer)
+    Ucoin = Column(Float)
+    Uinvate = Column(String(64))
 
 class Locations(Base):
     __tablename__ = "Locations"
     Lid = Column(String(64), primary_key=True)
+    Litem = Column(Integer, nullable=False)
     Lname = Column(String(64), nullable=False)
     Lno = Column(Integer, nullable=False)
     Lstatus = Column(Integer, nullable=False)
@@ -85,6 +89,14 @@ class Orderpart(Base):
     Oid = Column(String(64), nullable=False)
     Pid = Column(String(64), nullable=False)
     Pnum = Column(Integer, nullable=False)
+
+class Cart(Base):
+    __tablename__ = "Cart"
+    Cid = Column(String(64), primary_key=True)
+    Uid = Column(String(64), nullable=False)
+    Pid = Column(String(64), nullable=False)
+    Pnum = Column(Integer)
+    Cstatus = Column(Integer, default=1)  # 商品在购物车状态，1 在购物车， 2 已从购物车移除
 
 
 class databse_deal():

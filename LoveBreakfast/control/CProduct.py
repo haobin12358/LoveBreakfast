@@ -37,7 +37,7 @@ class CProduct():
         return {
             "message": "get pro_list success !",
             "status": 200,
-            "data":pro_list_of_control
+            "data": pro_list_of_control
         }
 
     #  根据商品id获取商品详情
