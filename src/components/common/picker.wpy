@@ -12,16 +12,20 @@
 
   export default class Picker extends wepy.page{
     props = {
-      picker:Object
+      picker:{
+        type:Object,
+        default:null,
+        twoWay:true
+      }
     }
     data = {
 
     }
     methods = {
       bindPickerChange: function(e) {
-        this.setData({
-          index: e.detail.value
-        })
+        this.picker.index = e.detail.value;
+        this.$emit('pickerChange',this.picker)
+//        this.$apply();
       },
     }
   }

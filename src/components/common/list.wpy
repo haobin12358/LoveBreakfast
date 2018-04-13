@@ -1,23 +1,23 @@
 <template>
-  <view class="list" @tap = "bindTap({{list}})" wx:if="{{page != 'car' || (page == 'car' && list.number != 0)}}">
+  <view class="list" @tap = "bindTap({{list}})" wx:if="{{page != 'car' || (page == 'car' && list.Pnum != 0)}}">
     <image class="m-business-img" src="/images/test.jpeg" wx:if="{{page != 'product_info'}}"  style="width: 200rpx;height: 200rpx;"/>
     <view class="m-business-info">
       <view class="m-first">
         <view class="m-first-left">
-          <view class="m-name">{{list.name}}</view>
+          <view class="m-name">{{list.Pname}}</view>
           <view class="m-time m-grey" wx:if="{{list.time && list.time != ''}}">{{list.time}}</view>
         </view>
         <view class="m-first-right {{list.label == '推荐'? 'm-recommend':''}} {{list.label == '配送中'? 'm-distribution':''}} {{list.label == '已完成'? 'm-completed':''}}" wx:if="{{list.label && list.label != ''}}">{{list.label}}</view>
       </view>
-      <view class="m-business-star score-grey" wx:if="{{list.sales_volume && list.score}}">月销{{list.sales_volume}}份 好评率{{list.score}}%</view>
-      <view class="m-business-star m-grey" wx:if="{{list.remarks}}">{{list.remarks}}</view>
-      <view class="m-business-star m-grey" wx:if="{{page == 'myOrder'}}">数量：{{list.number}}</view>
+      <view class="m-business-star score-grey" wx:if="{{list.P_sales_volume && list.Pscore}}">月销{{list.P_sales_volume}}份 好评率{{list.Pscore}}%</view>
+      <view class="m-business-star m-grey" wx:if="{{list.Pabo}}">{{list.Pabo}}</view>
+      <view class="m-business-star m-grey" wx:if="{{page == 'myOrder'}}">数量：{{list.Pnum}}</view>
       <view class="m-business-loc">
-        <view class="m-price">￥{{list.price}}</view>
-        <view class="m-add-cut" wx:if="{{page != 'myOrder' && list.number != undefined }}">
-          <image src="/images/cut.png" style="width: 48rpx;height: 48rpx;" wx:if="{{list.number > 0}}" @tap.stop="cutTap({{list.number}})"/>
-          <input type="number" value="{{list.number}}" wx:if="{{list.number > 0}}"/>
-          <image src="/images/add.png" style="width: 48rpx;height: 48rpx;" @tap.stop="addTap({{list.number}})"/>
+        <view class="m-price">￥{{list.Pprice}}</view>
+        <view class="m-add-cut" wx:if="{{page != 'myOrder' && list.Pnum != undefined }}">
+          <image src="/images/cut.png" style="width: 48rpx;height: 48rpx;" wx:if="{{list.Pnum > 0}}" @tap.stop="cutTap({{list.Pnum}})"/>
+          <input type="number" value="{{list.Pnum}}" wx:if="{{list.Pnum > 0}}"/>
+          <image src="/images/add.png" style="width: 48rpx;height: 48rpx;" @tap.stop="addTap({{list.Pnum}})"/>
         </view>
       </view>
     </view>
@@ -50,7 +50,7 @@
             success:function (res) {
               if(res.confirm){
                 console.log(res.confirm)
-                _that.list.number = v-1;
+                _that.list.Pnum = v-1;
                 _that.$apply();
               }else if(res.cancel){
               }
@@ -58,7 +58,7 @@
           })
         }else{
           v>0 && (v = v-1)
-          this.list.number = v;
+          this.list.Pnum = v;
           this.$apply();
         }
 
@@ -68,7 +68,7 @@
       addTap(v){
 
         v = v+1;
-        this.list.number = v;
+        this.list.Pnum = v;
         this.$apply();
       }
     }

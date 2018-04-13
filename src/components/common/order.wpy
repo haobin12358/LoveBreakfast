@@ -2,10 +2,10 @@
   <view class="m-one-product">
     <image src="/images/test.jpeg" style="width: 80rpx;height: 80rpx;"></image>
     <view class="m-right">
-      <view class="m-name">{{order.name}}</view>
+      <view class="m-name">{{order.Pname}}</view>
       <view class="m-info">
-        <view class="m-num">数量  {{order.number}}</view>
-        <view>￥{{order.price}}</view>
+        <view class="m-num">数量  {{order.Pnum}}</view>
+        <view>￥{{order.Pprice}}</view>
       </view>
     </view>
   </view>
@@ -21,11 +21,7 @@
 
     }
     methods = {
-      bindPickerChange: function(e) {
-        this.setData({
-          index: e.detail.value
-        })
-      },
+
     }
   }
 </script>

@@ -1,20 +1,142 @@
 <template>
-  <view class="container">
+  <view class="m-one-order">
+    <view class="m-head">
+      <view class="m-li">
+        <image  src="/images/test.jpeg" style="width: 500rpx;height: 350rpx;"/>
+        取货二维码
+      </view>
+    </view>
+    <view class="m-content">
+      <repeat for="{{all_order}}" key="index" index="index" item="item">
+        <Order :order.sync="item"></Order>
+      </repeat>
+      <view class="m-li">
+        <view class="m-label">优惠券</view>
+        <view class="m-coupon">满30减40</view>
+      </view>
+      <view class="m-li">
+        <view></view>
+        <view >实际支付：<i class="m-price"> $20 </i></view>
+      </view>
+    </view>
+    <view class="m-foot">
+      <view class="m-li">
+        <view>取货站点：</view>
+        <view >1号线江陵路Akou</view>
+      </view>
+      <view class="m-li">
+        <view>取货时间：</view>
+        <view >12：30</view>
+      </view>
+      <view class="m-li">
+        <button class="m-btn">取消订单</button>
+      </view>
+    </view>
 
+  </view>
   </view>
 </template>
 <script >
   import wepy from 'wepy';
+  import Order from '../components/common/order'
   export default class OneOrder extends wepy.page{
     config = {
-      navigationBarTitleText: '订单'
+      navigationBarTitleText: ''
+    }
+    components = {
+      Order:Order
     }
     data = {
-
+      all_order:[
+        {
+          Pname:'粥',
+          Pnum:1,
+          Pprice:12
+        },
+        {
+          Pname:'粥',
+          Pnum:1,
+          Pprice:12
+        },
+        {
+          Pname:'粥',
+          Pnum:1,
+          Pprice:12
+        }
+      ],
     }
     methods = {
     }
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
+  @import "../styles/common";
+  .m-one-order{
+    width: 100%;
+    background-color: #f8f8f8;
+    .m-head{
+      margin: 20rpx;
+      padding: 20rpx;
+      background-color: #fff;
+      /*border-bottom: 1px solid @border-color;*/
+      .m-li{
+        width: 100%;
+        display: flex;
+        flex-flow: column;
+        text-align: center;
+        align-items: center;
+        font-size: 30rpx;
+      }
+    }
+    .m-content{
+      margin: 20rpx;
+      background-color: #fff;
+      height: auto;
+      .m-li{
+        margin: 0 20rpx;
+        padding: 20rpx  0;
+        font-size: 30rpx;
+        border-bottom: 1px solid @border-color;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: space-between;
+        .m-label{
+          padding: 5rpx 10rpx;
+          color: #f4690c;
+          background-color: #FEF0F4;
+          border: 1px solid #f4690c;
+          border-radius: 5px;
+        }
+        .m-coupon{
+
+        }
+        .m-total{
+
+        }
+      }
+    }
+    .m-foot{
+      background-color: #fff;
+      margin: 20rpx;
+      padding: 0 20rpx ;
+      .m-li{
+        margin: 0 20rpx;
+        padding: 20rpx  0;
+        font-size: 30rpx;
+        border-bottom: 1px solid @border-color;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: space-between;
+        &:last-child{
+          border-bottom: none;
+        }
+        .m-btn{
+          line-height: 2;
+          width: 100%;
+        }
+      }
+    }
+  }
 </style>

@@ -1,8 +1,9 @@
 <style scoped lang="less" rel="stylesheet/less">
   @import "../styles/common";
-.m-btn{
-  font-size: 32rpx;
-  color: #1AAD19;
+.m-index{
+  width: 100%;
+  overflow-x: hidden;
+  background-color: #f8f8f8;
 }
   .m-location-box{
     width: 100%;
@@ -12,6 +13,7 @@
     justify-content: space-between;
     background-color: white;
     margin-bottom: @margin-interval;
+
     .m-location{
       font-size: 32rpx;
       margin: 20rpx;
@@ -38,7 +40,7 @@
       margin-right: @margin-interval;
       .m-search-input{
         width: 90%;
-        padding: 0 @margin-interval  ;
+        padding: 5rpx @margin-interval  ;
         border: 1px solid @border-color;
         border-radius: 20px;
         color: @border-color;
@@ -50,38 +52,14 @@
     width: 100%;
     margin-top: @margin-interval ;
     background-color: white;
-    padding-left: 70rpx;
-    .m-one-business{
-      display: flex;
-      flex-flow: row;
-      align-items: center;
-      padding: @margin-interval;
-      padding-left: 0;
-      border-bottom: 1px solid @border-color;
-      .m-business-img{
-        background-color: #bfbfbf;
-        margin-right: @margin-interval;
-      }
-      .m-business-info{
-        font-size: 32rpx;
-        line-height: 60rpx;
-        width: 100%;
-        padding-right: @margin-interval;
-        .m-business-loc{
-          width: 100%;
-          font-size: 28rpx;
-          color: @grey-font;
-          display: flex;
-          flex-flow: row;
-          justify-content: space-between;
-        }
-      }
-    }
+    padding-left: 30rpx;
+    padding-top: 10rpx;
+
   }
 
 </style>
 <template>
-  <view class="container">
+  <view class="m-index">
     <view class="m-location-box">
       <view class="m-location">
         <view>定位</view>
@@ -107,7 +85,6 @@
       </repeat>
     </view>
 
-    <view @tap="tap" class="m-btn">登录</view>
 
   </view>
 </template>
@@ -139,36 +116,35 @@
       name:'product',
       list_data:[
         {
-          name:'粥',
-          src:'../images/test.jpeg',
-          sales_volume:'100',
-          score:'98',
-          price:'12.3',
-          id:'01',
-          remarks:'',
-          number: 0
+          Pname:'粥',
+          Pimage:'../images/test.jpeg',
+          P_sales_volume:'100',
+          Pscore:'98',
+          Pprice:'12.3',
+          Pid:'01',
+          Pabo:'',
+          Pnum: 0
         },
         {
-          name:'包子',
-          src:'../images/test.jpeg',
-          sales_volume:'100',
-          score:'98',
-          price:'12.3',
-          id:'02',
-          remarks:'',
-          label:'推荐',
-          number: 0
+          Pname:'粥',
+          Pimage:'../images/test.jpeg',
+          P_sales_volume:'100',
+          Pscore:'98',
+          Pprice:'12.3',
+          Pid:'01',
+          Pabo:'',
+          Pnum: 0
         },
         {
-          name:'油条',
-          src:'../images/test.jpeg',
-          sales_volume:'100',
-          score:'98',
-          price:'12.3',
-          id:'03',
-          remarks:'',
-          number: 0
-        }
+          Pname:'粥',
+          Pimage:'../images/test.jpeg',
+          P_sales_volume:'100',
+          Pscore:'98',
+          Pprice:'12.3',
+          Pid:'01',
+          Pabo:'',
+          Pnum: 0
+        },
       ]
     }
 

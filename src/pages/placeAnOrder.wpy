@@ -4,7 +4,7 @@
       <view class="m-head-back"></view>
       <view class="m-head-content">
         <repeat for="{{all_picker}}" key="index" index="index" item="item">
-          <Pick :picker="item"></Pick>
+          <Pick :picker.sync="item" ></Pick>
         </repeat>
         <view class="m-li-more">联系人：yayay</view>
         <view class="m-li-more">联系方式：1223164654</view>
@@ -12,14 +12,25 @@
     </head>
     <view class="m-content">
       <repeat for="{{all_order}}" key="index" index="index" item="item">
-        <Order :order="item"></Order>
+        <Order :order.sync="item"></Order>
       </repeat>
       <view class="m-li-more">合计：<i class="m-price">123</i></view>
     </view>
     <view class="m-remark">
-      <repeat for="{{all_remark}}" key="index" index="index" item="item">
-        <Pick :picker="item"></Pick>
-      </repeat>
+      <view class="m-li">
+        <picker bindchange="PickerChangeWay" value="{{payment_method.index}}" range="{{payment_method.array}}">
+          <view class="picker">
+            支付方式：<image src="/images/icon-more.png" style="width: 42rpx;height: 36rpx;float: right"></image><i class="m-select">{{payment_method.array[payment_method.index]}}</i>
+          </view>
+        </picker>
+      </view>
+      <view class="m-li">
+        <picker bindchange="PickerChangeNum" value="{{number_of_meals.index}}" range="{{number_of_meals.array}}">
+          <view class="picker">
+            用餐人数：<image src="/images/icon-more.png" style="width: 42rpx;height: 36rpx;float: right"></image><i class="m-select">{{number_of_meals.array[number_of_meals.index]}}</i>
+          </view>
+        </picker>
+      </view>
     </view>
     <foot class="m-foot">
       <view class="m-car">
@@ -47,6 +58,11 @@
     data = {
       all_picker:[
         {
+          sort:'选择地铁线路',
+          array: ['1号线', '近江', '西兴', '滨和路'],
+          index:0,
+        },
+        {
           sort:'选择取餐站点',
           array: ['江陵路', '近江', '西兴', '滨和路'],
           index:0,
@@ -64,38 +80,33 @@
       ],
       all_order:[
         {
-          name:'粥',
-          number:1,
-          price:12
+          Pname:'粥',
+          Pnum:1,
+          Pprice:12
         },
         {
-          name:'粥',
-          number:1,
-          price:12
+          Pname:'粥',
+          Pnum:1,
+          Pprice:12
         },
         {
-          name:'粥',
-          number:1,
-          price:12
+          Pname:'粥',
+          Pnum:1,
+          Pprice:12
         }
       ],
-      all_remark:[
+      payment_method:
         {
           sort:'支付方式',
-          array: ['微信支付', '近江', '西兴', '滨和路'],
+          array: ['微信支付'],
           index:0,
         },
-        {
-          sort:'用餐人数',
-          array: ['A', 'B', 'C', 'D'],
-          index:0,
-        },
-        {
-          sort:'备注',
-          array: ['A', 'B', 'C', 'D'],
-          index:0,
-        },
-      ],
+      number_of_meals:{
+        sort:'用餐人数',
+        array: ['1', '2', '3', '4','5','6','7','8','9','10'],
+        index:0,
+      },
+
 
 
       list_data:[
@@ -115,8 +126,20 @@
         }
       ]
     }
+    events = {
+      'pickerChange':function(e){
+        this.$apply();
+      }
+    }
     methods = {
-
+      PickerChangeWay: function(e) {
+        this.payment_method.index = e.detail.value;
+        this.$apply()
+      },
+      PickerChangeNum: function(e) {
+        this.number_of_meals.index = e.detail.value;
+        this.$apply()
+      },
     }
   }
 </script>
@@ -130,7 +153,7 @@
       height: 400rpx;
       .m-head-back{
         background-color: @common-color;
-        height: 200rpx;
+        height: 296rpx;
         width: 100%;
       }
       .m-head-content{
@@ -138,7 +161,7 @@
         top: 0;
         left: 40rpx;
         width: 630rpx;
-        height: 450rpx;
+        height: 550rpx;
         background-color: #fff;
         border-radius: 2px;
         padding: 0 20rpx;
@@ -146,7 +169,7 @@
         .m-li-more{
           font-size: 30rpx;
           /*margin: 0 20rpx;*/
-          padding: 20rpx 0;
+          padding: 25rpx 0;
           border-bottom: 1px solid @border-color;
           &:last-child{
             border-bottom: none;
@@ -170,6 +193,26 @@
       background-color: #fff;
       border: 1px solid #f8f8f8;
       padding: 0 20rpx;
+      .m-li{
+        font-size: 30rpx;
+        padding: 30rpx 0;
+        border-bottom: 1px solid #dfdfdf;
+        /*&:last-child{*/
+        /*border-bottom: none;*/
+        /*}*/
+        .picker{
+          .m-select{
+            font-style: normal;
+            color: @common-color;
+            float: right;
+            &:before{
+              content: '';
+              display: block;
+              clear: both;
+            }
+          }
+        }
+      }
       .m-li:last-child{
         border-bottom: none;
       }

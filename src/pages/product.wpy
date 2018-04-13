@@ -21,11 +21,11 @@
     data = {
       list_data:[
         {
-          name: '粥',
-          price: '12.3',
-          id: '01',
-          remarks: '好粥好粥',
-          number: 1
+          Pname: '粥',
+          Pprice: '12.3',
+          Pid: '01',
+          Pabo: '好粥好粥',
+          Pnum: 1
         }
       ]
     }
