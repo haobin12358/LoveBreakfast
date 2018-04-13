@@ -32,15 +32,15 @@ class ACarts(Resource):
 
         return self.apis_wrong
 
-    def get(self, users):
-        print(PRINT_API_NAME.format(users))
+    def get(self, cart):
+        print(PRINT_API_NAME.format(cart))
 
         control_cart = CCarts()
         apis = {
             "get_all": "control_cart.get_carts_by_uid()"
         }
 
-        if users in apis:
-            return eval(apis[users])
+        if cart in apis:
+            return eval(apis[cart])
 
         return self.apis_wrong

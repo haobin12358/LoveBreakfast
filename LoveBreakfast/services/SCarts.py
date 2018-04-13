@@ -16,44 +16,24 @@ class SCarts(SBase):
 
     @close_session
     def get_carts_by_Uid(self, uid):
-        return self.session.query(Cart.Cid, Cart.Pid, Cart.Pnum).filter(Cart.Uid == uid, Cart.Cstatus == 1).all()
+        return self.session.query(Cart.Cid, Cart.Pid, Cart.Pnum, Cart.Cstatus).filter(Cart.Uid == uid).all()
 
-    def add_carts(self, carts):
-        try:
+    @close_session
+    def add_carts(self, **kwargs):
+        cart = Cart()
+        for key in cart.__table__.columns.keys():
+            if key in kwargs:
+                setattr(cart, key, kwargs.get(key))
+        self.session.add(cart)
 
-            cart = Cart()
-            for key in cart.__table__.columns.keys():
-                if key in carts:
-                    setattr(cart, key, carts.get(key))
-            self.session.add(cart)
-            self.session.commit()
-        except Exception as e:
-            print(e.message)
-            self.session.rollback()
-            raise e
-        finally:
-            self.session.close()
-
+    @close_session
     def del_carts(self, cid):
-        try:
-            self.session.query(Cart).filter(Cart.Cid).update({"Cstatus": 2})
-            self.session.commit()
-        except Exception as e:
-            print(e.message)
-            self.session.rollback()
-        finally:
-            self.session.close()
+        self.session.query(Cart).filter(Cart.Cid == cid).update({"Cstatus": 2, "Pnum": 0})
 
+    @close_session
     def update_num_cart(self, pnum, cid):
-        try:
-            self.session.query(Cart).filter(Cart.Cid == cid).update({"Pnum": pnum})
-            self.session.commit()
-        except Exception as e:
-            print(e.message)
-            self.session.rollback()
-        finally:
-            self.session.close()
+        self.session.query(Cart).filter(Cart.Cid == cid).update({"Pnum": pnum, "Cstatus": 1})
 
     @close_session
     def get_cart_by_uid_pid(self, uid, pid):
-        return self.session.query(Cart.Cid).filter(Cart.Uid == uid and Cart.Pid == pid and Cart.Cstatus == 1).scalar()
+        return self.session.query(Cart.Cid, Cart.Pnum, Cart.Cstatus).filter(Cart.Uid == uid, Cart.Pid == pid).first()

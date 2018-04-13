@@ -91,7 +91,7 @@ class Cart(Base):
     Cid = Column(String(64), primary_key=True)
     Uid = Column(String(64), nullable=False)
     Pid = Column(String(64), nullable=False)
-    Pnum = Column(INTEGER(unsigned=True), default=1)
+    Pnum = Column(Integer)
     Cstatus = Column(Integer, default=1)  # 商品在购物车状态，1 在购物车， 2 已从购物车移除
 
 

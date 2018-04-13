@@ -7,6 +7,7 @@ import json
 import uuid
 from config.status import response_ok as ok
 from common.get_model_return_list import get_model_return_list
+from common.lovebreakfast_error import dberror
 
 
 class CCarts():
@@ -43,13 +44,16 @@ class CCarts():
             cart_info_list = []
             cart_list = self.scart.get_carts_by_Uid(uid)
             for cart in cart_list:
-                cart_info = get_model_return_list(self.spro.get_all_pro_fro_carts(cart.Pid))
+                cart_info = get_model_return_list(self.spro.get_all_pro_fro_carts(cart.Pid))[0]
                 cart_info["Pnum"] = cart.Pnum
+                if cart.Cstatus != 1:
+                    continue
                 cart_info_list.append(cart_info)
             res_get_all["data"] = cart_info_list
             res_get_all["status"] = ok
             from config.messages import messages_get_cart_success as msg
             res_get_all["message"] = msg
+            return res_get_all
 
         except Exception as e:
             print(e.message)
@@ -64,19 +68,30 @@ class CCarts():
         uid = args.get("token")
         pid = data.get("Pid")
         pnum = data.get("Pnum")
-        cid = self.scart.get_cart_by_uid_pid(uid, pid)
+
         try:
-            if cid:
-                self.scart.update_num_cart(pnum, cid)
+            cart = self.scart.get_cart_by_uid_pid(uid, pid)
+            if cart:
+                if cart.Pnum + pnum < 0:
+                    from config.messages import error_messages_pnum_illegal as msg
+                    from config.status import response_error as status
+                    from config.status_code import error_pnum_illegal as code
+                    return {"status": status, "statuscode": code, "message": msg}
+                elif cart.Pnum + pnum == 0:
+                    self.scart.del_carts(cart.Cid)
+                else:
+                    self.scart.update_num_cart(pnum + cart.Pnum, cart.Cid)
             else:
                 self.scart.add_carts(
-                    {
+                    **{
                         "Cid": str(uuid.uuid4()),
                         "Pnum": pnum,
                         "Uid": uid,
                         "Cstatus": 1,
                         "Pid": pid
                     })
+        except dberror:
+            return self.system_error
         except Exception as e:
             print(e.message)
             return self.system_error
@@ -92,13 +107,13 @@ class CCarts():
         uid = args.get("token")
         pid = data.get("Pid")
         try:
-            cid = self.scart.get_cart_by_uid_pid(uid, pid)
-            if not cid:
+            cart = self.scart.get_cart_by_uid_pid(uid, pid)
+            if not cart:
                 from config.status import response_system_error as status
                 from config.status_code import error_cart_no_pro as code
                 from config.messages import error_messages_cart_no_pro as msg
                 return {"status": status, "statuscode": code, "message": msg}
-            self.scart.del_carts(cid)
+            self.scart.del_carts(cart.Cid)
             from config.messages import messages_del_cart as msg
             return {"status": ok, "message": msg}
         except Exception as e:

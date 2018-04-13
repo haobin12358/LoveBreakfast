@@ -82,7 +82,6 @@ class SProduct():
             self.session.close()
         return pprice
 
-    @trans_params
     def get_all_pro_fro_carts(self, pid):
         """
         通过pid搜索project信息
@@ -90,12 +89,13 @@ class SProduct():
         :return:
         """
         try:
-            return self.session.query(
+            res = self.session.query(
                 model.Products.Pid, model.Products.Pimage,
                 model.Products.Pname, model.Products.Pstatus,
                 model.Products.P_sales_volume, model.Products.Pprice,
                 model.Products.Pscore
-            ).filter(model.Products.Pid == pid).all()
+            ).filter_by(Pid=pid).all()
+            return res
         except Exception as e:
             self.session.rollback()
             raise e
