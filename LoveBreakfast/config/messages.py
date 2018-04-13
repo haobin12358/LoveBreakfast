@@ -18,3 +18,4 @@ messages_update_order_status_ok = "Update the order status is ok ."
 messages_error_wrong_status_code = "The order status is not found !"
 NO_THIS_CATEGORY = "not found this category !"  # 不存在此分类
 NO_THIS_Shop = "not found this shop !"  # 不存在这个商店
+messages_get_item_ok = "获取信息成功"

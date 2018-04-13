@@ -24,12 +24,6 @@ class COrders():
         self.system_error["status"] = response_system_error
         self.system_error["messages"] = error_system_error
 
-        from services.SOrders import SOrders
-        self.sorders = SOrders()
-
-        from services.SProduct import SProduct
-        self.sproduct = SProduct()
-
         from services.SUsers import SUsers
         self.susers = SUsers()
 
@@ -40,7 +34,9 @@ class COrders():
 
         Uid = args["token"]
         # 暂时不处理过滤
-        order_list = self.sorders.get_all_order_by_uid(Uid)
+        from services.SOrders import SOrders
+        sorders = SOrders()
+        order_list = sorders.get_all_order_by_uid(Uid)
         data = []
         for row in order_list:
             data_item = {}
@@ -49,7 +45,7 @@ class COrders():
             data_item["Ostatus"] = row.Ostatus
             data_item["Oprice"] = row.Oprice
             data_item["Order_items"] = []
-            order_items = self.sorders.get_order_item_by_oid(row.Oid)
+            order_items = sorders.get_order_item_by_oid(row.Oid)
             for raw in order_items:
                 order_item = {}
                 order_item["Pnum"] = raw.Pnum
@@ -70,28 +66,34 @@ class COrders():
             return self.param_miss
         Oid = args["Oid"]
         Uid = args["token"]
-        order_abo = self.sorders.get_order_abo_by_oid(Oid)
+        from services.SOrders import SOrders
+        sorders = SOrders()
+        order_abo = sorders.get_order_abo_by_oid(Oid)
         data = {}
         data["Oid"] = Oid
         data["Otime"] = order_abo.Otime
         data["Ostatus"] = order_abo.Ostatus
         data["Oprice"] = order_abo.Oprice
         Lid = order_abo.Lid
-        labo = self.sorders.get_lname_lno_lboxno_by_lid(Lid)
+        labo = sorders.get_lname_lno_lboxno_by_lid(Lid)
         data["Lname"] = labo.Lname
         data["Lno"] = labo.Lno
         data["Lboxno"] = labo.Lboxno
-        users = self.susers.get_uname_utel_by_uid(Uid)
+        from services.SUsers import SUsers
+        susers = SUsers()
+        users = susers.get_uname_utel_by_uid(Uid)
         data["Utel"] = users.Utel
         data["Uname"] = users.Uname
         data["Oabo"] = order_abo.Oabo
         data["Order_items"] = []
-        order_items = self.sorders.get_order_item_by_oid(Oid)
+        order_items = sorders.get_order_item_by_oid(Oid)
         for row in order_items:
             order_item = {}
             order_item["Pnum"] = row.Pnum
             order_item["Pid"] = row.Pid
-            product = self.sproduct.get_product_all_by_pid(row.Pid)
+            from services.SProduct import SProduct
+            sproduct = SProduct()
+            product = sproduct.get_product_all_by_pid(row.Pid)
             order_item["Pname"] = row.Pname
             order_item["Psalenum"] = row.P_sales_volume
             order_item["Plevel"] = row.Pscore
@@ -108,15 +110,15 @@ class COrders():
         if "token" not in args:
             return self.param_miss
 
-        if "Otime" not in data or "Otruetimemin" not in data or "Otruetimemax" not in data:
+        if "Otime" not in data or "Omintime" not in data or "Omaxtime" not in data:
             return self.param_miss
 
-        if "order_items" not in data:
+        if "Order_items" not in data:
             return self.system_error
         Uid = args["token"]
         Otime = data["Otime"]
-        Otruetimemin = data["Otruetimemin"]
-        Otruetimemax = data["Otruetimemax"]
+        Otruetimemin = data["Omintime"]
+        Otruetimemax = data["Omaxtime"]
         Ostatus = 5
 
         if "Lname" not in data or "Lno" not in data or "Lboxno" not in data:
@@ -133,18 +135,20 @@ class COrders():
         Lno = data["Lno"]
         Lboxno = data["Lboxno"]
 
-        Lid = self.sorders.get_lid_by_lname_lno_lboxno(Lname, Lno, Lboxno)
+        from services.SOrders import SOrders
+        sorders = SOrders()
+        Lid = sorders.get_lid_by_lname_lno_lboxno(Lname, Lno, Lboxno)
         if not Lid:
             return self.system_error
         Oabo = None
         if "Oabo" in data:
-            Oabo = data["Labo"]
+            Oabo = data["Oabo"]
 
-        add_main_order = self.sorders.add_main_order(Otime, Otruetimemin, Otruetimemax, Ostatus, None, Uid, Lid, Oabo)
+        add_main_order = sorders.add_main_order(Otime, Otruetimemin, Otruetimemax, Ostatus, None, Uid, Lid, Oabo)
         if not add_main_order:
             return self.system_error
 
-        order_item = data["order_items"]
+        order_item = data["Order_items"]
         add_order_items_by_uid = self.add_order_items(order_item, add_main_order)
 
         from config.messages import messages_add_main_order_success
@@ -155,22 +159,33 @@ class COrders():
 
     def add_order_items(self, order_item_list, oid):
 
-        order_item_list = json.loads(order_item_list)
+        #order_item_list = json.loads(order_item_list)
         order_price = 0
+        from services.SOrders import SOrders
+        sorders = SOrders()
         for row in order_item_list:
             Pid = row["Pid"]
             Pnum = row["Pnum"]
-            add_order_item = self.sorders.add_order_item(oid, Pid, Pnum)
+            add_order_item = sorders.add_order_item(oid, Pid, Pnum)
             if not add_order_item:
                 return self.system_error
-            order_item_price = self.sproduct.get_pprice_by_pid(Pid)
+            from services.SProduct import SProduct
+            sproduct = SProduct()
+            order_item_price = sproduct.get_pprice_by_pid(Pid)
             if not order_item_price:
-                return self.system_error
+                from config.status import response_system_error
+                from config.messages import error_system_error
+                system_error = {}
+                system_error["status"] = response_system_error
+                system_error["messages"] = error_system_error
+                return system_error
             order_price = order_price + order_item_price
 
+        from services.SOrders import SOrders
+        sorders = SOrders()
         update_main_order = {}
         update_main_order["Oprice"] = order_price
-        response_update_main_order = self.sorders.update_price_by_oid(oid, update_main_order)
+        response_update_main_order = sorders.update_price_by_oid(oid, update_main_order)
 
         if not response_update_main_order:
             return self.system_error
@@ -190,6 +205,8 @@ class COrders():
         if "Ostatus" not in data or "Oid" not in data:
             return self.param_miss
 
+        from services.SOrders import SOrders
+        sorders = SOrders()
         # 处理token过程，这里未设计
 
         Ostatus = data["Ostatus"]
@@ -209,7 +226,7 @@ class COrders():
         update_ostatus = {}
         update_ostatus["Ostatus"] = Ostatus
 
-        response_update_order_status = self.sorders.update_status_by_oid(Oid, update_ostatus)
+        response_update_order_status = sorders.update_status_by_oid(Oid, update_ostatus)
 
         if not response_update_order_status:
             return self.system_error
@@ -220,3 +237,37 @@ class COrders():
         update_order_status_ok["messages"] = messages_update_order_status_ok
 
         return update_order_status_ok
+
+    def get_order_user(self):
+        args = request.args.to_dict()
+        if "token" not in args:
+            return self.param_miss
+        Uid = args["token"]
+
+        from services.SUsers import SUsers
+        susers = SUsers()
+        users_info = susers.get_all_users_info(Uid)
+
+        if not users_info:
+            return self.system_error
+
+        response_user_info = {}
+        Utel = users_info.Utel
+        response_user_info["Utel"] = Utel
+        if "Uname" in users_info:
+            Uname = users_info.Uname
+            response_user_info["Uname"] = Uname
+        else:
+            response_user_info["Uname"] = None
+        if "Usex" in users_info:
+            Usex = users_info.Usex
+            response_user_info["Usex"] = Usex
+        else:
+            response_user_info["Usex"] = None
+
+        response_of_get_all = {}
+        response_of_get_all["status"] = response_ok
+        from config.messages import messages_get_item_ok
+        response_of_get_all["messages"] = messages_get_item_ok
+        response_of_get_all["data"] = response_user_info
+        return response_of_get_all
