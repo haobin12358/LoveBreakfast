@@ -9,7 +9,7 @@ from config.status import response_ok
 
 class COrders():
 
-    def __int__(self):
+    def __init__(self):
         from config.status import response_error
         from config.status_code import error_param_miss
         from config.messages import error_messages_param_miss
@@ -46,19 +46,25 @@ class COrders():
             data_item["Oprice"] = row.Oprice
             data_item["Order_items"] = []
             order_items = sorders.get_order_item_by_oid(row.Oid)
+            from services.SProduct import SProduct
+            sproduct = SProduct()
             for raw in order_items:
                 order_item = {}
                 order_item["Pnum"] = raw.Pnum
                 Pid = raw.Pid
-                product = self.sproduct.get_product_all_by_pid(Pid)
+                product = sproduct.get_product_all_by_pid(Pid)
                 order_item["Pname"] = product.Pname
                 order_item["Psalenum"] = product.P_sales_volume
                 order_item["Plevel"] = product.Pscore
                 order_item["Pprice"] = product.Pprice
                 data_item["Order_items"].append(order_item)
             data.append(data_item)
-        response_ok["data"] = order_list
-        return response_ok
+
+        response_make_main_order = {}
+        response_make_main_order["status"] = response_ok
+        response_make_main_order["messages"] = ""
+        response_make_main_order["data"] = data
+        return response_make_main_order
 
     def get_order_abo(self):
         args = request.args.to_dict()
@@ -94,13 +100,17 @@ class COrders():
             from services.SProduct import SProduct
             sproduct = SProduct()
             product = sproduct.get_product_all_by_pid(row.Pid)
-            order_item["Pname"] = row.Pname
-            order_item["Psalenum"] = row.P_sales_volume
-            order_item["Plevel"] = row.Pscore
-            order_item["Pprice"] = row.Pprice
+            order_item["Pname"] = product.Pname
+            order_item["Psalenum"] = product.P_sales_volume
+            order_item["Plevel"] = product.Pscore
+            order_item["Pprice"] = product.Pprice
             data["Order_items"].append(order_item)
-        response_ok["data"] = data
-        return response_ok
+
+        response_make_main_order = {}
+        response_make_main_order["status"] = response_ok
+        response_make_main_order["messages"] = ""
+        response_make_main_order["data"] = data
+        return response_make_main_order
 
     def make_main_order(self):
         args = request.args.to_dict()
@@ -254,12 +264,12 @@ class COrders():
         response_user_info = {}
         Utel = users_info.Utel
         response_user_info["Utel"] = Utel
-        if "Uname" in users_info:
+        if users_info.Uname not in ["", None]:
             Uname = users_info.Uname
             response_user_info["Uname"] = Uname
         else:
             response_user_info["Uname"] = None
-        if "Usex" in users_info:
+        if users_info.Usex not in ["", None]:
             Usex = users_info.Usex
             response_user_info["Usex"] = Usex
         else:

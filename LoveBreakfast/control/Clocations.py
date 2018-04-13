@@ -9,7 +9,7 @@ from config.status import response_ok
 
 
 class Clocations():
-    def __int__(self):
+    def __init__(self):
         from config.status import response_error
         from config.status_code import error_param_miss
         from config.messages import error_messages_param_miss

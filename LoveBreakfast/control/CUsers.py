@@ -9,7 +9,7 @@ from config.status import response_ok
 
 
 class CUsers():
-    def __int__(self):
+    def __init__(self):
         from config.status import response_error
         from config.status_code import error_param_miss
         from config.messages import error_messages_param_miss
@@ -190,12 +190,12 @@ class CUsers():
         response_user_info = {}
         Utel = users_info.Utel
         response_user_info["Utel"] = Utel
-        if "Uname" in users_info:
+        if users_info.Uname not in ["", None]:
             Uname = users_info.Uname
             response_user_info["Uname"] = Uname
         else:
             response_user_info["Uname"] = None
-        if "Usex" in users_info:
+        if users_info.Usex not in["", None]:
             Usex = users_info.Usex
             response_user_info["Usex"] = Usex
         else:

@@ -97,6 +97,7 @@ class SOrders():
 
     def update_status_by_oid(self, oid, order_status):
         try:
+            # add 和 update 修改
             self.session.query(model.Ordermain).filter_by(Oid=oid).update(order_status)
             self.session.commit()
             self.session.close()
