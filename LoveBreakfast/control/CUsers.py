@@ -30,6 +30,7 @@ class CUsers():
     def register(self):
         data = request.data
         print(data)
+        data = json.loads(data)
 
         if "Utel" not in data or "Upwd" not in data:
             return self.param_miss
@@ -62,6 +63,7 @@ class CUsers():
     def login(self):
         data = request.data
         print(data)
+        data = json.loads(data)
 
         if "Utel" not in data or "Upwd" not in data:
             return self.param_miss
@@ -110,6 +112,7 @@ class CUsers():
         Uid = args["token"]
 
         data = request.data
+        data = json.loads(data)
 
         if "Uname" not in data and "Usex" not in data:
             return self.param_miss
@@ -141,6 +144,7 @@ class CUsers():
         Uid = args["token"]
 
         data = request.data
+        data = json.loads(data)
 
         if "Upwd" not in data:
             return self.param_miss
@@ -185,8 +189,12 @@ class CUsers():
             response_user_info["Usex"] = Usex
         else:
             response_user_info["Usex"] = None
+        response_user_info["Ucoin"] = users_info.Ucoin
+        response_user_info["Uinvate"] = users_info.Uinvate
 
         response_of_get_all = {}
         response_of_get_all["status"] = response_ok
         response_of_get_all["messages"] = response_user_info
+        response_of_get_all["data"] = response_user_info
+        return response_of_get_all
         

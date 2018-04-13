@@ -69,16 +69,31 @@ class SProduct():
             self.session.commit()
         except Exception as e:
             print(e.message)
+            self.session.rollback()
         finally:
             self.session.close()
 
     def get_pprice_by_pid(self, pid):
         pprice = None
         try:
-            pprice = self.session.query(models.Products.Pprice).filter_by(Pid=pid).scalar()
+            pprice = self.session.query(model.Products.Pprice).filter_by(Pid=pid).scalar()
         except Exception as e:
             print(e.message)
+            self.session.rollback()
         finally:
             self.session.close()
         return pprice
+
+    def get_product_all_by_pid(self, pid):
+        product = None
+        try:
+            product = self.session.query(model.Products.Pname, model.Products.P_sales_volume, model.Products.Pscore,
+                                         model.Products.Pprice).filter_by(Pid = pid).first()
+        except Exception as e:
+            print(e.message)
+            self.session.rollback()
+        finally:
+            self.session.close()
+        return product
+
 

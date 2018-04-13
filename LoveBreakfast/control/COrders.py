@@ -30,15 +30,80 @@ class COrders():
         from services.SProduct import SProduct
         self.sproduct = SProduct()
 
+        from services.SUsers import SUsers
+        self.susers = SUsers()
+
     def get_order_list(self):
-        pass
+        args = request.args.to_dict()
+        if "token" not in args:
+            return self.param_miss
+
+        Uid = args["token"]
+        # 暂时不处理过滤
+        order_list = self.sorders.get_all_order_by_uid(Uid)
+        data = []
+        for row in order_list:
+            data_item = {}
+            data_item["Oid"] = row.Oid
+            data_item["Otime"] = row.Otime
+            data_item["Ostatus"] = row.Ostatus
+            data_item["Oprice"] = row.Oprice
+            data_item["Order_items"] = []
+            order_items = self.sorders.get_order_item_by_oid(row.Oid)
+            for raw in order_items:
+                order_item = {}
+                order_item["Pnum"] = raw.Pnum
+                Pid = raw.Pid
+                product = self.sproduct.get_product_all_by_pid(Pid)
+                order_item["Pname"] = product.Pname
+                order_item["Psalenum"] = product.P_sales_volume
+                order_item["Plevel"] = product.Pscore
+                order_item["Pprice"] = product.Pprice
+                data_item["Order_items"].append(order_item)
+            data.append(data_item)
+        response_ok["data"] = order_list
+        return response_ok
 
     def get_order_abo(self):
-        pass
+        args = request.args.to_dict()
+        if "token" not in args or "Oid" not in args:
+            return self.param_miss
+        Oid = args["Oid"]
+        Uid = args["token"]
+        order_abo = self.sorders.get_order_abo_by_oid(Oid)
+        data = {}
+        data["Oid"] = Oid
+        data["Otime"] = order_abo.Otime
+        data["Ostatus"] = order_abo.Ostatus
+        data["Oprice"] = order_abo.Oprice
+        Lid = order_abo.Lid
+        labo = self.sorders.get_lname_lno_lboxno_by_lid(Lid)
+        data["Lname"] = labo.Lname
+        data["Lno"] = labo.Lno
+        data["Lboxno"] = labo.Lboxno
+        users = self.susers.get_uname_utel_by_uid(Uid)
+        data["Utel"] = users.Utel
+        data["Uname"] = users.Uname
+        data["Oabo"] = order_abo.Oabo
+        data["Order_items"] = []
+        order_items = self.sorders.get_order_item_by_oid(Oid)
+        for row in order_items:
+            order_item = {}
+            order_item["Pnum"] = row.Pnum
+            order_item["Pid"] = row.Pid
+            product = self.sproduct.get_product_all_by_pid(row.Pid)
+            order_item["Pname"] = row.Pname
+            order_item["Psalenum"] = row.P_sales_volume
+            order_item["Plevel"] = row.Pscore
+            order_item["Pprice"] = row.Pprice
+            data["Order_items"].append(order_item)
+        response_ok["data"] = data
+        return response_ok
 
     def make_main_order(self):
         args = request.args.to_dict()
         data = request.data
+        data = json.loads(data)
 
         if "token" not in args:
             return self.param_miss
@@ -118,6 +183,7 @@ class COrders():
     def update_order_status(self):
         args = request.args.to_dict()
         data = request.data
+        data = json.loads(data)
 
         if "token" not in args:
             return self.param_miss

@@ -21,6 +21,8 @@ class Users(Base):
     Upwd = Column(String(32), nullable=False)
     Uname = Column(String(64))
     Usex = Column(Integer)
+    Ucoin = Column(float)
+    Uinvate = Column(String(64))
 
 class Locations(Base):
     __tablename__ = "Locations"
