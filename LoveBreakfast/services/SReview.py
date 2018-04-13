@@ -21,13 +21,27 @@ class SReview():
         pass
 
     # 创建评论
-    def create_review(self,review):
+    def create_review(self, review):
         try:
+            print(1)
             self.session.add(review)
+            self.session.commit()
+            return True
         except Exception as e:
             print e.message
         finally:
             self.session.close()
+
+    # 根据oid和pid获取评论信息
+    def get_review(self, oid):
+        try:
+            review_list = self.session.query(model.Review.Pid, model.Review.Rscore,
+                                             model.Review.Rcontent).filter_by(Oid=oid).all()
+        except Exception as e:
+            print e.message
+        finally:
+            self.session.close()
+        return review_list
 
     # 根据用户id获取评论信息
     def get_user_review(self, uid):

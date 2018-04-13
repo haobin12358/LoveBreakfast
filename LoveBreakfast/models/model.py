@@ -46,13 +46,11 @@ class Products(Base):
 class Review(Base):
     __tablename__ = "Review"
     Rid = Column(String(64), primary_key=True)
-    Oid = Column(String(64), primary_key=True)  # 对应的订单编号
-    Pid = Column(String(64), primary_key=True)  # 对应的商品编号
-    Rpname = Column(String(64), primary_key=True)  # 对应的商品名称
-    Rpimage = Column(String(64), primary_key=True)  # 对应的商品图片
+    Oid = Column(String(64), nullable=False)  # 对应的订单编号
+    Pid = Column(String(64), nullable=False)  # 对应的商品编号
     Rscore = Column(Integer, nullable=True)  # 对应的商品评分
-    Rcontent = Column(Text)  # 评价内容
-    Rstatus = Column(String(64), primary_key=True)  # 对应的评价状态.分为on和off
+    Rcontent = Column(Text, nullable=True)  # 评价内容
+    Rstatus = Column(String(64))  # 对应的评价状态.分为on和off
 
 class Category(Base):
     __tablename__ = "Category"
