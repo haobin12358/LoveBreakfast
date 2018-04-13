@@ -16,7 +16,7 @@ class SCarts(SBase):
 
     @close_session
     def get_carts_by_Uid(self, uid):
-        return self.session.query(Cart.Cid, Cart.Pid, Cart.Pnum, Cart.Cstatus).filter(Cart.Uid == uid).all()
+        return self.session.query(Cart.Caid, Cart.Pid, Cart.Pnum, Cart.Castatus).filter(Cart.Uid == uid).all()
 
     @close_session
     def add_carts(self, **kwargs):
@@ -27,13 +27,13 @@ class SCarts(SBase):
         self.session.add(cart)
 
     @close_session
-    def del_carts(self, cid):
-        self.session.query(Cart).filter(Cart.Cid == cid).update({"Cstatus": 2, "Pnum": 0})
+    def del_carts(self, caid):
+        self.session.query(Cart).filter(Cart.Caid == caid).update({"Castatus": 2, "Pnum": 0})
 
     @close_session
-    def update_num_cart(self, pnum, cid):
-        self.session.query(Cart).filter(Cart.Cid == cid).update({"Pnum": pnum, "Cstatus": 1})
+    def update_num_cart(self, pnum, caid):
+        self.session.query(Cart).filter(Cart.Caid == caid).update({"Pnum": pnum, "Castatus": 1})
 
     @close_session
     def get_cart_by_uid_pid(self, uid, pid):
-        return self.session.query(Cart.Cid, Cart.Pnum, Cart.Cstatus).filter(Cart.Uid == uid, Cart.Pid == pid).first()
+        return self.session.query(Cart.Caid, Cart.Pnum, Cart.Castatus).filter(Cart.Uid == uid, Cart.Pid == pid).first()

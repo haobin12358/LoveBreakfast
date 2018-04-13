@@ -88,11 +88,27 @@ class Orderpart(Base):
 
 class Cart(Base):
     __tablename__ = "Cart"
-    Cid = Column(String(64), primary_key=True)
+    Caid = Column(String(64), primary_key=True)
     Uid = Column(String(64), nullable=False)
     Pid = Column(String(64), nullable=False)
     Pnum = Column(Integer)
-    Cstatus = Column(Integer, default=1)  # 商品在购物车状态，1 在购物车， 2 已从购物车移除
+    Castatus = Column(Integer, default=1)  # 商品在购物车状态，1 在购物车， 2 已从购物车移除
+
+class Coupons(Base):
+    __tablename__ = "Coupon"
+    Couid = Column(String(64), primary_key=True)
+    Coufilter = Column(Float)  # 优惠券优惠条件
+    Coudiscount = Column(Float)  # 折扣
+    Couamount = Column(Float)  # 优惠金额
+
+class Cardpackage(Base):
+    __tablename__ = "Cardpackage"
+    Carid = Column(String(64), primary_key=True)
+    Uid = Column(String(64), nullable=False)
+    Carstatus = Column(Integer, default=1)  # 卡包中优惠券的状态 {1:可使用，2: 不可使用}
+    Carstart = Column(String(14))
+    Carend = Column(String(14))
+    Couid = Column(String(64), nullable=False)
 
 
 class databse_deal():
@@ -134,7 +150,6 @@ def create():
 
 def drop():
     databse_deal().drop_database()
-
 
 
 if __name__ == "__main__":

@@ -46,7 +46,7 @@ class CCarts():
             for cart in cart_list:
                 cart_info = get_model_return_list(self.spro.get_all_pro_fro_carts(cart.Pid))[0]
                 cart_info["Pnum"] = cart.Pnum
-                if cart.Cstatus != 1:
+                if cart.Castatus != 1:
                     continue
                 cart_info_list.append(cart_info)
             res_get_all["data"] = cart_info_list
@@ -78,16 +78,16 @@ class CCarts():
                     from config.status_code import error_pnum_illegal as code
                     return {"status": status, "statuscode": code, "message": msg}
                 elif cart.Pnum + pnum == 0:
-                    self.scart.del_carts(cart.Cid)
+                    self.scart.del_carts(cart.Caid)
                 else:
-                    self.scart.update_num_cart(pnum + cart.Pnum, cart.Cid)
+                    self.scart.update_num_cart(pnum + cart.Pnum, cart.Caid)
             else:
                 self.scart.add_carts(
                     **{
-                        "Cid": str(uuid.uuid4()),
+                        "Caid": str(uuid.uuid4()),
                         "Pnum": pnum,
                         "Uid": uid,
-                        "Cstatus": 1,
+                        "Castatus": 1,
                         "Pid": pid
                     })
         except dberror:
@@ -108,12 +108,12 @@ class CCarts():
         pid = data.get("Pid")
         try:
             cart = self.scart.get_cart_by_uid_pid(uid, pid)
-            if not cart or cart.Cstatus == 2:
+            if not cart or cart.Castatus == 2:
                 from config.status import response_system_error as status
                 from config.status_code import error_cart_no_pro as code
                 from config.messages import error_messages_cart_no_pro as msg
                 return {"status": status, "statuscode": code, "message": msg}
-            self.scart.del_carts(cart.Cid)
+            self.scart.del_carts(cart.Caid)
             from config.messages import messages_del_cart as msg
             return {"status": ok, "message": msg}
         except Exception as e:
