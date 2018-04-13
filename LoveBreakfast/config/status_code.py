@@ -11,3 +11,5 @@ error_no_location = 405400
 error_wrong_status_code = 405401
 NO_THIS_CATEGORY = 405202
 NO_THIS_Shop = 405203
+error_cart_no_pro = 405601
+error_pnum_illegal = 405602
