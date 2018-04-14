@@ -20,11 +20,21 @@ class CProduct():
 
     #  获取全部商品列表
     def get_all(self):
-        pro_list_of_control = self.service_product.get_all()
+        pro_list_of_service = self.service_product.get_all()
+
+        pro_list_of_control  = []
+        for i in range(len(pro_list_of_service)):
+            dic_of_pro = {}
+            dic_of_pro["Pid"] = pro_list_of_service[i].Pid
+            dic_of_pro["Pname"] = pro_list_of_service[i].Pname
+            dic_of_pro["Pprice"] = pro_list_of_service[i].Pprice
+            dic_of_pro["Pimage"] = pro_list_of_service[i].Pimage
+            dic_of_pro["PsalesVolume"] = pro_list_of_service[i].P_sales_volume
+            dic_of_pro["Pscore"] = pro_list_of_service[i].Pscore
+            dic_of_pro["Pnum"] = 0  # 前端控制用
+            pro_list_of_control.append(dic_of_pro)
+
         print(pro_list_of_control)
-        # for i in range(pro_list_of_control):
-
-
         return {
             "message": "get pro_list success !",
             "status": 200,
@@ -32,7 +42,7 @@ class CProduct():
         }
 
     #  根据商品id获取商品详情
-    def get_info(self, pid):
+    def get_info_by_id(self):
         args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
         # 判断url参数是否异常
         if len(args) != 1 or "Pid" not in args.keys():
@@ -45,7 +55,9 @@ class CProduct():
 
         pid_to_str = get_str(args, "Pid")
         # 判断是否存在此pid
+        print type(pid_to_str)
         all_product_id = self.service_product.get_all_pid()
+        print type(all_product_id[0])
         if pid_to_str not in all_product_id:
             message, status, statuscode = import_status("NO_THIS_PRODUCT", "response_error", "NO_THIS_PRODUCT")
             return {
@@ -56,17 +68,15 @@ class CProduct():
 
         # 返回商品详情
         proabo_of_controller = {}
-        proabo_of_service = self.service_product.get_pro_info_by_uid(pid_to_str)
+        proabo_of_service = self.service_product.get_pro_info_by_pid(pid_to_str)
         proabo_of_controller["Pname"] = proabo_of_service.Pname
         proabo_of_controller["Pprice"] = proabo_of_service.Pprice
         proabo_of_controller["Pimage"] = proabo_of_service.Pimage
-        proabo_of_controller["Sid"] = proabo_of_service.Sid
-        proabo_of_controller["Pabo"] = proabo_of_service.Pabo
-        proabo_of_controller["Pstatus"] = proabo_of_service.Pstatus
+        proabo_of_controller["Pinfo"] = proabo_of_service.Pinfo
         return {
             "status": 200,
             "message": "get pro_info success !",
-            "productinfo": proabo_of_controller,
+            "data": proabo_of_controller,
         }
 
     # 根据分类id获取商品信息

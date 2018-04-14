@@ -22,10 +22,13 @@ class Users(Base):
     Upwd = Column(String(32), nullable=False)
     Uname = Column(String(64))
     Usex = Column(Integer)
+    Ucoin = Column(Float)
+    Uinvate = Column(String(64))
 
 class Locations(Base):
     __tablename__ = "Locations"
     Lid = Column(String(64), primary_key=True)
+    Litem = Column(Integer, nullable=False)
     Lname = Column(String(64), nullable=False)
     Lno = Column(Integer, nullable=False)
     Lstatus = Column(Integer, nullable=False)
@@ -42,15 +45,17 @@ class Products(Base):
     Pimage = Column(String(64), nullable=False)
     Pinfo = Column(Text)  # 商品介绍
     P_sales_volume = Column(Integer, nullable=False)  # 商品销量
-    Pscore = Column(Integer, nullable=True)  # 商品评分
+    Pscore = Column(Float, nullable=True)  # 商品评分
 
 class Review(Base):
     __tablename__ = "Review"
     Rid = Column(String(64), primary_key=True)
-    Oid = Column(String(64), primary_key=True)  # 对应的订单编号
-    Pid = Column(String(64), primary_key=True)  # 对应的商品编号
+    Oid = Column(String(64), nullable=False)  # 对应的订单编号
+    Pid = Column(String(64), nullable=False)  # 对应的商品编号
+    Uid = Column(String(64), nullable=False)  # 用户id
     Rscore = Column(Integer, nullable=True)  # 对应的商品评分
-    Rcontent = Column(Text)  # 评价内容
+    Rcontent = Column(Text, nullable=True)  # 评价内容
+    Rstatus = Column(String(64))  # 对应的评价状态.分为on和off
 
 class Category(Base):
     __tablename__ = "Category"

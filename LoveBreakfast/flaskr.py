@@ -7,6 +7,8 @@ from apis.ACarts import ACarts
 from apis.ACategory import ACategory
 from apis.AShop import AShop
 from apis.AReview import AReview
+from apis.AOrders import AOrders
+from apis.ALocations import ALocations
 
 app = Flask(__name__)
 api = flask_restful.Api(app)
@@ -17,6 +19,8 @@ api.add_resource(ACarts, "/love/breakfast/salelist/<string:cart>")
 api.add_resource(AReview, "/love/breakfast/review/<string:review>")
 api.add_resource(ACategory, "/love/breakfast/category/<string:category>")
 api.add_resource(AShop, "/love/breakfast/shop/<string:shop>")
+api.add_resource(AOrders, "/love/breakfast/orders/<string:orders>")
+api.add_resource(ALocations, "/love/breakfast/locations/<string:locations>")
 
 if __name__ == '__main__':
     app.run('0.0.0.0', 7443, debug=True)

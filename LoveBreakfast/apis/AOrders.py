@@ -22,7 +22,8 @@ class AOrders(Resource):
         control_order = COrders()
         apis = {
             "get_order_list":"control_order.get_order_list()",
-            "get_order_abo":"control_order.get_order_abo()"
+            "get_order_abo":"control_order.get_order_abo()",
+            "get_order_user": "control_order.get_order_user()"
         }
 
         if orders not in apis:

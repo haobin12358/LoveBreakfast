@@ -22,7 +22,7 @@ class SProduct():
 
     # 获取所有商品信息
     def get_all(self):
-        pro_list_of_service = None
+        pro_list_of_service = []
         try:
             pro_list_of_service = self.session.query(model.Products.Pid, model.Products.Pname,
                                                      model.Products.Pprice,model.Products.Pimage,
@@ -35,20 +35,28 @@ class SProduct():
         print(pro_list_of_service)
         return pro_list_of_service
 
-
-
-
     # 根据商品id获取商品详情
     def get_pro_info_by_pid(self, pid):
         pro_abo = None
         try:
             pro_abo = self.session.query(model.Products.Pname, model.Products.Pprice,
-                                         model.Products.Pimage,).filter_by(Pid=pid).first()
+                                         model.Products.Pimage, model.Products.Pinfo).filter_by(Pid=pid).first()
         except Exception as e:
             print e.message
         finally:
             self.session.close()
         return pro_abo
+    # 获取所有商品id
+
+    @trans_params
+    def get_all_pid(self):
+        try:
+            pid_list = self.session.query(model.Products.Pid).all()
+        except Exception as e:
+            print e.message
+        finally:
+            self.session.close()
+        return pid_list
 
     # 根据分类id获取全部商品信息
     def get_pro_id_by_cid(self, cid):
@@ -69,6 +77,7 @@ class SProduct():
             self.session.commit()
         except Exception as e:
             print(e.message)
+            self.session.rollback()
         finally:
             self.session.close()
 
@@ -78,9 +87,22 @@ class SProduct():
             pprice = self.session.query(model.Products.Pprice).filter_by(Pid=pid).scalar()
         except Exception as e:
             print(e.message)
+            self.session.rollback()
         finally:
             self.session.close()
         return pprice
+
+    def get_product_all_by_pid(self, pid):
+        product = None
+        try:
+            product = self.session.query(model.Products.Pname, model.Products.P_sales_volume, model.Products.Pscore,
+                                         model.Products.Pprice).filter_by(Pid = pid).first()
+        except Exception as e:
+            print(e.message)
+            self.session.rollback()
+        finally:
+            self.session.close()
+        return product
 
     def get_all_pro_fro_carts(self, pid):
         """

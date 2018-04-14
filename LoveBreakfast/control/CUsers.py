@@ -9,7 +9,7 @@ from config.status import response_ok
 
 
 class CUsers():
-    def __int__(self):
+    def __init__(self):
         from config.status import response_error
         from config.status_code import error_param_miss
         from config.messages import error_messages_param_miss
@@ -24,17 +24,17 @@ class CUsers():
         self.system_error["status"] = response_system_error
         self.system_error["messages"] = error_system_error
 
-        from services.SUsers import SUsers
-        self.susers = SUsers()
-
     def register(self):
         data = request.data
         print(data)
+        data = json.loads(data)
 
         if "Utel" not in data or "Upwd" not in data:
             return self.param_miss
 
-        list_utel = self.susers.get_all_user_tel()
+        from services.SUsers import SUsers
+        susers = SUsers()
+        list_utel = susers.get_all_user_tel()
 
         if list_utel == False:
             return self.system_error
@@ -49,12 +49,12 @@ class CUsers():
             repeated_tel["messages"] = messages_repeat_tel
             return repeated_tel
 
-        is_register = self.susers.login_users(data["Utel"], data["Upwd"])
+        is_register = susers.login_users(data["Utel"], data["Upwd"])
         if is_register:
             from config.messages import messages_regist_ok
             register_ok = {}
-            response_ok["status"] = response_ok
-            response_ok["messages"] = messages_regist_ok
+            register_ok["status"] = response_ok
+            register_ok["messages"] = messages_regist_ok
             return register_ok
         else:
             return self.system_error
@@ -62,12 +62,15 @@ class CUsers():
     def login(self):
         data = request.data
         print(data)
+        data = json.loads(data)
 
         if "Utel" not in data or "Upwd" not in data:
             return self.param_miss
 
         Utel = data["Utel"]
-        list_utel = self.susers.get_all_user_tel()
+        from services.SUsers import SUsers
+        susers = SUsers()
+        list_utel = susers.get_all_user_tel()
 
         if list_utel == False:
             return self.system_error
@@ -82,8 +85,8 @@ class CUsers():
             no_utel["messages"] = messages_no_user
             return no_utel
 
-        upwd = self.susers.get_upwd_by_utel(Utel)
-        if upwd == data["Upwd"]:
+        upwd = susers.get_upwd_by_utel(Utel)
+        if upwd != data["Upwd"]:
             from config.status import response_error
             from config.status_code import error_wrong_pwd
             from config.messages import messages_wrong_pwd
@@ -93,7 +96,7 @@ class CUsers():
             wrong_pwd["messages"] = messages_wrong_pwd
             return wrong_pwd
 
-        Uid = self.susers.get_uid_by_utel(Utel)
+        Uid = susers.get_uid_by_utel(Utel)
 
         login_success = {}
         from config.messages import messages_login_ok
@@ -110,6 +113,7 @@ class CUsers():
         Uid = args["token"]
 
         data = request.data
+        data = json.loads(data)
 
         if "Uname" not in data and "Usex" not in data:
             return self.param_miss
@@ -120,9 +124,15 @@ class CUsers():
             users["Uname"] = Uname
         if "Usex" in data:
             Usex = data["Usex"]
+            if Usex == "男":
+                Usex = 101
+            elif Usex == "女":
+                Usex = 102
             users["Usex"] = Usex
 
-        update_info = self.susers.update_users_by_uid(Uid, users)
+        from services.SUsers import SUsers
+        susers = SUsers()
+        update_info = susers.update_users_by_uid(Uid, users)
 
         if not update_info:
             return self.system_error
@@ -141,6 +151,7 @@ class CUsers():
         Uid = args["token"]
 
         data = request.data
+        data = json.loads(data)
 
         if "Upwd" not in data:
             return self.param_miss
@@ -149,7 +160,9 @@ class CUsers():
         Upwd = data["Upwd"]
         users["Upwd"] = Upwd
 
-        update_info = self.susers.update_users_by_uid(Uid, users)
+        from services.SUsers import SUsers
+        susers = SUsers()
+        update_info = susers.update_users_by_uid(Uid, users)
 
         if not update_info:
             return self.system_error
@@ -161,13 +174,15 @@ class CUsers():
 
         return response_of_update_users
 
-    def get_all(self):
+    def all_info(self):
         args = request.args.to_dict()
         if "token" not in args:
             return self.param_miss
         Uid = args["token"]
 
-        users_info = self.susers.get_all_users_info(Uid)
+        from services.SUsers import SUsers
+        susers = SUsers()
+        users_info = susers.get_all_users_info(Uid)
 
         if not users_info:
             return self.system_error
@@ -175,18 +190,23 @@ class CUsers():
         response_user_info = {}
         Utel = users_info.Utel
         response_user_info["Utel"] = Utel
-        if "Uname" in users_info:
+        if users_info.Uname not in ["", None]:
             Uname = users_info.Uname
             response_user_info["Uname"] = Uname
         else:
             response_user_info["Uname"] = None
-        if "Usex" in users_info:
+        if users_info.Usex not in["", None]:
             Usex = users_info.Usex
             response_user_info["Usex"] = Usex
         else:
             response_user_info["Usex"] = None
+        response_user_info["Ucoin"] = users_info.Ucoin
+        response_user_info["Uinvate"] = users_info.Uinvate
 
         response_of_get_all = {}
         response_of_get_all["status"] = response_ok
-        response_of_get_all["messages"] = response_user_info
+        from config.messages import messages_get_item_ok
+        response_of_get_all["messages"] = messages_get_item_ok
+        response_of_get_all["data"] = response_user_info
+        return response_of_get_all
         

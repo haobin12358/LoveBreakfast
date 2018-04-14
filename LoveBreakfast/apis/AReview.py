@@ -11,26 +11,27 @@ class AReview(Resource):
     def __init__(self):
         self.control_review = CReview()
 
-    def post(self, product):
-        print(PRINT_API_NAME.format(product))
+    def post(self, review):
+        print(PRINT_API_NAME.format(review))
 
         apis = {
-            "create_review": "control_product.create_review()"
+            "create_review": "self.control_review.create_review()",
+            "delete_user_review": "self.control_review.delete_user_review()"
         }
 
-        if product in apis:
-            return eval(apis[product])
+        if review in apis:
+            return eval(apis[review])
 
         return
 
-    def get(self, product):
-        print(PRINT_API_NAME.format(product))
-
+    def get(self, review):
+        print(PRINT_API_NAME.format(review))
         apis = {
-            "get_user_review": "self.control_product.get_user_review()",
-            "get_product_review": "self.control_product.get_product_review()"
+            "get_review": "self.control_review.get_review()",
+            "get_user_review": "self.control_review.get_user_review()",
+            "get_product_review": "self.control_review.get_product_review()"
         }
-        if product in apis:
-            return eval(apis[product])
+        if review in apis:
+            return eval(apis[review])
 
         return

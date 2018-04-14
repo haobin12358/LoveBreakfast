@@ -70,6 +70,11 @@ class CCarts():
         pnum = data.get("Pnum")
 
         try:
+            if not self.spro.get_product_all_by_pid(pid):
+                from config.messages import error_messages_no_pid as msg
+                from config.status import response_error as status
+                from config.status_code import error_no_pid as code
+                return {"status": status, "statuscode": code, "message": msg}
             cart = self.scart.get_cart_by_uid_pid(uid, pid)
             if cart:
                 if cart.Pnum + pnum < 0:

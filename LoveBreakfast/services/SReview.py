@@ -20,65 +20,54 @@ class SReview():
         self.session, self.status = DBSession.get_session()
         pass
 
-    # 获取所有商品信息
-    def get_all(self):
-        pro_list_of_service = None
+    # 创建评论
+    def create_review(self, review):
         try:
-            pro_list_of_service = self.session.query(model.Products.Pid, model.Products.Pname,
-                                                     model.Products.Pprice,model.Products.Pimage,
-                                                     model.Products.P_sales_volume,model.Products.Pscore
-                                                     ).filter_by(Pstatus="on_sale").all()
-        except Exception as e:
-            print e.message
-        finally:
-            self.session.close()
-        print(pro_list_of_service)
-        return pro_list_of_service
-
-
-
-
-    # 根据商品id获取商品详情
-    def get_pro_info_by_pid(self, pid):
-        pro_abo = None
-        try:
-            pro_abo = self.session.query(model.Products.Pname, model.Products.Pprice,
-                                         model.Products.Pimage,).filter_by(Pid=pid).first()
-        except Exception as e:
-            print e.message
-        finally:
-            self.session.close()
-        return pro_abo
-
-    # 根据分类id获取全部商品信息
-    def get_pro_id_by_cid(self, cid):
-        proid_list = None
-        try:
-            proid_list = self.session.query(model.Products.Pname, model.Products.Pprice, model.Products.Pimage
-                                            ).filter_by(Cid=cid).all()
-        except Exception as e:
-            print(e.message)
-        finally:
-            self.session.close()
-        return proid_list
-
-    #向数据库中插入数据，用于初始化数据
-    def add_product(self, product):
-        try:
-            self.session.add(product)
+            print(1)
+            self.session.add(review)
             self.session.commit()
+            return True
         except Exception as e:
-            print(e.message)
+            print e.message
         finally:
             self.session.close()
 
-    def get_pprice_by_pid(self, pid):
-        pprice = None
+    # 根据oid获取评论信息
+    def get_review(self, oid):
         try:
-            pprice = self.session.query(models.Products.Pprice).filter_by(Pid=pid).scalar()
+            review_list = self.session.query(model.Review.Pid, model.Review.Rscore,
+                                             model.Review.Rcontent).filter_by(Oid=oid).all()
         except Exception as e:
-            print(e.message)
+            print e.message
         finally:
             self.session.close()
-        return pprice
+        return review_list
 
+    # 根据用户id获取评论信息
+    def get_user_review(self, uid):
+        try:
+            review_of_service = self.session.query(model.Review.Rid, model.Review.Rscore, model.Review.Rpname, model.Review.Rpimage,
+                                                   model.Review.Rcontent).filter_by(Uid=uid, Rstatus="on").all()
+        except Exception as e:
+            print e.message
+        finally:
+            self.session.close()
+        return review_of_service
+
+    # 根据用户id获取评论id列表
+    def get_rid_by_uid(self, uid):
+        try:
+            review_list = self.session.query(model.Review.Rid).filter_by(Uid=uid).all()
+        except Exception as e:
+            print e.message
+        finally:
+            self.session.close()
+        return review_list
+
+    def delete_user_review(self, rid):
+        try:
+            self.session.query(model.Review).filter_by(Rid=rid).update(Rstatus="off")
+        except Exception as e:
+            print e.message
+        finally:
+            self.session.close()
