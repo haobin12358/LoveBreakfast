@@ -42,7 +42,7 @@ class COrders():
             data_item = {}
             data_item["Oid"] = row.Oid
             data_item["Otime"] = row.Otime
-            data_item["Ostatus"] = row.Ostatus
+            data_item["Ostatus"] = self.get_status_name_by_status(row.Ostatus)
             data_item["Oprice"] = row.Oprice
             data_item["Order_items"] = []
             order_items = sorders.get_order_item_by_oid(row.Oid)
@@ -78,7 +78,7 @@ class COrders():
         data = {}
         data["Oid"] = Oid
         data["Otime"] = order_abo.Otime
-        data["Ostatus"] = order_abo.Ostatus
+        data["Ostatus"] = self.get_status_name_by_status(order_abo.Ostatus)
         data["Oprice"] = order_abo.Oprice
         Lid = order_abo.Lid
         labo = sorders.get_lname_lno_lboxno_by_lid(Lid)
@@ -129,7 +129,7 @@ class COrders():
         Otime = data["Otime"]
         Otruetimemin = data["Omintime"]
         Otruetimemax = data["Omaxtime"]
-        Ostatus = 5
+        Ostatus = 7
 
         if "Lname" not in data or "Lno" not in data or "Lboxno" not in data:
             from config.status import response_error
@@ -221,7 +221,7 @@ class COrders():
 
         Ostatus = data["Ostatus"]
 
-        Ostatus_list = [5, 10, 15, 20, -1]
+        Ostatus_list = ["已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价"]
         if Ostatus not in Ostatus_list:
             from config.status import response_error
             from config.status_code import error_wrong_status_code
@@ -234,7 +234,7 @@ class COrders():
         Oid = data["Oid"]
 
         update_ostatus = {}
-        update_ostatus["Ostatus"] = Ostatus
+        update_ostatus["Ostatus"] = self.get_status_by_status_name(Ostatus)
 
         response_update_order_status = sorders.update_status_by_oid(Oid, update_ostatus)
 
@@ -281,3 +281,21 @@ class COrders():
         response_of_get_all["messages"] = messages_get_item_ok
         response_of_get_all["data"] = response_user_info
         return response_of_get_all
+
+    def get_status_name_by_status(self, status):
+        status_name = ["已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价"]
+        return status_name[status/7]
+
+    def get_status_by_status_name(self, status_name):
+        status_list = ["已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价"]
+        i = 0
+        while i < 7:
+            if status_name == status_list[i]:
+                return i*7
+            i = i + 1
+
+        return -99
+
+if __name__ == "__main__":
+    sorder = COrders()
+    print sorder.get_status_by_status_name("未支付")

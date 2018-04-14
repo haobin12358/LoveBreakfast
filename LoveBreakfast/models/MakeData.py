@@ -3,7 +3,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
-from services.SShop import SShop
+#from services.SShop import SShop
 from services.SProduct import SProduct
 import model
 
@@ -13,7 +13,7 @@ info_count = 22  # 需要插入的数据库条数
 
 class MakeData():
     def __init__(self):
-        self.shop = SShop()
+        #self.shop = SShop()
         self.product = SProduct()
 
     def make_id(self):

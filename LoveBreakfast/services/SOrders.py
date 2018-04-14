@@ -154,3 +154,7 @@ class SOrders():
         finally:
             self.session.close()
         return location
+
+if __name__ == "__main__":
+    sorder = SOrders()
+    print sorder.get_lid_by_lname_lno_lboxno("江陵路",1,555)
