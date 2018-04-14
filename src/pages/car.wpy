@@ -75,14 +75,14 @@
         },
         success:function (res) {
           tip.loaded()
+            let total=0;
           if(res.data.status == '200'){
             that.list_data = res.data.data;
-
-            console.log(that.list_data,'aaaa')
             for(let i=0;i< that.list_data.length;i++){
-              that.total_money += Number(that.list_data[i].Pnum * that.list_data[i].Pprice)
+              total += Number(that.list_data[i].Pnum * that.list_data[i].Pprice)
             }
-
+            that.total_money = total
+            //
             that.$apply()
           }
         }

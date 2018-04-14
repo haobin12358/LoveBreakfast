@@ -42,7 +42,7 @@
         }
       })
     }
-    onLoad(option){
+    onShow(option){
       this.getProductInfo(option.Pid);
     }
     data = {

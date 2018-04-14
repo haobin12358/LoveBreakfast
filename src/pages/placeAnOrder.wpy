@@ -6,15 +6,19 @@
         <repeat for="{{all_picker}}" key="index" index="index" item="item">
           <Pick :picker.sync="item" ></Pick>
         </repeat>
-        <view class="m-li-more">联系人：yayay</view>
-        <view class="m-li-more">联系方式：1223164654</view>
+        <view class="m-li-more">联系人：{{Uname}}</view>
+        <view class="m-li-more">联系方式：{{Utel}}</view>
       </view>
     </head>
     <view class="m-content">
       <repeat for="{{all_order}}" key="index" index="index" item="item">
         <Order :order.sync="item"></Order>
       </repeat>
-      <view class="m-li-more">合计：<i class="m-price">123</i></view>
+      <view class="m-li-m">
+        <view class="m-label">优惠券</view>
+        <view class="m-coupon">满30减40</view>
+      </view>
+      <view class="m-li-more">合计：<i class="m-price">￥{{total_money}}</i></view>
     </view>
     <view class="m-remark">
       <view class="m-li">
@@ -36,7 +40,7 @@
       <view class="m-car">
         <!--<image src="/images/car.png" style="width: 100rpx;height: 100rpx;"></image>-->
         <!--<view class="m-num">2</view>-->
-        <view>合计：<text class="m-price">￥123</text></view>
+        <view>合计：<text class="m-price">￥{{total_money}}</text></view>
       </view>
       <view class="m-btn m-active" @tap="placeAnOrder">支付</view>
     </foot>
@@ -46,7 +50,8 @@
   import wepy from 'wepy';
   import Pick from '../components/common/picker'
   import Order from '../components/common/order'
-
+  import tip from '../utils/tip'
+  import api from '../api/api'
   export default class PlaceAnOrder extends wepy.page{
     config = {
       navigationBarTitleText: ''
@@ -59,23 +64,29 @@
       all_picker:[
         {
           sort:'选择地铁线路',
-          array: ['1号线', '近江', '西兴', '滨和路'],
+          array: ['1号线', '2号线', '4号线'],
+          id:[],
           index:0,
+          type:''
         },
         {
           sort:'选择取餐站点',
           array: ['江陵路', '近江', '西兴', '滨和路'],
+          id:[],
           index:0,
+          type:''
         },
         {
           sort:'选择出站口',
           array: ['A', 'B', 'C', 'D'],
+          id:[],
           index:0,
+          type:''
         },
         {
           sort:'时间',
-          array: ['A', 'B', 'C', 'D'],
-          index:0,
+          value:'08:00',
+          type:'time'
         },
       ],
       all_order:[
@@ -95,6 +106,8 @@
           Pprice:12
         }
       ],
+      Uname:'',
+      Utel:'',
       payment_method:
         {
           sort:'支付方式',
@@ -106,30 +119,109 @@
         array: ['1', '2', '3', '4','5','6','7','8','9','10'],
         index:0,
       },
-
-
-
-      list_data:[
-        {
-          name: '粥',
-          price: '12.3',
-          id: '01',
-          remarks: '',
-          number: 1
-        },
-        {
-          name: '粥',
-          price: '12.3',
-          id: '01',
-          remarks: '',
-          number: 1
-        }
-      ]
+      total_money:0,
     }
     events = {
       'pickerChange':function(e){
+        if(e.sort == '选择取餐站点'){
+          this.getExitInfo(e.id[e.index])
+        }
         this.$apply();
       }
+    }
+    async getCationInfo(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_all_location,
+        method:'GET',
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.all_picker[1].array = that.deal_arr(res.data.data,'Lname');
+            that.all_picker[1].id = that.deal_arr(res.data.data,'Lid');
+            that.$apply()
+          }
+        }
+      })
+    }
+    async getExitInfo(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_lno,
+        method:'GET',
+        data:{Lid:params},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.all_picker[2].array = that.deal_arr(res.data.data,'Lno');
+            that.$apply()
+          }
+        }
+      })
+    }
+    async getPersonInfo(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_order_user,
+        method:'GET',
+        data:{token:params},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.Uname = res.data.data.Uname;
+            that.Utel = res.data.data.Utel;
+            that.$apply()
+          }
+        }
+      })
+    }
+    async getAllCar(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_all_car,
+        method:'GET',
+        data:{token:params},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          that.total_money = 0;
+          if(res.data.status == '200'){
+            that.all_order = res.data.data;
+            for(let i=0;i< that.all_order.length;i++){
+              that.total_money += Number(that.all_order[i].Pnum * that.all_order[i].Pprice)
+            }
+            //
+            that.$apply()
+          }
+        }
+      })
+    }
+    deal_arr(data,name){
+      let _arr = [];
+      for(let i = 0;i<data.length;i++){
+        _arr.push(data[i][name])
+      }
+      return _arr;
+    }
+    onShow(option){
+      this.getCationInfo();
+      this.getPersonInfo('87da4341-94f3-4611-bdb9-51ff718d252e');
+      this.getAllCar('87da4341-94f3-4611-bdb9-51ff718d252e');
     }
     methods = {
       PickerChangeWay: function(e) {
@@ -186,6 +278,29 @@
         margin: 0 20rpx;
         padding: 20rpx;
         text-align: right;
+      }
+      .m-li-m{
+        margin: 0 20rpx;
+        padding: 20rpx  0;
+        font-size: 30rpx;
+        border-bottom: 1px solid @border-color;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: space-between;
+        .m-label{
+          padding: 5rpx 10rpx;
+          color: #f4690c;
+          background-color: #FEF0F4;
+          border: 1px solid #f4690c;
+          border-radius: 5px;
+        }
+        .m-coupon{
+
+        }
+        .m-total{
+
+        }
       }
     }
     .m-remark{

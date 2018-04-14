@@ -21,7 +21,6 @@ const delete_car =  _title + '/love/breakfast/salelist/delete_product';//删除�
 //下单
 const get_all_location = _title + '/love/breakfast/locations/get_all_location';//获取站点信息
 const get_lno = _title + '/love/breakfast/locations/get_lno';//获取出口信息
-// const get_lno =  _title + '/love/breakfast/locations/get_lno';//获取出口信息
 
 //登录
 const login =  _title + '/love/breakfast/users/register';

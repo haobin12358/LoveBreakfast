@@ -1,11 +1,18 @@
 <template>
-    <view class="m-li">
+    <view class="m-li" wx:if="{{picker.type != 'time'}}">
       <picker bindchange="bindPickerChange" value="{{picker.index}}" range="{{picker.array}}">
         <view class="picker">
           {{picker.sort}}：<image src="/images/icon-more.png" style="width: 42rpx;height: 36rpx;float: right"></image><i class="m-select">{{picker.array[picker.index]}}</i>
         </view>
       </picker>
     </view>
+  <view class="m-li" wx:if="{{picker.type == 'time'}}">
+    <picker mode="time" bindchange="bindTimeChange" value="{{picker.value}}" start="09:01" end="21:01">
+      <view class="picker">
+        {{picker.sort}}：<image src="/images/icon-more.png" style="width: 42rpx;height: 36rpx;float: right"></image><i class="m-select">{{picker.value}}</i>
+      </view>
+    </picker>
+  </view>
 </template>
 <script>
   import wepy from 'wepy';
@@ -24,6 +31,11 @@
     methods = {
       bindPickerChange: function(e) {
         this.picker.index = e.detail.value;
+        this.$emit('pickerChange',this.picker)
+//        this.$apply();
+      },
+      bindTimeChange: function(e) {
+        this.picker.value = e.detail.value;
         this.$emit('pickerChange',this.picker)
 //        this.$apply();
       },

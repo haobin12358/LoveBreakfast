@@ -118,7 +118,7 @@
         }
       })
     }
-    onLoad(option){
+    onShow(option){
       this.getOrderInfo('87da4341-94f3-4611-bdb9-51ff718d252e');
     }
     methods = {

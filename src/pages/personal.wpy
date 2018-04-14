@@ -69,7 +69,7 @@
       </view>
       <image class="m-arrow" src="../images/more.png"></image>
     </navigator>
-    <navigator class="m-item" url="/pages/">
+    <navigator class="m-item" url="/pages/myOrder">
       <view class="m-item_content">
         <image class="m-item_img" src="../images/order.png"></image>
         <view class="m-text">订单</view>
