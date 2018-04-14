@@ -73,6 +73,7 @@ class CProduct():
         proabo_of_controller["Pprice"] = proabo_of_service.Pprice
         proabo_of_controller["Pimage"] = proabo_of_service.Pimage
         proabo_of_controller["Pinfo"] = proabo_of_service.Pinfo
+        proabo_of_controller["Pnum"] = 0
         return {
             "status": 200,
             "message": "get pro_info success !",
