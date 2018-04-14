@@ -32,7 +32,7 @@ class SReview():
         finally:
             self.session.close()
 
-    # 根据oid和pid获取评论信息
+    # 根据oid获取评论信息
     def get_review(self, oid):
         try:
             review_list = self.session.query(model.Review.Pid, model.Review.Rscore,

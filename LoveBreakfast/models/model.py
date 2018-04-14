@@ -45,13 +45,14 @@ class Products(Base):
     Pimage = Column(String(64), nullable=False)
     Pinfo = Column(Text)  # 商品介绍
     P_sales_volume = Column(Integer, nullable=False)  # 商品销量
-    Pscore = Column(Integer, nullable=True)  # 商品评分
+    Pscore = Column(Float, nullable=True)  # 商品评分
 
 class Review(Base):
     __tablename__ = "Review"
     Rid = Column(String(64), primary_key=True)
     Oid = Column(String(64), nullable=False)  # 对应的订单编号
     Pid = Column(String(64), nullable=False)  # 对应的商品编号
+    Uid = Column(String(64), nullable=False)  # 用户id
     Rscore = Column(Integer, nullable=True)  # 对应的商品评分
     Rcontent = Column(Text, nullable=True)  # 评价内容
     Rstatus = Column(String(64))  # 对应的评价状态.分为on和off
