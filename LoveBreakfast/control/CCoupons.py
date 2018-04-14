@@ -8,6 +8,7 @@ import uuid
 from config.status import response_ok as ok
 from common.get_model_return_list import get_model_return_list
 from common.lovebreakfast_error import dberror
+from common.timeformate import get_db_time_str, get_web_time_str
 
 class CCoupons():
     def __init__(self):
@@ -28,4 +29,60 @@ class CCoupons():
         self.scoupons = SCoupons()
 
     def add_cardpackage(self):
+        args = request.args.to_dict()
+        data = json.loads(request.data)
 
+        if "token" not in args:
+            return self.param_miss
+        uid = args.get("token")
+        couid = data.get("Couid")
+
+        try:
+            cart_pkg = self.scoupons.get_card_by_uid_couid(uid, couid)
+            cend = get_db_time_str()  # 后期补充优惠券截止日期计算方法
+            if cart_pkg:
+                if cart_pkg.Carstatus == 2:
+                    from config.status import response_error as status
+                    from config.status_code import error_coupon_used as code
+                    from config.messages import error_coupons_used as msg
+                    return {"status": status, "statuscode": code, "message": msg}
+                self.scoupons.update_carbackage(cart_pkg.Carid)
+            else:
+                self.scoupons.add_cardpackage({
+                    "Carid": str(uuid.uuid4()),
+                    "Uid": uid,
+                    "Carstatus": 1,
+                    "Carstart": get_db_time_str(),
+                    "Carend": cend,
+                    "Couid": couid
+                })
+        except dberror:
+            return self.system_error
+        except Exception as e:
+            print(e.message)
+            return self.system_error
+
+        from config.messages import messages_add_coupons_success as msg
+        return {"status": ok, "message": msg}
+
+    def get_cart_pkg(self):
+        args = request.args.to_dict()
+        if "token" not in args:
+            return self.param_miss
+        uid = args.get("token")
+
+        try:
+            cart_list = []
+            cart_pkgs = get_model_return_list(self.scoupons.get_cardpackage_by_uid(uid))
+            for cart_pkg in cart_pkgs:
+                if cart_pkg.get("Cstatus") == 2:
+                    continue
+                coupon = self.scoupons.get_coupons_by_couid(cart_pkg.get("Couid"))
+                for key in coupon.__table__.columns.keys():
+                    cart_pkg[key] = getattr(coupon, key, None)
+                cart_list.append(cart_pkg)
+        except Exception as e:
+            print("ERROR: " + e.message)
+            return self.system_error
+        from config.messages import messages_get_carpkg_success as msg
+        return {"status": ok, "message": msg}

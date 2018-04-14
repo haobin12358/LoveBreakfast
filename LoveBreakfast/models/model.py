@@ -97,9 +97,11 @@ class Cart(Base):
 class Coupons(Base):
     __tablename__ = "Coupon"
     Couid = Column(String(64), primary_key=True)
-    Coufilter = Column(Float)  # 优惠券优惠条件
-    Coudiscount = Column(Float)  # 折扣
-    Couamount = Column(Float)  # 优惠金额
+    Coufilter = Column(Float)      # 优惠券优惠条件
+    Coudiscount = Column(Float)    # 折扣
+    Couamount = Column(Float)      # 优惠金额
+    Coustart = Column(String(14))  # 优惠券的生命周期
+    Couend = Column(String(14))
 
 class Cardpackage(Base):
     __tablename__ = "Cardpackage"

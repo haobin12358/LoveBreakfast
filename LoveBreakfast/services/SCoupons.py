@@ -13,6 +13,7 @@ class SCoupons(SBase):
 
     @close_session
     def get_cardpackage_by_uid(self, uid):
+
         return self.session.query(Cardpackage).filter(Cardpackage.Uid == uid).all()
 
     @close_session
@@ -36,5 +37,10 @@ class SCoupons(SBase):
         self.session.query(Cardpackage).filter(Cardpackage.Carid == cardid).update({"Carstatus": 2})
 
     @close_session
+    def get_card_by_uid_couid(self, uid, couid):
+        return self.session.query(Cardpackage).filter(Cardpackage.Uid == uid, Cardpackage.Couid == couid).first()
+
+
+    @close_session
     def get_coupons_by_couid(self, couid):
-        self.session.query(Coupons).filter(Coupons.Couid == couid).first()
+        return self.session.query(Coupons).filter(Coupons.Couid == couid).first()
