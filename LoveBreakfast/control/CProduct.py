@@ -31,6 +31,7 @@ class CProduct():
             dic_of_pro["Pimage"] = pro_list_of_service[i].Pimage
             dic_of_pro["PsalesVolume"] = pro_list_of_service[i].P_sales_volume
             dic_of_pro["Pscore"] = pro_list_of_service[i].Pscore
+            dic_of_pro["Pnum"] = 0  # 前端控制用
             pro_list_of_control.append(dic_of_pro)
 
         print(pro_list_of_control)
@@ -72,6 +73,7 @@ class CProduct():
         proabo_of_controller["Pprice"] = proabo_of_service.Pprice
         proabo_of_controller["Pimage"] = proabo_of_service.Pimage
         proabo_of_controller["Pinfo"] = proabo_of_service.Pinfo
+        proabo_of_controller["Pnum"] = 0
         return {
             "status": 200,
             "message": "get pro_info success !",
