@@ -1,7 +1,90 @@
+<style scoped lang="less" rel="stylesheet/less">
+@import "../styles/common";
+  .m-header-box {
+    width: 100%;
+    height: 280rpx;
+  }
+    .m-header-content {
+      width: 100%;
+      margin: 0 auto;
+      text-align: center;
+      padding-top: 40rpx;
+      .m-avatar {
+        width: 150rpx;
+        height: 150rpx;
+        border-radius: 100px;
+      }
+      .m-nickname {
+        font-size: 35rpx;
+        padding-top: 15rpx;
+      }
+    }
+  .m-info_block-list {
+    margin-top: 10rpx;
+    padding: 0rpx 80rpx 0rpx 80rpx;
+    width: 100%;
+    font-size: 30rpx;
+    .m-item {
+      border-top: 2rpx solid #dbdbdb;
+      background: #fff;
+      padding: 34rpx 60rpx;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .m-item:last-child {
+      border-bottom: 2rpx solid #dbdbdb;
+    }
+      .m-item_content {
+        display: flex;
+        align-items: center;
+        .m-item_img {
+          width: 42rpx;
+          height: 42rpx;
+        }
+        .m-text {
+          margin-left: 30rpx;
+          color: @grey-font;
+        }
+      }
+    .m-arrow {
+      width: 30rpx;
+      height: 15px;
+    }
+  }
+</style>
 <template>
-  <view class="container">
-
+<view class="container">
+  <view class="m-header-box">
+    <view class="m-header-content">
+      <image class="m-avatar" src="../images/test.jpeg"></image>
+      <view class="m-nickname">{{ nickname }}林 杨</view>
+    </view>
   </view>
+  <view class="m-info_block-list">
+    <navigator class="m-item" url="/pages/">
+      <view class="m-item_content">
+        <image class="m-item_img" src="../images/edit.png"></image>
+        <view class="m-text">基本信息</view>
+      </view>
+      <image class="m-arrow" src="../images/more.png"></image>
+    </navigator>
+    <navigator class="m-item" url="/pages/">
+      <view class="m-item_content">
+        <image class="m-item_img" src="../images/order.png"></image>
+        <view class="m-text">订单</view>
+      </view>
+      <image class="m-arrow" src="../images/more.png"></image>
+    </navigator>
+    <navigator class="m-item" url="/pages/">
+      <view class="m-item_content">
+        <image class="m-item_img" src="../images/set.png"></image>
+        <view class="m-text">设置</view>
+      </view>
+      <image class="m-arrow" src="../images/more.png"></image>
+    </navigator>
+  </view>
+</view>
 </template>
 <script >
   import wepy from 'wepy';
@@ -16,5 +99,3 @@
     }
   }
 </script>
-<style scoped lang="less" rel="stylesheet/less">
-</style>
