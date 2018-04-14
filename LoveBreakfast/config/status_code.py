@@ -14,4 +14,4 @@ NO_THIS_Shop = 405203
 NO_THIS_REVIEW = 405204
 error_cart_no_pro = 405601
 error_pnum_illegal = 405602
-
+error_no_pid = 405603
