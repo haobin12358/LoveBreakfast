@@ -23,7 +23,7 @@ api.add_resource(AOrders, "/love/breakfast/orders/<string:orders>")
 api.add_resource(ALocations, "/love/breakfast/locations/<string:locations>")
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 7443, debug=True)
+    app.run('0.0.0.0', 7444, debug=True)
 
 @app.error_handlers(Exception)
 def catchException(error):
