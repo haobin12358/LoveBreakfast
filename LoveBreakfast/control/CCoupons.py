@@ -6,7 +6,7 @@ from flask import request
 import json
 import uuid
 from config.status import response_ok as ok
-from common.get_model_return_list import get_model_return_list
+from common.get_model_return_list import get_model_return_list, get_model_return_dict
 from common.lovebreakfast_error import dberror
 from common.timeformate import get_db_time_str, get_web_time_str
 
@@ -48,7 +48,7 @@ class CCoupons():
                     return {"status": status, "statuscode": code, "message": msg}
                 self.scoupons.update_carbackage(cart_pkg.Carid)
             else:
-                self.scoupons.add_cardpackage({
+                self.scoupons.add_cardpackage(**{
                     "Carid": str(uuid.uuid4()),
                     "Uid": uid,
                     "Carstatus": 1,
@@ -75,14 +75,14 @@ class CCoupons():
             cart_list = []
             cart_pkgs = get_model_return_list(self.scoupons.get_cardpackage_by_uid(uid))
             for cart_pkg in cart_pkgs:
-                if cart_pkg.get("Cstatus") == 2:
+                if cart_pkg.get("Carstatus") == 2:
                     continue
-                coupon = self.scoupons.get_coupons_by_couid(cart_pkg.get("Couid"))
-                for key in coupon.__table__.columns.keys():
-                    cart_pkg[key] = getattr(coupon, key, None)
+                coupon = get_model_return_dict(self.scoupons.get_coupons_by_couid(cart_pkg.get("Couid")))
+                for key in coupon.keys():
+                    cart_pkg[key] = coupon.get(key)
                 cart_list.append(cart_pkg)
         except Exception as e:
             print("ERROR: " + e.message)
             return self.system_error
         from config.messages import messages_get_carpkg_success as msg
-        return {"status": ok, "message": msg}
+        return {"status": ok, "message": msg, "data": cart_list}

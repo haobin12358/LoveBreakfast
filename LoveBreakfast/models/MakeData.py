@@ -5,6 +5,7 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
 #from services.SShop import SShop
 from services.SProduct import SProduct
+from services.SCoupons import SCoupons
 import model
 
 change_index = 10  # 循环中改变type的点
@@ -14,7 +15,8 @@ info_count = 22  # 需要插入的数据库条数
 class MakeData():
     def __init__(self):
         #self.shop = SShop()
-        self.product = SProduct()
+        # self.product = SProduct()
+        self.cou = SCoupons()
 
     def make_id(self):
         import uuid
@@ -49,10 +51,22 @@ class MakeData():
             pro_model.Pscore = 5
             self.product.add_product(pro_model)
 
+    def add_conpons(self, conid):
+        for i in range(info_count):
+            self.cou.add_coupons(**{
+                "Couid": i,
+                "Coufilter": float("1%02d.00" % i),
+                "Coudiscount": 0.2,
+                "Couamount": 10.1,
+                "Coustart": "2018011421%02d00" % i,
+                "Couend": "2018041421%02d00" % i
+            })
+
 if __name__ == "__main__":
     print("start")
     data = MakeData()
     tshop_ids = data.make_id()
     # data.add_shops(tshop_ids)
-    data.add_products(tshop_ids)
+    # data.add_products(tshop_ids)
+    data.add_conpons(tshop_ids)
     print("over")
