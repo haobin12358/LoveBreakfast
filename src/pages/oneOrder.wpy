@@ -16,17 +16,29 @@
       </view>
       <view class="m-li">
         <view></view>
-        <view >实际支付：<i class="m-price"> $20 </i></view>
+        <view >实际支付：<i class="m-price">￥{{Oprice}} </i></view>
       </view>
     </view>
     <view class="m-foot">
       <view class="m-li">
         <view>取货站点：</view>
-        <view >1号线江陵路Akou</view>
+        <view >{{Lboxno}}{{Lname}}{{Lno}}</view>
       </view>
       <view class="m-li">
         <view>取货时间：</view>
-        <view >12：30</view>
+        <view >{{Otime}}</view>
+      </view>
+      <view class="m-li">
+        <view>联系人：</view>
+        <view >{{Uname}}</view>
+      </view>
+      <view class="m-li">
+        <view>联系人电话：</view>
+        <view >{{Utel}}</view>
+      </view>
+      <view class="m-li">
+        <view>下单时间：</view>
+        <view >{{Otime}}</view>
       </view>
       <view class="m-li">
         <button class="m-btn">取消订单</button>
@@ -34,11 +46,12 @@
     </view>
 
   </view>
-  </view>
 </template>
 <script >
   import wepy from 'wepy';
   import Order from '../components/common/order'
+  import tip from '../utils/tip'
+  import api from '../api/api'
   export default class OneOrder extends wepy.page{
     config = {
       navigationBarTitleText: ''
@@ -47,6 +60,17 @@
       Order:Order
     }
     data = {
+      src:'',
+      Lboxno:'',
+      Lname:'',
+      Lno:'',
+      Oabo:'',
+      Oid:'',
+      Oprice:'',
+      Ostatus:'',
+      Otime:'',
+      Uname:'',
+      Utel:'',
       all_order:[
         {
           Pname:'粥',
@@ -64,6 +88,38 @@
           Pprice:12
         }
       ],
+    }
+    async getOrderInfo(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_order_abo,
+        method:'GET',
+        data:{token:params,Oid:'c264e70c-6791-4462-8a0c-d84d123b1176'},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.Lboxno = res.data.data.Lboxno;
+            that.Lname = res.data.data.Lname;
+            that.Lno = res.data.data.Lno;
+            that.Oabo = res.data.data.Oabo;
+            that.Oid = res.data.data.Oid;
+            that.Oprice = res.data.data.Oprice;
+            that.Ostatus = res.data.data.Ostatus;
+            that.Otime = res.data.data.Otime;
+            that.Uname = res.data.data.Uname;
+            that.Utel = res.data.data.Utel;
+            that.all_order = res.data.data.Order_items;
+            that.$apply()
+          }
+        }
+      })
+    }
+    onLoad(option){
+      this.getOrderInfo('87da4341-94f3-4611-bdb9-51ff718d252e');
     }
     methods = {
     }

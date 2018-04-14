@@ -91,7 +91,9 @@
 
 <script >
   import wepy from 'wepy';
-  import List from '../components/common/list'
+  import List from '../components/common/list';
+  import api from '../api/api';
+  import tip from '../utils/tip'
 
 
 
@@ -151,17 +153,33 @@
     computed = {
 
     }
-
+    async getProductList() {
+      let that = this;
+      tip.loading();
+     wx.request({
+        url:api.get_product_all,
+        method:'GET',
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          // console.log(res,'aaa')
+          if(res.data.status == '200'){
+            that.list_data = res.data.data;
+            that.$apply()
+          }
+        }
+      })
+    }
+    onLoad(){
+      this.getProductList();
+    }
     methods = {
-      tap(){
-        wx.navigateTo({
-          url: '/pages/login'
-        })
-      },
       businessTap(v){
-        console.log(v)
+        console.log(v,'asasa')
         wx.navigateTo({
-          url: '/pages/product'
+          url: '/pages/product?Pid='+v.Pid
         })
       },
       listTap(v){

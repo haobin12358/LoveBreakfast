@@ -1,39 +1,39 @@
-import {wxRequest} from '../utils/wxRequest';
+import {request} from '../utils/request';
 //接口前缀
-const _title = '';
+const _title = 'http://120.79.182.43:7444';
 //定义接口
 //首页
-const get_product_all = (params) => wxRequest(params, _title + '/love/breakfast/product/get_all');
+const get_product_all =  _title + '/love/breakfast/product/get_all';
 //商品详情
-const get_product_info = (params) => wxRequest(params, _title + '/love/breakfast/product/get_info');
+const get_product_info =  _title + '/love/breakfast/product/get_info_by_id';
 //订单
-const make_main_order = (params) => wxRequest(params, _title + '/love/breakfast/orders/make_main_order');//创建订单
-const get_order_user = (params) => wxRequest(params, _title + '/love/breakfast/orders/get_order_user');//获取下单人信息
-const update_order_status = (params) => wxRequest(params, _title + '/love/breakfast/orders/update_order_status');//更新订单状态
-const get_order_list = (params) => wxRequest(params, _title + '/love/breakfast/orders/get_order_list');//获取所有订单
-const get_order_abo = (params) => wxRequest(params, _title + '/love/breakfast/orders/get_order_abo');//获取订单性情
+const make_main_order =  _title + '/love/breakfast/orders/make_main_order';//创建订单
+const get_order_user =  _title + '/love/breakfast/orders/get_order_user';//获取下单人信息
+const update_order_status =  _title + '/love/breakfast/orders/update_order_status';//更新订单状态
+const get_order_list = _title + '/love/breakfast/orders/get_order_list';//获取所有订单
+const get_order_abo =  _title + '/love/breakfast/orders/get_order_abo';//获取订单性情
 
 //购物车
-const get_all_car = (params) => wxRequest(params, _title + '/love/breakfast/salelist/get_all');//获取购物车信息
-const update_car = (params) => wxRequest(params, _title + '/love/breakfast/salelist/update');//更新购物车信息
-const delete_car = (params) => wxRequest(params, _title + '/love/breakfast/salelist/delete_product');//删除购物车信息
+const get_all_car = _title + '/love/breakfast/salelist/get_all';//获取购物车信息
+const update_car = _title + '/love/breakfast/salelist/update';//更新购物车信息
+const delete_car =  _title + '/love/breakfast/salelist/delete_product';//删除购物车信息
 
 //下单
-const get_all_location = (params) => wxRequest(params, _title + '/love/breakfast/locations/get_all_location');//获取站点信息
-const get_lno = (params) => wxRequest(params, _title + '/love/breakfast/locations/get_lno');//获取出口信息
-// const get_lno = (params) => wxRequest(params, _title + '/love/breakfast/locations/get_lno');//获取出口信息
+const get_all_location = _title + '/love/breakfast/locations/get_all_location';//获取站点信息
+const get_lno = _title + '/love/breakfast/locations/get_lno';//获取出口信息
+// const get_lno =  _title + '/love/breakfast/locations/get_lno';//获取出口信息
 
 //登录
-const login = (params) => wxRequest(params, _title + '/love/breakfast/users/register');
+const login =  _title + '/love/breakfast/users/register';
 //注册
-const register = (params) => wxRequest(params, _title + '/love/breakfast/users/login');
+const register =  _title + '/love/breakfast/users/login';
 //个人中心
-const get_person_info = (params) => wxRequest(params, _title + '/love/breakfast/users/all_info');//获取用户信息
-const change_person_info = (params) => wxRequest(params, _title + '/love/breakfast/users/update_info');//修改用户信息
-const change_person_Pwd = (params) => wxRequest(params, _title + '/love/breakfast/users/update_pwd');//修改用户信息
+const get_person_info = _title + '/love/breakfast/users/all_info';//获取用户信息
+const change_person_info = _title + '/love/breakfast/users/update_info';//修改用户信息
+const change_person_Pwd =  _title + '/love/breakfast/users/update_pwd';//修改用户信息
 
 //评价
-// const change_person_Pwd = (params) => wxRequest(params, _title + '/love/breakfast/users/update_pwd');//修改用户信息
+// const change_person_Pwd = _title + '/love/breakfast/users/update_pwd';//修改用户信息
 
 module.exports = {
   get_product_all,
