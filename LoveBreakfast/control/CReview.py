@@ -12,11 +12,12 @@ import json
 from services.SProduct import SProduct
 from common.get_str import get_str
 from common.import_status import import_status
-from services.SCategory import SCategory
 from services.SReview import SReview
 from control.COrders import COrders
 from models import model
 from services.SUsers import SUsers
+from services.SOrders import SOrders
+from config.messages import error_system_error
 
 class CReview():
     def __init__(self):
@@ -24,27 +25,37 @@ class CReview():
         self.service_review = SReview()
         self.control_order = COrders()
         self.service_user = SUsers()
+        self.service_order = SOrders()
 
     #  创建评论
     def create_review(self):
-        # args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
+        args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
         # 判断url参数是否异常
-        # if len(args) != 1 or "Oid" not in args.keys():
-        #     message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
-        #     return {
-        #         "message": message,
-        #         "status": status,
-        #         "statuscode": statuscode,
-        #     }
-        # order_to_str = get_str(args, "Oid")
-        order_list = self.control_order.get_order_list()
-        # if order_to_str not in order_list:
-        #     message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
-        #     return {
-        #         "message": message,
-        #         "status": status,
-        #         "statuscode": statuscode,
-        #     }
+        if len(args) != 2 or "token" not in args.keys() or "Oid" not in args.keys():
+            message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
+            return {
+                "message": message,
+                "status": status,
+                "statuscode": statuscode,
+            }
+        token_to_str = get_str(args, "token")
+        oid_to_str = get_str(args, "Oid")
+        oid_list_service = self.service_order.get_all_order_by_uid(token_to_str)
+        for i in range(len(oid_list_service)):
+            oid_list_control = []
+            oid = oid_list_service[i].Oid
+            oid_list_control.append(oid)
+        if oid_to_str in oid_list_control:
+            # 查看订单状态是否正常
+            order_abo = self.service_order.get_order_abo_by_oid(oid_to_str)
+            if order_abo.Ostatus != 42:
+                message, status, statuscode = import_status("messages_error_wrong_status_code", "response_error",
+                                                            "error_wrong_status_code")
+                return {
+                    "message": message,
+                    "status": status,
+                    "statuscode": statuscode,
+                }
         form = request.data  # 获取前端发送的body体
         form = json.loads(form)
         pro_list = form["Product_list"]
@@ -52,30 +63,65 @@ class CReview():
         for i in range(len(pro_list)):
             review = model.Review()
             Rid = uuid.uuid4()
-            print(Rid)
             review.Rid = str(Rid)
-            review.Oid = pro_list[i].get("Oid")
+            review.Oid = oid_to_str
             review.Pid = pro_list[i].get("Pid")
+            review.Uid = token_to_str
             review.Rscore = pro_list[i].get("Rscore")
             review.Rcontent = pro_list[i].get("Rcontent")
             review.Rstatus = "on"
             result = self.service_review.create_review(review)
             print(result)
+        # 更新订单状态
+        try:
+            order_status = {}
+            order_status["Ostatus"] = 49
+            self.service_order.update_status_by_oid(oid_to_str, order_status)
+            print(111)
+        except Exception as e:
+            print(e)
+            from config.status import response_error
+            from config.status_code import SYSTEM_ERROR
+            return {
+                "message": error_system_error,
+                "status": response_error,
+                "statuscode": SYSTEM_ERROR,
+            }
         return {
             "message": "create review success !",
             "status": 200,
         }
-    # 更具Oid获取商品评论
+
+    # 根据Oid获取商品评论
     def get_review(self):
         args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
         # 判断url参数是否异常
-        if len(args) != 1 or "Oid" not in args.keys() :
+        if len(args) != 2 or "Oid" not in args.keys() or "token" not in args.keys():
             message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
             return {
                 "message": message,
                 "status": status,
                 "statuscode": statuscode,
             }
+        # 验证是否存在该订单
+        token_to_str = get_str(args, "token")
+        oid_to_str = get_str(args, "Oid")
+        oid_list_service = self.service_order.get_all_order_by_uid(token_to_str)
+        for i in range(len(oid_list_service)):
+            oid_list_control = []
+            oid = oid_list_service[i].Oid
+            oid_list_control.append(oid)
+        if oid_to_str in oid_list_control:
+            # 查看订单状态是否正常
+            order_abo = self.service_order.get_order_abo_by_oid(oid_to_str)
+            if order_abo.Ostatus != 49:
+                message, status, statuscode = import_status("messages_error_wrong_status_code", "response_error",
+                                                            "error_wrong_status_code")
+                return {
+                    "message": message,
+                    "status": status,
+                    "statuscode": statuscode,
+                }
         oid_to_str = get_str(args, "Oid")
         review_list_service = self.service_review.get_review(oid_to_str)
         print(review_list_service)
