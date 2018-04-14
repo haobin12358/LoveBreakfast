@@ -26,3 +26,4 @@ messages_del_cart = "购物车删除商品成功"
 error_messages_cart_no_pro = "delete error! the project does not exist cart !"
 messages_get_cart_success = "get cart success"
 error_messages_pnum_illegal = "Unlawful Pnum!"
+
