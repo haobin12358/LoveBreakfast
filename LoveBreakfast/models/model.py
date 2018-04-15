@@ -82,6 +82,7 @@ class Ordermain(Base):
     Oprice = Column(Float)
     Uid = Column(String(64))
     Lid = Column(String(64))
+    Opic = Column(String(64))
     Oabo = Column(Text)
 
 class Orderpart(Base):

@@ -6,6 +6,7 @@ from flask import request
 import json
 import uuid
 from config.status import response_ok
+import datetime
 
 class COrders():
 
@@ -41,9 +42,31 @@ class COrders():
         for row in order_list:
             data_item = {}
             data_item["Oid"] = row.Oid
-            data_item["Otime"] = row.Otime
+            data_item["Otime"] = self.deal_string_to_time(row.Otime)
             data_item["Ostatus"] = self.get_status_name_by_status(row.Ostatus)
             data_item["Oprice"] = row.Oprice
+            data_item["Opic"] = row.Opic
+            dt = datetime.datetime.now()
+            day = datetime.datetime.now().day + 1
+            month = datetime.datetime.now().month
+            year = datetime.datetime.now().year
+            month_day_list = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+            if year % 4 == 0:
+                if year % 100 != 0:
+                    month_day_list[2] = 29
+                if year % 400 == 0:
+                    month_day_list[2] = 29
+            if day > month_day_list[month]:
+                month = month + 1
+                day = day - month_day_list[month]
+                if month > 12:
+                    month = 1
+                    year = year + 1
+            dt_pass = datetime.datetime(year, month, day, 6, 0, 0)
+            if (dt_pass - dt).seconds < 28800 or row.Ostatus > 21 or row.Ostatus == 0:
+                data_item["is_index"] = 702
+            else:
+                data_item["is_index"] = 701
             data_item["Order_items"] = []
             order_items = sorders.get_order_item_by_oid(row.Oid)
             from services.SProduct import SProduct
@@ -57,6 +80,7 @@ class COrders():
                 order_item["Psalenum"] = product.P_sales_volume
                 order_item["Plevel"] = product.Pscore
                 order_item["Pprice"] = product.Pprice
+                order_item["Pimage"] = product.Pimage
                 data_item["Order_items"].append(order_item)
             data.append(data_item)
 
@@ -77,14 +101,36 @@ class COrders():
         order_abo = sorders.get_order_abo_by_oid(Oid)
         data = {}
         data["Oid"] = Oid
-        data["Otime"] = order_abo.Otime
+        data["Otime"] = self.deal_string_to_time(order_abo.Otime)
         data["Ostatus"] = self.get_status_name_by_status(order_abo.Ostatus)
         data["Oprice"] = order_abo.Oprice
+        data["Opic"] = order_abo.Opic
         Lid = order_abo.Lid
         labo = sorders.get_lname_lno_lboxno_by_lid(Lid)
         data["Lname"] = labo.Lname
         data["Lno"] = labo.Lno
         data["Lboxno"] = labo.Lboxno
+        dt = datetime.datetime.now()
+        day = datetime.datetime.now().day + 1
+        month = datetime.datetime.now().month
+        year = datetime.datetime.now().year
+        month_day_list = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        if year % 4 == 0:
+            if year % 100 != 0:
+                month_day_list[2] = 29
+            if year % 400 == 0:
+                month_day_list[2] = 29
+        if day > month_day_list[month]:
+            month = month + 1
+            day = day - month_day_list[month]
+            if month > 12:
+                month = 1
+                year = year + 1
+        dt_pass = datetime.datetime(year, month, day, 6, 0, 0)
+        if (dt_pass - dt).seconds < 28800 or order_abo.Ostatus > 21 or order_abo.Ostatus == 0:
+            data["is_index"] = 702
+        else:
+            data["is_index"] = 701
         from services.SUsers import SUsers
         susers = SUsers()
         users = susers.get_uname_utel_by_uid(Uid)
@@ -104,6 +150,7 @@ class COrders():
             order_item["Psalenum"] = product.P_sales_volume
             order_item["Plevel"] = product.Pscore
             order_item["Pprice"] = product.Pprice
+            order_item["Pimage"] = product.Pimage
             data["Order_items"].append(order_item)
 
         response_make_main_order = {}
@@ -295,6 +342,15 @@ class COrders():
             i = i + 1
 
         return -99
+
+    def deal_time_to_string(self, time):
+        time_string = str(time[0,3]) + str(time[5,6]) + str(time[8,9]) + str(time[11,12]) + str(time[14,15]) + \
+                      str(time[17,18])
+        return time_string
+    def deal_string_to_time(self, time_string):
+        time = str(time_string[0,3]) + "-" + str(time_string[4,5]) + "-" + str(time_string[6,7]) + " " +\
+               str(time_string[8,9]) + ":" + str(time_string[10,11]) + ":" + str(time_string[12,13])
+        return time
 
 if __name__ == "__main__":
     sorder = COrders()

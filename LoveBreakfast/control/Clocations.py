@@ -27,7 +27,12 @@ class Clocations():
     def get_all_location(self):
         from services.Slocations import Slocations
         slocations = Slocations()
-        all_location = slocations.get_all()
+        args = request.args.to_dict()
+        Lline = args["Lline"]
+        Lline_no = self.get_lline_no_by_lline(Lline)
+        if Lline_no == -1:
+            return self.param_miss
+        all_location = slocations.get_all(Lline_no)
         print all_location
         data = []
         for row in all_location:
@@ -61,3 +66,26 @@ class Clocations():
         response["data"] = data
 
         return response
+
+    def get_lline(self):
+        data = []
+        lline_list = ["一号线", "二号线", "四号线"]
+        for row in lline_list:
+            data_item = {}
+            data_item["Lline"] = row
+            data.append(data_item)
+        response = {}
+        response["status"] = response_ok
+        response["message"] = "获取线路成功"
+        response["data"] = data
+
+        return response
+
+    def get_lline_no_by_lline(self, lline):
+        lline_list = ["一号线", "二号线", "四号线"]
+        i = 0
+        while i < 3:
+            if lline == lline_list[i]:
+                return i
+            i = i + 1
+        return -1

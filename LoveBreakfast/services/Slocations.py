@@ -15,10 +15,11 @@ class Slocations():
             print(e.message)
 
 
-    def get_all(self):
+    def get_all(self, lline):
         all_location = None
         try:
-            all_location = self.session.query(model.Locations.Lid, model.Locations.Lname, model.Locations.Litem).all()
+            all_location = self.session.query(model.Locations.Lid, model.Locations.Lname, model.Locations.Litem)\
+                .filter_by(Litem=lline).all()
         except Exception as e:
             print(e.message)
             self.session.rollback()

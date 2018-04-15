@@ -49,6 +49,10 @@ class CUsers():
             repeated_tel["messages"] = messages_repeat_tel
             return repeated_tel
 
+        if data["Uinvate"] in data:
+            Uinvate = data["Uinvate"]
+            # 创建优惠券
+
         is_register = susers.login_users(data["Utel"], data["Upwd"])
         if is_register:
             from config.messages import messages_regist_ok

@@ -112,7 +112,7 @@ class SOrders():
         all_order = None
         try:
             all_order = self.session.query(model.Ordermain.Oid, model.Ordermain.Otime, model.Ordermain.Ostatus,
-                                           model.Ordermain.Oprice).filter_by(Uid=uid).all()
+                                           model.Ordermain.Oprice, model.Ordermain.Opic).filter_by(Uid=uid).all()
         except Exception as e:
             print(e.message)
             self.session.rollback()
@@ -135,7 +135,8 @@ class SOrders():
         order_abo = None
         try:
             order_abo = self.session.query(model.Ordermain.Otime, model.Ordermain.Ostatus, model.Ordermain.Oprice,
-                                           model.Ordermain.Lid, model.Ordermain.Oabo).filter_by(Oid=oid).first()
+                                           model.Ordermain.Lid, model.Ordermain.Oabo, model.Ordermain.Opic)\
+                .filter_by(Oid=oid).first()
         except Exception as e:
             print(e.message)
             self.session.rollback()

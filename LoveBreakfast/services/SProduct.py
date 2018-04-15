@@ -96,7 +96,7 @@ class SProduct():
         product = None
         try:
             product = self.session.query(model.Products.Pname, model.Products.P_sales_volume, model.Products.Pscore,
-                                         model.Products.Pprice).filter_by(Pid = pid).first()
+                                         model.Products.Pprice, model.Products.Pimage).filter_by(Pid = pid).first()
         except Exception as e:
             print(e.message)
             self.session.rollback()

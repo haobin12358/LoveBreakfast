@@ -11,8 +11,8 @@ from apis.AOrders import AOrders
 from apis.ALocations import ALocations
 from apis.ACoupons import ACoupons
 
-app = Flask(__name__)
-api = flask_restful.Api(app)
+bk = Flask(__name__)
+api = flask_restful.Api(bk)
 
 api.add_resource(AUsers, "/love/breakfast/users/<string:users>")
 api.add_resource(AProduct, "/love/breakfast/product/<string:product>")
@@ -26,10 +26,4 @@ api.add_resource(ACoupons, "/love/breakfast/cardpkg/<string:card>")
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 7444, debug=True)
-
-@app.error_handlers(Exception)
-def catchException(error):
-    from flask import jsonify
-    response = dict(status=0, message="500 Error")
-    return jsonify(response), 400
+    bk.run('0.0.0.0', 7444, debug=True)
