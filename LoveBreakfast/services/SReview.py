@@ -29,11 +29,13 @@ class SReview():
             return True
         except Exception as e:
             print e.message
+            self.session.rollback()
         finally:
             self.session.close()
 
     # 根据oid获取评论信息
     def get_review(self, oid):
+        review_list = None
         try:
             review_list = self.session.query(model.Review.Pid, model.Review.Rscore,
                                              model.Review.Rcontent).filter_by(Oid=oid).all()

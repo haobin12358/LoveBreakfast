@@ -22,7 +22,7 @@ class SProduct():
 
     # 获取所有商品信息
     def get_all(self):
-        pro_list_of_service = []
+        pro_list_of_service = None
         try:
             pro_list_of_service = self.session.query(model.Products.Pid, model.Products.Pname,
                                                      model.Products.Pprice,model.Products.Pimage,

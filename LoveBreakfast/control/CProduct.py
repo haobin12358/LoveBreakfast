@@ -21,26 +21,35 @@ class CProduct():
     #  获取全部商品列表
     def get_all(self):
         pro_list_of_service = self.service_product.get_all()
+        if pro_list_of_service != None:
+            pro_list_of_control  = []
+            for i in range(len(pro_list_of_service)):
+                dic_of_pro = {}
+                dic_of_pro["Pid"] = pro_list_of_service[i].Pid
+                dic_of_pro["Pname"] = pro_list_of_service[i].Pname
+                dic_of_pro["Pprice"] = pro_list_of_service[i].Pprice
+                dic_of_pro["Pimage"] = pro_list_of_service[i].Pimage
+                dic_of_pro["PsalesVolume"] = pro_list_of_service[i].P_sales_volume
+                dic_of_pro["Pscore"] = pro_list_of_service[i].Pscore
+                dic_of_pro["Pnum"] = 0  # 前端控制用
+                pro_list_of_control.append(dic_of_pro)
 
-        pro_list_of_control  = []
-        for i in range(len(pro_list_of_service)):
-            dic_of_pro = {}
-            dic_of_pro["Pid"] = pro_list_of_service[i].Pid
-            dic_of_pro["Pname"] = pro_list_of_service[i].Pname
-            dic_of_pro["Pprice"] = pro_list_of_service[i].Pprice
-            dic_of_pro["Pimage"] = pro_list_of_service[i].Pimage
-            dic_of_pro["PsalesVolume"] = pro_list_of_service[i].P_sales_volume
-            dic_of_pro["Pscore"] = pro_list_of_service[i].Pscore
-            dic_of_pro["Pnum"] = 0  # 前端控制用
-            pro_list_of_control.append(dic_of_pro)
+            print(pro_list_of_control)
+            return {
+                "message": "get pro_list success !",
+                "status": 200,
+                "data": pro_list_of_control
+            }
+        else:
+            from config.status import response_error
+            from config.status_code import SYSTEM_ERROR
+            from config.messages import error_system_error
+            return {
+                "message": error_system_error,
+                "status": response_error,
+                "status_code": SYSTEM_ERROR
 
-        print(pro_list_of_control)
-        return {
-            "message": "get pro_list success !",
-            "status": 200,
-            "data": pro_list_of_control
-        }
-
+            }
     #  根据商品id获取商品详情
     def get_info_by_id(self):
         args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
@@ -57,29 +66,39 @@ class CProduct():
         # 判断是否存在此pid
         print type(pid_to_str)
         all_product_id = self.service_product.get_all_pid()
-        print type(all_product_id[0])
-        if pid_to_str not in all_product_id:
-            message, status, statuscode = import_status("NO_THIS_PRODUCT", "response_error", "NO_THIS_PRODUCT")
+        if all_product_id != None:
+            print type(all_product_id[0])
+            if pid_to_str not in all_product_id:
+                message, status, statuscode = import_status("NO_THIS_PRODUCT", "response_error", "NO_THIS_PRODUCT")
+                return {
+                    "message": message,
+                    "status": status,
+                    "statuscode": statuscode,
+                }
+
+            # 返回商品详情
+            proabo_of_controller = {}
+            proabo_of_service = self.service_product.get_pro_info_by_pid(pid_to_str)
+            proabo_of_controller["Pname"] = proabo_of_service.Pname
+            proabo_of_controller["Pprice"] = proabo_of_service.Pprice
+            proabo_of_controller["Pimage"] = proabo_of_service.Pimage
+            proabo_of_controller["Pinfo"] = proabo_of_service.Pinfo
+            proabo_of_controller["Pnum"] = 0
             return {
-                "message": message,
-                "status": status,
-                "statuscode": statuscode,
+                "status": 200,
+                "message": "get pro_info success !",
+                "data": proabo_of_controller,
             }
+        else:
+            from config.status import response_error
+            from config.status_code import SYSTEM_ERROR
+            from config.messages import error_system_error
+            return {
+                "message": error_system_error,
+                "status": response_error,
+                "status_code": SYSTEM_ERROR
 
-        # 返回商品详情
-        proabo_of_controller = {}
-        proabo_of_service = self.service_product.get_pro_info_by_pid(pid_to_str)
-        proabo_of_controller["Pname"] = proabo_of_service.Pname
-        proabo_of_controller["Pprice"] = proabo_of_service.Pprice
-        proabo_of_controller["Pimage"] = proabo_of_service.Pimage
-        proabo_of_controller["Pinfo"] = proabo_of_service.Pinfo
-        proabo_of_controller["Pnum"] = 0
-        return {
-            "status": 200,
-            "message": "get pro_info success !",
-            "data": proabo_of_controller,
-        }
-
+            }
     # 根据分类id获取商品信息
     def get_all_by_category(self, cid):
         args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
