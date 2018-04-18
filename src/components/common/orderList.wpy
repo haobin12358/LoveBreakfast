@@ -15,7 +15,8 @@
       <view class="m-business-loc">
         <view class="m-price">￥{{list.Oprice}}</view>
         <view class="m-add-cut" >
-          <button class="m-btn m-cancel">取消订单</button>
+          <button class="m-btn m-cancel" wx:if="{{list.is_index == '701'}}">取消订单</button>
+          <button class="m-btn " wx:if="{{list.is_index == '702'}}" @tap="evaluateTap({{list}})">评价</button>
         </view>
       </view>
     </view>
@@ -35,6 +36,12 @@
     methods = {
       bindTap(v){
         this.$emit('listTap',v)
+      },
+      evaluateTap(v){
+        console.log(v)
+        wx.navigateTo({
+          url: '/pages/commodityEvaluation'
+        })
       }
     }
   }

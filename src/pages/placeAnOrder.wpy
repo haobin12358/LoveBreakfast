@@ -125,9 +125,29 @@
       'pickerChange':function(e){
         if(e.sort == '选择取餐站点'){
           this.getExitInfo(e.id[e.index])
+        }else if(e.sort == '选择地铁线路'){
+          this.getCationInfo(e.array[e.index])
         }
         this.$apply();
       }
+    }
+    async getLineInfo(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_line,
+        method:'GET',
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.all_picker[0].array = that.deal_arr(res.data.data,'Lline');
+            that.$apply()
+          }
+        }
+      })
     }
     async getCationInfo(params) {
       let that = this;
@@ -135,6 +155,7 @@
       wx.request({
         url:api.get_all_location,
         method:'GET',
+        data:{Lline:params},
         header:{
           'content-type':'application/json',
         },
@@ -219,7 +240,7 @@
       return _arr;
     }
     onShow(option){
-      this.getCationInfo();
+      this.getLineInfo();
       this.getPersonInfo('87da4341-94f3-4611-bdb9-51ff718d252e');
       this.getAllCar('87da4341-94f3-4611-bdb9-51ff718d252e');
     }

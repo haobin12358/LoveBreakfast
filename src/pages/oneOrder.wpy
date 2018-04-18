@@ -43,6 +43,9 @@
       <view class="m-li">
         <button class="m-btn">取消订单</button>
       </view>
+      <!--<view class="m-li">-->
+        <!--<button class="m-btn m-active">评价</button>-->
+      <!--</view>-->
     </view>
 
   </view>

@@ -1,20 +1,145 @@
 <template>
-  <view class="container">
+  <view class="m-evaluation">
+    <view class="m-head">
+      <view class="m-left">
+        <image src="/images/icon_radio.png" style="width: 60rpx; height: 60rpx;"></image>
+        <text>全选</text>
+      </view>
+
+      <!--<view class="m-star-box">-->
+        <!--<image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>-->
+        <!--<image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>-->
+        <!--<image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>-->
+      <!--</view>-->
+      <Star></Star>
+    </view>
+    <view class="m-content">
+      <view class="m-content-one">
+        <view class="m-product-title">
+          <image src="/images/icon_radio.png" style="width: 60rpx; height: 60rpx;"></image>
+          <text>名字</text>
+        </view>
+        <view class="m-textarea">
+          <textarea bindblur="bindTextAreaBlur" auto-height placeholder="评价内容" />
+        </view>
+        <view class="m-foot">
+          <text>星级：</text>
+          <view class="m-star-box">
+            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
+            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
+            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
+          </view>
+        </view>
+      </view>
+      <view class="m-content-one">
+        <view class="m-product-title">
+          <image src="/images/icon_radio.png" style="width: 60rpx; height: 60rpx;"></image>
+          <text>名字</text>
+        </view>
+        <view class="m-textarea">
+          <textarea bindblur="bindTextAreaBlur" auto-height placeholder="评价内容" />
+        </view>
+        <view class="m-foot">
+          <text>星级：</text>
+          <view class="m-star-box">
+            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
+            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
+            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="m-foot-b">
+      <button class="m-btn">提交评价</button>
+    </view>
 
   </view>
+
 </template>
 <script>
   import wepy from 'wepy';
+  import Star from '../components/common/star'
   export default class CommondityEvaluation extends wepy.page{
     config = {
-      navigationBarTitleText: ''
+      navigationBarTitleText: '商品评价'
+    }
+    components = {
+      Star:Star
     }
     data = {
 
     }
     methods = {
+      bindTextAreaBlur: function(e) {
+        console.log(e.detail.value)
+      },
     }
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
+  @import "../../src/styles/common";
+  .m-evaluation{
+    width: 100%;
+    background-color: #f8f8f8;
+    .m-head{
+      width: 95%;
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 30rpx;
+      padding: @margin-interval;
+      background-color: #fff;
+
+      .m-left{
+        display: flex;
+        align-items: center;
+      }
+    }
+    .m-content{
+      .m-content-one{
+        width: 95%;
+        padding: 0 @margin-interval;
+        background-color: #fff;
+        margin: 20rpx 0;
+        .m-product-title{
+          width: 100%;
+          padding: @margin-interval 0 ;
+          display: flex;
+          align-items: center;
+
+        }
+        .m-textarea{
+          min-height: 100rpx ;
+          width: 80%;
+          border: 1px solid @border-color;
+          padding: @margin-interval;
+          margin-left: 50rpx;
+          font-size: 30rpx;
+        }
+        .m-foot{
+          width: 100%;
+          display: flex;
+          flex-flow: row;
+          font-size: 30rpx;
+          align-items: center;
+          margin: 20rpx;
+        }
+
+      }
+    }
+    .m-foot-b{
+      width: 100%;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      .m-btn{
+        background-color: #fff;
+        width: 50%;
+        line-height: 100rpx;
+        font-size: 30rpx;
+        margin: @margin-interval;
+      }
+    }
+  }
 </style>
