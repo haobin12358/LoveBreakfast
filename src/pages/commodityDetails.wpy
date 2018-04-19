@@ -1,20 +1,163 @@
 <template>
-  <view class="container">
+  <view class="m-evaluation">
+    <view class="m-content">
+      <!--<repeat for="{{list_data}}" key="index" index="index" item="item">-->
+      <!--<Evaluation :list.sync="item" @starChange.user="starChange" ></Evaluation>-->
+      <!--</repeat>-->
+      <view class="m-content-one" wx:for="{{list_data}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+        <view class="m-product-title">
+          <text >{{item.Pname}}</text>
+        </view>
+        <view class="m-textarea" >
+          <!--wx:if="{{item.Rcontent != ''}}"-->
+          <text >{{item.Rcontent}}</text>
+        </view>
+        <view class="m-foot">
+          <text>星级:</text>
+          <view class="m-star-box">
+            <view wx:for="{{arr}}" wx:key="i"  wx:for-index = "in" wx:for-item="i" >
+              <image src="/images/icon_star.png" wx:if="{{item.Rscore < (in+1)}}"  style="width: 60rpx; height: 60rpx"></image>
+              <image src="/images/icon_star_active.png" wx:if="{{item.Rscore >= (in+1)}}" style="width: 60rpx; height: 60rpx"></image>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
 
   </view>
+
 </template>
-<script >
+<script>
   import wepy from 'wepy';
+  import api from '../api/api'
+  import tip from '../utils/tip'
   export default class CommondityDetails extends wepy.page{
     config = {
-      navigationBarTitleText: ''
+      navigationBarTitleText: '评价详情'
     }
     data = {
+      is_radio:false,
+      list_data:[],
+      arr:[
+        1,2,3,4,5
+      ],
+      length:0,
+      all_star:0
+    }
+    async getAllCommodity(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_order_abo,
+        method:'GET',
+        data:{token:params.token,Oid:params.Oid},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          // console.log(res,'aaa')
+          if(res.data.status == '200'){
+            that.list_data = res.data.data.Order_items;
+            for(let i=0;i<that.list_data.length;i++){
+              that.list_data[i].Oid = params.Oid;
+              that.list_data[i].Rscore = 0;
+              that.list_data[i].Rcontent = '';
+            }
+            that.$apply()
+          }
+        }
+      })
+    }
+    onLoad(option){
+      let token = '';
+      let that = this;
+      wx.getStorage({
+        key: 'token',
+        success: function(res){
+          token = res.data
+          that.getAllCommodity({token:token,Oid:option.Oid});
+          that.$apply()
+        }
+      })
 
+      this.$apply();
     }
     methods = {
+
     }
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
+  @import "../../src/styles/common";
+  .m-evaluation{
+    width: 100%;
+    background-color: #f8f8f8;
+    .m-head{
+      width: 95%;
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 30rpx;
+      padding: @margin-interval;
+      background-color: #fff;
+
+      .m-left{
+        display: flex;
+        align-items: center;
+      }
+    }
+    .m-content{
+      .m-content-one{
+        width: 95%;
+        padding: 0 @margin-interval;
+        background-color: #fff;
+        margin: 20rpx 0;
+        .m-product-title{
+          width: 100%;
+          padding: @margin-interval 0 ;
+          display: flex;
+          align-items: center;
+
+        }
+        .m-textarea{
+          min-height: 50rpx ;
+          width: 80%;
+          border: 1px solid @border-color;
+          padding: @margin-interval;
+          margin-left: 50rpx;
+          font-size: 30rpx;
+        }
+        .m-foot{
+          width: 100%;
+          display: flex;
+          flex-flow: row;
+          font-size: 30rpx;
+          align-items: center;
+          margin: 20rpx;
+        }
+
+      }
+    }
+    .m-foot-b{
+      width: 100%;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      .m-btn{
+        background-color: #fff;
+        width: 50%;
+        line-height: 100rpx;
+        font-size: 30rpx;
+        margin: @margin-interval;
+      }
+    }
+  }
+  .m-star-box{
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+  }
 </style>

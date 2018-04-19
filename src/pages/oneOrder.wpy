@@ -2,7 +2,7 @@
   <view class="m-one-order">
     <view class="m-head">
       <view class="m-li">
-        <image  src="/images/test.jpeg" style="width: 500rpx;height: 350rpx;"/>
+        <image  src="{{Opic}}" style="width: 500rpx;height: 350rpx;"/>
         取货二维码
       </view>
     </view>
@@ -41,7 +41,7 @@
         <view >{{Otime}}</view>
       </view>
       <view class="m-li">
-        <button class="m-btn">取消订单</button>
+        <button class="m-btn" @tap="cancelOrder">取消订单</button>
       </view>
       <!--<view class="m-li">-->
         <!--<button class="m-btn m-active">评价</button>-->
@@ -74,23 +74,9 @@
       Otime:'',
       Uname:'',
       Utel:'',
-      all_order:[
-        {
-          Pname:'粥',
-          Pnum:1,
-          Pprice:12
-        },
-        {
-          Pname:'粥',
-          Pnum:1,
-          Pprice:12
-        },
-        {
-          Pname:'粥',
-          Pnum:1,
-          Pprice:12
-        }
-      ],
+      all_order:[],
+      Opic:'',
+      token:''
     }
     async getOrderInfo(params) {
       let that = this;
@@ -98,7 +84,7 @@
       wx.request({
         url:api.get_order_abo,
         method:'GET',
-        data:{token:params,Oid:'c264e70c-6791-4462-8a0c-d84d123b1176'},
+        data:{token:params.token,Oid:params.Oid},
         header:{
           'content-type':'application/json',
         },
@@ -116,15 +102,80 @@
             that.Uname = res.data.data.Uname;
             that.Utel = res.data.data.Utel;
             that.all_order = res.data.data.Order_items;
+            that.Opic = res.data.data.Opic;
             that.$apply()
           }
         }
       })
     }
-    onShow(option){
-      this.getOrderInfo('87da4341-94f3-4611-bdb9-51ff718d252e');
+    async changeOrder(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.update_order_status+'?token='+params,
+        method:'POST',
+        data:{Ostatus:that.Ostatus,Oid:that.Oid},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            wx.showToast({
+              title: '删除成功',
+              icon: 'success',
+              duration: 800
+            }).navigateTo({
+              url: '/pages/myOrder'
+            })
+            that.$apply()
+          }
+        }
+      })
+    }
+    onLoad(option){
+      let params = {
+        token:'',
+        Oid:option.Oid
+      }
+      let token = '';
+      let that = this;
+      wx.getStorage({
+        key: 'token',
+        success: function(res){
+          params.token = res.data;
+          that.token = res.data;
+          that.getOrderInfo(params);
+          that.$apply()
+        }
+      })
+
     }
     methods = {
+      cancelOrder(){
+        let that = this;
+        wx.getStorage({
+          key: 'token',
+          success: function(res){
+
+            that.token = res.data;
+            wx.showModal({
+              title:'提示',
+              content:'确定要删除该商品吗？',
+              success:function (res) {
+                if(res.confirm){
+                  that.changeOrder(that.token)
+                  that.$apply();
+
+                }else if(res.cancel){
+                }
+              }
+            })
+
+          }
+        })
+
+      }
     }
   }
 </script>

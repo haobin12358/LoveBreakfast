@@ -16,7 +16,8 @@
         <view class="m-price">￥{{list.Oprice}}</view>
         <view class="m-add-cut" >
           <button class="m-btn m-cancel" wx:if="{{list.is_index == '701'}}">取消订单</button>
-          <button class="m-btn " wx:if="{{list.is_index == '702'}}" @tap="evaluateTap({{list}})">评价</button>
+          <button class="m-btn " wx:if="{{list.Ostatus == '已完成'}}" @tap="evaluateTap({{list}})">评价</button>
+          <button class="m-btn " wx:if="{{list.Ostatus == '已评价'}}" @tap="evaluateLookTap({{list}})">评价详情</button>
         </view>
       </view>
     </view>
@@ -38,10 +39,16 @@
         this.$emit('listTap',v)
       },
       evaluateTap(v){
-        console.log(v)
-        wx.navigateTo({
-          url: '/pages/commodityEvaluation'
-        })
+        this.$emit('evalTap',v)
+//        wx.navigateTo({
+//          url: '/pages/commodityEvaluation'
+//        })
+      },
+      evaluateLookTap(v){
+        this.$emit('evalookTap',v)
+//        wx.navigateTo({
+//          url: '/pages/commodityDetails'
+//        })
       }
     }
   }

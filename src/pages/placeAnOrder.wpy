@@ -35,6 +35,12 @@
           </view>
         </picker>
       </view>
+      <view class="m-li">
+        <view class="m-input-box">
+          备注：<input class="m-input" value="{{Oabo}}" bindinput="bindKeyInput"  maxlength="200" placeholder="备注信息" />
+        </view>
+
+      </view>
     </view>
     <foot class="m-foot">
       <view class="m-car">
@@ -61,51 +67,46 @@
       Order:Order
     }
     data = {
+      Oabo:'',
       all_picker:[
         {
           sort:'选择地铁线路',
           array: ['1号线', '2号线', '4号线'],
-          id:[],
+          id:['1号线'],
           index:0,
           type:''
         },
         {
           sort:'选择取餐站点',
-          array: ['江陵路', '近江', '西兴', '滨和路'],
+          array: [],
           id:[],
           index:0,
           type:''
         },
         {
           sort:'选择出站口',
-          array: ['A', 'B', 'C', 'D'],
+          array: [],
           id:[],
           index:0,
           type:''
         },
         {
-          sort:'时间',
+          sort:'取餐日期',
+          value:'2018-04-06',
+          type:'date'
+        },
+        {
+          sort:'最早时间',
+          value:'08:00',
+          type:'time'
+        },
+        {
+          sort:'最晚时间',
           value:'08:00',
           type:'time'
         },
       ],
-      all_order:[
-        {
-          Pname:'粥',
-          Pnum:1,
-          Pprice:12
-        },
-        {
-          Pname:'粥',
-          Pnum:1,
-          Pprice:12
-        },
-        {
-          Pname:'粥',
-          Pnum:1,
-          Pprice:12
-        }
-      ],
+      all_order:[],
       Uname:'',
       Utel:'',
       payment_method:
@@ -232,6 +233,50 @@
         }
       })
     }
+    async getAllYou(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_cardpkg,
+        method:'GET',
+        data:{token:params},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+//          that.total_money = 0;
+          if(res.data.status == '200'){
+            console.log(res)
+            that.$apply()
+          }
+        }
+      })
+    }
+    async submitAll(token,params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.make_main_order+'?token='+token,
+        method:'POST',
+        data:params,
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          that.total_money = 0;
+          if(res.data.status == '200'){
+            that.all_order = res.data.data;
+            for(let i=0;i< that.all_order.length;i++){
+              that.total_money += Number(that.all_order[i].Pnum * that.all_order[i].Pprice)
+            }
+            //
+            that.$apply()
+          }
+        }
+      })
+    }
     deal_arr(data,name){
       let _arr = [];
       for(let i = 0;i<data.length;i++){
@@ -239,10 +284,22 @@
       }
       return _arr;
     }
-    onShow(option){
+    onLoad(option){
+      let date = new Date();
+      let token ='';
+      this.all_picker[3].value = date.getFullYear() + '-' + ((date.getMonth()+1)>=10 ?(date.getMonth()+1):'0'+(date.getMonth()+1) ) + '-' +(date.getDate()>=10?date.getDate():'0'+date.getDate())
       this.getLineInfo();
-      this.getPersonInfo('87da4341-94f3-4611-bdb9-51ff718d252e');
-      this.getAllCar('87da4341-94f3-4611-bdb9-51ff718d252e');
+      wx.getStorage({
+        key: 'token',
+        success: function(res){
+          token = res.data
+          this.getPersonInfo(token);
+          this.getAllCar(token);
+          this.getAllYou(token);
+          that.$apply()
+        }
+      })
+
     }
     methods = {
       PickerChangeWay: function(e) {
@@ -253,6 +310,38 @@
         this.number_of_meals.index = e.detail.value;
         this.$apply()
       },
+      bindKeyInput(e){
+        this.Oabo = e.detail.value;
+        this.$apply();
+      },
+      placeAnOrder(){
+        let params = {};
+        let that = this;
+        let token = '';
+        let date = new Date();
+        params ={
+          "Otime":date.getFullYear() + '-' + ((date.getMonth()+1)>=10 ?(date.getMonth()+1):'0'+(date.getMonth()+1) ) + '-' +(date.getDate()>=10?date.getDate():'0'+date.getDate())+' '+date.getHours()+':'+date.getMinutes(),
+          "Omintime":this.all_picker[3].value + ' '+this.all_picker[4].value ,
+          "Omaxtime":this.all_picker[3].value + ' '+this.all_picker[5].value,
+          "Lname":this.all_picker[1].array[this.all_picker[1].index],
+          "Lno":this.all_picker[0].array[this.all_picker[0].index],
+          "Lline":this.all_picker[2].array[this.all_picker[2].index],
+          'Lboxno':1,
+          "Oabo":this.Oabo,
+          "Order_items":this.all_order
+        }
+        wx.getStorage({
+          key: 'token',
+          success: function(res){
+            token = res.data
+            that.submitAll(token,params)
+            that.$apply()
+          }
+        })
+
+
+
+      }
     }
   }
 </script>
@@ -263,7 +352,7 @@
     background-color: #f8f8f8;
     .m-head{
       width: 100%;
-      height: 400rpx;
+      height: 600rpx;
       .m-head-back{
         background-color: @common-color;
         height: 296rpx;
@@ -274,7 +363,7 @@
         top: 0;
         left: 40rpx;
         width: 630rpx;
-        height: 550rpx;
+        height: 750rpx;
         background-color: #fff;
         border-radius: 2px;
         padding: 0 20rpx;
@@ -291,7 +380,7 @@
       }
     }
     .m-content{
-      margin: 270rpx 40rpx 40rpx 40rpx;
+      margin: 470rpx 40rpx 40rpx 40rpx;
       background-color: #fff;
       border: 1px solid #f8f8f8;
       .m-li-more{
@@ -348,10 +437,18 @@
             }
           }
         }
+        .m-input-box{
+          display: flex;
+          flex-flow: row;
+          align-items: center;
+          .m-input{
+
+          }
+        }
       }
-      .m-li:last-child{
-        border-bottom: none;
-      }
+      /*.m-li:last-child{*/
+        /*border-bottom: none;*/
+      /*}*/
     }
     .m-foot{
       position: fixed;
@@ -364,6 +461,7 @@
       flex-flow: row;
       justify-content: space-between;
       align-items: center;
+      z-index: 100;
       /*background-color: rgba(0,0,0,0.5);*/
       .m-car{
         position: relative;

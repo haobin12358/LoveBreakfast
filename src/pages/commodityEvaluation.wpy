@@ -2,55 +2,40 @@
   <view class="m-evaluation">
     <view class="m-head">
       <view class="m-left">
-        <image src="/images/icon_radio.png" style="width: 60rpx; height: 60rpx;"></image>
+        <image src="/images/icon_radio.png" wx:if="{{!is_radio}}" style="width: 60rpx; height: 60rpx;" @tap="radioTap"></image>
+        <image src="/images/icon_radio_active.png" wx:if="{{is_radio}}" style="width: 60rpx; height: 60rpx;" @tap="radioTap"></image>
         <text>全选</text>
       </view>
 
-      <!--<view class="m-star-box">-->
-        <!--<image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>-->
-        <!--<image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>-->
-        <!--<image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>-->
-      <!--</view>-->
-      <Star></Star>
+      <Star @allStar.user="allStar"></Star>
     </view>
     <view class="m-content">
-      <view class="m-content-one">
+      <!--<repeat for="{{list_data}}" key="index" index="index" item="item">-->
+        <!--<Evaluation :list.sync="item" @starChange.user="starChange" ></Evaluation>-->
+      <!--</repeat>-->
+      <view class="m-content-one" wx:for="{{list_data}}" wx:key="index" wx:for-index="index" wx:for-item="item">
         <view class="m-product-title">
-          <image src="/images/icon_radio.png" style="width: 60rpx; height: 60rpx;"></image>
-          <text>名字</text>
+          <image src="/images/icon_radio.png" wx:if="{{!is_radio}}" style="width: 60rpx; height: 60rpx;"></image>
+          <image src="/images/icon_radio_active.png" wx:if="{{is_radio}}" style="width: 60rpx; height: 60rpx;"></image>
+          <text>{{item.Pname}}</text>
         </view>
         <view class="m-textarea">
-          <textarea bindblur="bindTextAreaBlur" auto-height placeholder="评价内容" />
+          <textarea bindblur="bindTextAreaBlur({{index}},{{this.value}})" value="{{item.Rcontent}}" auto-height placeholder="评价内容" />
         </view>
         <view class="m-foot">
-          <text>星级：</text>
+          <text>星级：{{item.Rscore}}</text>
           <view class="m-star-box">
-            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
-            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
-            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
+            <view wx:for="{{arr}}" wx:key="i"  wx:for-index = "in" wx:for-item="i" @tap="starChange({{in}},{{index}})">
+              <image src="/images/icon_star.png" wx:if="{{item.Rscore < (in+1)}}"  style="width: 60rpx; height: 60rpx"></image>
+              <image src="/images/icon_star_active.png" wx:if="{{item.Rscore >= (in+1)}}" style="width: 60rpx; height: 60rpx"></image>
+            </view>
           </view>
-        </view>
-      </view>
-      <view class="m-content-one">
-        <view class="m-product-title">
-          <image src="/images/icon_radio.png" style="width: 60rpx; height: 60rpx;"></image>
-          <text>名字</text>
-        </view>
-        <view class="m-textarea">
-          <textarea bindblur="bindTextAreaBlur" auto-height placeholder="评价内容" />
-        </view>
-        <view class="m-foot">
-          <text>星级：</text>
-          <view class="m-star-box">
-            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
-            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
-            <image src="/images/icon_star.png" style="width: 60rpx; height: 60rpx"></image>
-          </view>
+          <!--<Star @StarChange.user="StarChange" :length.sync="{{list.Rscore}}"></Star>-->
         </view>
       </view>
     </view>
     <view class="m-foot-b">
-      <button class="m-btn">提交评价</button>
+      <button class="m-btn" @tap="dealAll">提交评价</button>
     </view>
 
   </view>
@@ -59,20 +44,113 @@
 <script>
   import wepy from 'wepy';
   import Star from '../components/common/star'
+  import Evaluation from '../components/common/evaluation'
+  import api from '../api/api'
+  import tip from '../utils/tip'
   export default class CommondityEvaluation extends wepy.page{
     config = {
       navigationBarTitleText: '商品评价'
     }
     components = {
-      Star:Star
+      Star:Star,
+      Evaluation:Evaluation
     }
     data = {
+      is_radio:false,
+      list_data:[],
+      arr:[
+        1,2,3,4,5
+      ],
+      length:0,
+      all_star:0
+    }
+    async getAllCommodity(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_order_abo,
+        method:'GET',
+        data:{token:params.token,Oid:params.Oid},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          // console.log(res,'aaa')
+          if(res.data.status == '200'){
+            that.list_data = res.data.data.Order_items;
+            for(let i=0;i<that.list_data.length;i++){
+              that.list_data[i].Oid = params.Oid;
+              that.list_data[i].Rscore = 0;
+              that.list_data[i].Rcontent = '';
+            }
+            that.$apply()
+          }
+        }
+      })
+    }
+    async submitAllCommodity(token,Oid,params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.create_review+'?token='+token+'&Oid='+Oid,
+        method:'POST',
+        data:{Product_list:params},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          // console.log(res,'aaa')
+//          if(res.data.status == '200'){
+//            that.list_data = res.data.data.Order_items;
+//            for(let i=0;i<that.list_data.length;i++){
+//              that.list_data[i].Oid = params.Oid;
+//              that.list_data[i].Rscore = 0;
+//              that.list_data[i].Rcontent = '';
+//            }
+//            that.$apply()
+//          }
+        }
+      })
+    }
+    onLoad(option){
+      let token = '';
+      let that = this;
+      wx.getStorage({
+        key: 'token',
+        success: function(res){
+          token = res.data
+          that.getAllCommodity({token:token,Oid:option.Oid});
+          that.$apply()
+        }
+      })
 
     }
     methods = {
-      bindTextAreaBlur: function(e) {
-        console.log(e.detail.value)
+      bindTextAreaBlur: function(i,e) {
+        this.list_data[i].Rcontent = e.detail.value;
+        this.$apply();
       },
+      starChange(v,s){
+        this.list_data[s].Rscore = v+1;
+        this.$apply();
+      },
+      radioTap(){
+        this.is_radio = !this.is_radio;
+      },
+      allStar(v){
+        this.all_star = v;
+        if(this.is_radio){
+          for(let i=0;i<this.list_data.length;i++){
+            this.list_data[i].Rscore = this.all_star
+          }
+        }
+        this.$apply();
+      },
+      dealAll(){
+        this.submitAllCommodity('87da4341-94f3-4611-bdb9-51ff718d252e','c264e70c-6791-4462-8a0c-d84d123b1176',this.list_data)
+      }
     }
   }
 </script>
@@ -141,5 +219,10 @@
         margin: @margin-interval;
       }
     }
+  }
+  .m-star-box{
+    display: flex;
+    flex-flow: row;
+    align-items: center;
   }
 </style>

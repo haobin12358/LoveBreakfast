@@ -1,13 +1,13 @@
 <template>
   <view class="m-business-content">
-    <view class="m-order-tab-box">
-      <view class="m-order-tab m-active">全部</view>
-      <view class="m-order-tab">配送中</view>
-      <view class="m-order-tab">退订</view>
-    </view>
+    <!--<view class="m-order-tab-box">-->
+      <!--<view class="m-order-tab m-active">全部</view>-->
+      <!--<view class="m-order-tab">配送中</view>-->
+      <!--<view class="m-order-tab">退订</view>-->
+    <!--</view>-->
     <view class="m-all-products">
       <repeat for="{{list_data}}" key="index" index="index" item="item">
-        <List :list="item" page="myOrder" @listTap.user="productTap"></List>
+        <List :list="item" page="myOrder" @listTap.user="productTap" @evalTap.user="evalTap" @evalookTap.user="evalookTap"></List>
       </repeat>
   </view>
   </view>
@@ -25,44 +25,7 @@
       List:List
     }
     data = {
-      list_data:[
-        {
-          Pname:'粥',
-          Pimage:'../images/test.jpeg',
-          P_sales_volume:'100',
-          Pscore:'98',
-          Pprice:'12.3',
-          Pid:'01',
-          Pabo:'',
-          time:'2018-04-03012:55:12',
-          label:'配送中',
-          Pnum:1
-        },
-        {
-          Pname:'粥',
-          Pimage:'../images/test.jpeg',
-          P_sales_volume:'100',
-          Pscore:'98',
-          Pprice:'12.3',
-          Pid:'01',
-          Pabo:'',
-          time:'2018-04-03012:55:12',
-          label:'配送中',
-          Pnum:1
-        },
-        {
-          Pname:'粥',
-          Pimage:'../images/test.jpeg',
-          P_sales_volume:'100',
-          Pscore:'98',
-          Pprice:'12.3',
-          Pid:'01',
-          Pabo:'',
-          time:'2018-04-03012:55:12',
-          label:'配送中',
-          Pnum:1
-        }
-      ]
+      list_data:[]
     }
     async getAllOrder(params) {
       let that = this;
@@ -84,15 +47,34 @@
         }
       })
     }
-    onLoad(option){
-      // console.log(option,'aaaa')
-      this.getAllOrder('87da4341-94f3-4611-bdb9-51ff718d252e');
+    onShow(option){
+      let token = '';
+      let that = this;
+      wx.getStorage({
+        key: 'token',
+        success: function(res){
+          token = res.data
+          that.getAllOrder(token);
+          that.$apply()
+        }
+      })
+
       // this.getProductInfo(option.Pid);
     }
     methods = {
-      productTap(){
+      productTap(v){
         wx.navigateTo({
-          url: '/pages/oneOrder'
+          url: '/pages/oneOrder?Oid='+v.Oid
+        })
+      },
+      evalTap(v){
+        wx.navigateTo({
+          url: '/pages/commodityEvaluation?Oid='+v.Oid
+        })
+      },
+      evalookTap(v){
+        wx.navigateTo({
+          url: '/pages/commodityDetails?Oid='+v.Oid
         })
       }
     }

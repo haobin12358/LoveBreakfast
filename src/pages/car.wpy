@@ -89,12 +89,22 @@
       })
     }
     onShow(option){
-      this.getAllCar('87da4341-94f3-4611-bdb9-51ff718d252e');
+      let token = '';
+      let that = this;
+      wx.getStorage({
+        key: 'token',
+        success: function(res){
+          token = res.data
+          that.getAllCar(token);
+          that.$apply()
+        }
+      })
+
     }
     methods = {
-      productTap(){
+      productTap(v){
         wx.navigateTo({
-          url: '/pages/product'
+          url: '/pages/product?Pid='+v.Pid
         })
       },
       placeAnOrder(){

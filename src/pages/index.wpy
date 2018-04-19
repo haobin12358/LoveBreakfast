@@ -116,38 +116,7 @@
       interval: 3500,
       duration: 500,
       name:'product',
-      list_data:[
-        {
-          Pname:'粥',
-          Pimage:'../images/test.jpeg',
-          P_sales_volume:'100',
-          Pscore:'98',
-          Pprice:'12.3',
-          Pid:'01',
-          Pabo:'',
-          Pnum: 0
-        },
-        {
-          Pname:'粥',
-          Pimage:'../images/test.jpeg',
-          P_sales_volume:'100',
-          Pscore:'98',
-          Pprice:'12.3',
-          Pid:'01',
-          Pabo:'',
-          Pnum: 0
-        },
-        {
-          Pname:'粥',
-          Pimage:'../images/test.jpeg',
-          P_sales_volume:'100',
-          Pscore:'98',
-          Pprice:'12.3',
-          Pid:'01',
-          Pabo:'',
-          Pnum: 0
-        },
-      ]
+      list_data:[]
     }
 
     computed = {
@@ -174,10 +143,10 @@
     }
     onLoad(){
       this.getProductList();
+      wx.setStorageSync('token','87da4341-94f3-4611-bdb9-51ff718d252e')
     }
     methods = {
       businessTap(v){
-        console.log(v,'asasa')
         wx.navigateTo({
           url: '/pages/product?Pid='+v.Pid
         })
