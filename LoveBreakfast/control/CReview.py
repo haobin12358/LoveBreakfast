@@ -17,7 +17,6 @@ from control.COrders import COrders
 from models import model
 from services.SUsers import SUsers
 from services.SOrders import SOrders
-from config.messages import error_system_error
 
 class CReview():
     def __init__(self):
@@ -107,37 +106,47 @@ class CReview():
         token_to_str = get_str(args, "token")
         oid_to_str = get_str(args, "Oid")
         oid_list_service = self.service_order.get_all_order_by_uid(token_to_str)
-        for i in range(len(oid_list_service)):
-            oid_list_control = []
-            oid = oid_list_service[i].Oid
-            oid_list_control.append(oid)
-        if oid_to_str in oid_list_control:
-            # 查看订单状态是否正常
-            order_abo = self.service_order.get_order_abo_by_oid(oid_to_str)
-            if order_abo.Ostatus != 49:
-                message, status, statuscode = import_status("messages_error_wrong_status_code", "response_error",
-                                                            "error_wrong_status_code")
-                return {
-                    "message": message,
-                    "status": status,
-                    "statuscode": statuscode,
-                }
-        oid_to_str = get_str(args, "Oid")
-        review_list_service = self.service_review.get_review(oid_to_str)
-        print(review_list_service)
-        review_list_control = []
-        for i in range(len(review_list_service)):
-            review_dic = {}
-            review_dic["Pid"] = review_list_service[i].Pid
-            review_dic["Rscore"] = review_list_service[i].Rscore
-            review_dic["Rcontent"] = review_list_service[i].Rcontent
-            review_list_control.append(review_dic)
-        return {
-            "message": "获取商品评论成功",
-            "status": 200,
-            "data": review_list_control
-        }
+        if oid_list_service != None:
+            for i in range(len(oid_list_service)):
+                oid_list_control = []
+                oid = oid_list_service[i].Oid
+                oid_list_control.append(oid)
+            if oid_to_str in oid_list_control:
+                # 查看订单状态是否正常
+                order_abo = self.service_order.get_order_abo_by_oid(oid_to_str)
+                if order_abo.Ostatus != 49:
+                    message, status, statuscode = import_status("messages_error_wrong_status_code", "response_error",
+                                                                "error_wrong_status_code")
+                    return {
+                        "message": message,
+                        "status": status,
+                        "statuscode": statuscode,
+                    }
+            oid_to_str = get_str(args, "Oid")
+            review_list_service = self.service_review.get_review(oid_to_str)
+            print(review_list_service)
+            review_list_control = []
+            for i in range(len(review_list_service)):
+                review_dic = {}
+                review_dic["Pid"] = review_list_service[i].Pid
+                review_dic["Rscore"] = review_list_service[i].Rscore
+                review_dic["Rcontent"] = review_list_service[i].Rcontent
+                review_list_control.append(review_dic)
+            return {
+                "message": "获取商品评论成功",
+                "status": 200,
+                "data": review_list_control
+            }
+        else:
+            from config.status import response_error
+            from config.status_code import SYSTEM_ERROR
+            from config.messages import error_system_error
+            return {
+                "message": error_system_error,
+                "status": response_error,
+                "status_code": SYSTEM_ERROR
 
+            }
     def get_user_review(self):
         args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
         # 判断url参数是否异常
