@@ -12,9 +12,6 @@ from control.Clocations import Clocations
 class ALocations(Resource):
     def __int__(self):
         self.apis_wrong = []
-        self.apis_wrong["status"] = response_system_error
-        self.apis_wrong["status_code"] = error_wrong_apis
-        self.apis_wrong["messages"] = error_messages_wrong_api
 
     def get(self, locations):
         print(PRINT_API_NAME.format(locations))
@@ -29,4 +26,8 @@ class ALocations(Resource):
         if locations in apis:
             return eval(apis[locations])
 
-        return self.apis_wrong
+        apis_wrong = []
+        apis_wrong["status"] = response_system_error
+        apis_wrong["status_code"] = error_wrong_apis
+        apis_wrong["messages"] = error_messages_wrong_api
+        return apis_wrong

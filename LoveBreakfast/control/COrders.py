@@ -42,7 +42,9 @@ class COrders():
         for row in order_list:
             data_item = {}
             data_item["Oid"] = row.Oid
-            data_item["Otime"] = self.deal_string_to_time(row.Otime)
+            print str(row.Otime)
+            Otime = row.Otime
+            data_item["Otime"] = self.deal_string_to_time(str(Otime))
             data_item["Ostatus"] = self.get_status_name_by_status(row.Ostatus)
             data_item["Oprice"] = row.Oprice
             data_item["Opic"] = row.Opic
@@ -348,8 +350,26 @@ class COrders():
                       str(time[17,18])
         return time_string
     def deal_string_to_time(self, time_string):
-        time = str(time_string[0,3]) + "-" + str(time_string[4,5]) + "-" + str(time_string[6,7]) + " " +\
-               str(time_string[8,9]) + ":" + str(time_string[10,11]) + ":" + str(time_string[12,13])
+        # time_string = int(time_string)
+        time = time_string[0]\
+               + time_string[1]\
+               + time_string[2]\
+               + time_string[3]\
+               + "-" \
+               + time_string[4]\
+               + time_string[5]\
+               + "-" \
+               + time_string[6]\
+               + time_string[7]\
+               + " " \
+               + time_string[8]\
+               + time_string[9]\
+               + ":" \
+               + time_string[10] \
+               + time_string[11]\
+               + ":" \
+               + time_string[12] \
+               + time_string[13]
         return time
 
 if __name__ == "__main__":
