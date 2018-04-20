@@ -35,6 +35,7 @@ const change_person_Pwd =  _title + '/love/breakfast/users/update_pwd';//修改�
 //评价
 // const change_person_Pwd = _title + '/love/breakfast/users/update_pwd';//修改用户信息
 const create_review = _title +'/love/breakfast/review/create_review';//添加评价
+const get_review = _title +'/love/breakfast/review/get_review';//添加评价
 
 const get_cardpkg = _title + '/love/breakfast/cardpkg/get_cardpkg';//获取优惠券
 
@@ -58,5 +59,6 @@ module.exports = {
   change_person_info,
   change_person_Pwd,
   create_review,
-  get_cardpkg
+  get_cardpkg,
+  get_review
 }

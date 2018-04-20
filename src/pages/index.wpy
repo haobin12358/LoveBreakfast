@@ -133,7 +133,6 @@
         },
         success:function (res) {
           tip.loaded()
-          // console.log(res,'aaa')
           if(res.data.status == '200'){
             that.list_data = res.data.data;
             that.$apply()
@@ -143,7 +142,7 @@
     }
     onLoad(){
       this.getProductList();
-      wx.setStorageSync('token','87da4341-94f3-4611-bdb9-51ff718d252e')
+//      wx.setStorageSync('token','87da4341-94f3-4611-bdb9-51ff718d252e')
     }
     methods = {
       businessTap(v){

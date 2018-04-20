@@ -67,7 +67,8 @@
       wx.getStorage({
         key: 'token',
         success: function(res){
-          token = res.data
+          token = res.data;
+          that.token = res.data
           that.$apply()
         }
       })
@@ -85,9 +86,17 @@
             content:'确定要删除该商品吗？',
             success:function (res) {
               if(res.confirm){
-                console.log(res.confirm)
                 _that.list.Pnum = v-1;
-                this.dealCar(this.list,'87da4341-94f3-4611-bdb9-51ff718d252e')
+                let token = '';
+                wx.getStorage({
+                  key: 'token',
+                  success: function(res){
+                    token = res.data
+                    _that.dealCar(this.list,token)
+                    _that.$apply()
+                  }
+                })
+
                 _that.$apply();
               }else if(res.cancel){
               }

@@ -1,5 +1,5 @@
 <template>
-  <view class="m-place-order">
+  <view class="m-place-order" >
     <head class="m-head">
       <view class="m-head-back"></view>
       <view class="m-head-content">
@@ -14,9 +14,11 @@
       <repeat for="{{all_order}}" key="index" index="index" item="item">
         <Order :order.sync="item"></Order>
       </repeat>
-      <view class="m-li-m">
+      <view class="m-li-m" catchtap="showModal">
         <view class="m-label">优惠券</view>
-        <view class="m-coupon">满30减40</view>
+        <view class="m-coupon" wx:if="{{choose_card.Couamount }}">￥{{choose_card.Couamount}}</view>
+        <view class="m-coupon" wx:if="{{choose_card.Coudiscount }}">折扣：{{choose_card.Coudiscount }}</view>
+        <view wx:if="{{!choose_card}}">选择优惠券</view>
       </view>
       <view class="m-li-more">合计：<i class="m-price">￥{{total_money}}</i></view>
     </view>
@@ -50,6 +52,36 @@
       </view>
       <view class="m-btn m-active" @tap="placeAnOrder">支付</view>
     </foot>
+
+
+  </view>
+  <view class="m-cover" catchtouchmove="Touch" wx:if="{{show_modal}}">
+    <view class="m-modal" >
+      <view class="m-modal-head">
+        <image src="/images/icon_back.png" style="width: 60rpx; height: 60rpx;" catchtap="modalBack"></image>
+        <view class="m-sure"></view>
+        <!--<view class="m-sure" catchtap="cardSure">确定 </view>-->
+        <!--优惠券-->
+      </view>
+      <view class="m-scroll">
+        <scroll-view class="m-modal-content" scroll-y="true" catchtouchmove="modalTouch">
+
+          <view class="m-no-card">
+          <text>不使用优惠券</text>
+          <image src="/images/icon_radio_active.png" style="width: 60rpx; height: 60rpx;"></image>
+          </view>
+
+          <view class="m-modal-title">可用的优惠卷</view>
+          <view class="m-card-box">
+            <repeat for="{{card_data}}" key="index" index="index" item="item">
+              <Card :list.sync="item" @cardTap.user="cardTap"></Card>
+            </repeat>
+
+          </view>
+        </scroll-view>
+      </view>
+
+    </view>
   </view>
 </template>
 <script >
@@ -58,13 +90,15 @@
   import Order from '../components/common/order'
   import tip from '../utils/tip'
   import api from '../api/api'
+  import Card from '../components/common/card'
   export default class PlaceAnOrder extends wepy.page{
     config = {
       navigationBarTitleText: ''
     }
     components = {
       Pick:Pick,
-      Order:Order
+      Order:Order,
+      Card:Card
     }
     data = {
       Oabo:'',
@@ -121,6 +155,9 @@
         index:0,
       },
       total_money:0,
+      show_modal:false,
+      card_data:[],
+      choose_card:null
     }
     events = {
       'pickerChange':function(e){
@@ -247,8 +284,9 @@
           tip.loaded()
 //          that.total_money = 0;
           if(res.data.status == '200'){
+            that.card_data = res.data.data;
             console.log(res)
-            that.$apply()
+            that.$apply();
           }
         }
       })
@@ -287,19 +325,18 @@
     onLoad(option){
       let date = new Date();
       let token ='';
+      let that = this;
       this.all_picker[3].value = date.getFullYear() + '-' + ((date.getMonth()+1)>=10 ?(date.getMonth()+1):'0'+(date.getMonth()+1) ) + '-' +(date.getDate()>=10?date.getDate():'0'+date.getDate())
       this.getLineInfo();
       wx.getStorage({
         key: 'token',
         success: function(res){
           token = res.data
-          this.getPersonInfo(token);
-          this.getAllCar(token);
-          this.getAllYou(token);
+          that.getPersonInfo(token);
+          that.getAllCar(token);
           that.$apply()
         }
       })
-
     }
     methods = {
       PickerChangeWay: function(e) {
@@ -319,6 +356,30 @@
         let that = this;
         let token = '';
         let date = new Date();
+        if(this.all_picker[1].index == ''){
+          wx.showToast({
+            title: '请选择站点',
+            icon: 'none',
+            duration: 1000
+          });
+          return;
+        }
+        if(this.all_picker[0].index == ''){
+          wx.showToast({
+            title: '请选择线路',
+            icon: 'none',
+            duration: 1000
+          });
+          return;
+        }
+        if(this.all_picker[1].index == ''){
+          wx.showToast({
+            title: '请选择出口',
+            icon: 'none',
+            duration: 1000
+          })
+          return;
+        }
         params ={
           "Otime":date.getFullYear() + '-' + ((date.getMonth()+1)>=10 ?(date.getMonth()+1):'0'+(date.getMonth()+1) ) + '-' +(date.getDate()>=10?date.getDate():'0'+date.getDate())+' '+date.getHours()+':'+date.getMinutes(),
           "Omintime":this.all_picker[3].value + ' '+this.all_picker[4].value ,
@@ -328,7 +389,8 @@
           "Lline":this.all_picker[2].array[this.all_picker[2].index],
           'Lboxno':1,
           "Oabo":this.Oabo,
-          "Order_items":this.all_order
+          "Order_items":this.all_order,
+          "Carid":this.choose_card.Carid
         }
         wx.getStorage({
           key: 'token',
@@ -341,6 +403,37 @@
 
 
 
+      },
+      Touch(e){
+//        console.log(e)
+//        e.preventDefault()
+        return;
+      },
+      modalBack(){
+        this.show_modal = false;
+      },
+      showModal(){
+        this.show_modal = true;
+        let date = new Date();
+        let token ='';
+        let that = this;
+        this.all_picker[3].value = date.getFullYear() + '-' + ((date.getMonth()+1)>=10 ?(date.getMonth()+1):'0'+(date.getMonth()+1) ) + '-' +(date.getDate()>=10?date.getDate():'0'+date.getDate())
+        this.getLineInfo();
+        wx.getStorage({
+          key: 'token',
+          success: function(res){
+            token = res.data
+            that.getAllYou(token);
+            that.$apply()
+          }
+        })
+      },
+      cardTap(v){
+        this.show_modal = false;
+        this.choose_card = v;
+      },
+      modalTouch(e){
+        console.log(e)
       }
     }
   }
@@ -495,5 +588,81 @@
         }
       }
     }
+
   }
+  .m-cover{
+    position: fixed;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background-color: rgba(0,0,0,0.5);
+    .m-modal{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 60%;
+
+      background-color: #f8f8f8;
+      .m-modal-head{
+        background-color: @common-color;
+        color: #fff;
+        z-index: 1001;
+        /*display: flex;*/
+        /*flex-flow: row;*/
+        /*align-items: center;*/
+        /*font-size: 30rpx;*/
+        /*justify-content: space-between;*/
+
+        /*text-align: center;*/
+        padding: 20rpx ;
+      }
+      .m-scroll{
+        height: 100%;
+        overflow-y: auto;
+
+        background-color: #fff;
+        .m-modal-content{
+          /*min-height: 80%;*/
+          padding-bottom: 75rpx;
+          .m-modal-title{
+            padding: 10rpx;
+            border-bottom: 1px solid @border-color;
+            font-size: 30rpx;
+          }
+          .m-no-card{
+            display: flex;
+            flex-flow: row;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid @border-color;
+            padding: 10rpx;
+          }
+          .m-card-box{
+            margin-top: 20rpx;
+            .m-one-card{
+              border: 1px solid @border-color;
+              border-radius: 5px;
+              margin: 40rpx;
+              padding: 40rpx;
+              display: flex;
+              flex-flow: row;
+              align-items: center;
+              justify-content: space-around;
+              &.m-active{
+                border: 1px solid #f4690c;
+              }
+              &.m-disable{
+                color: @border-color;
+              }
+            }
+          }
+        }
+      }
+
+    }
+  }
+
 </style>

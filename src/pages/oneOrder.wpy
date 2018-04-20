@@ -125,10 +125,11 @@
               title: '删除成功',
               icon: 'success',
               duration: 800
-            }).navigateTo({
-              url: '/pages/myOrder'
             })
             that.$apply()
+            wx.navigateBack({
+              delta:1
+            })
           }
         }
       })

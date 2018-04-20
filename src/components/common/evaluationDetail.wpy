@@ -1,0 +1,70 @@
+<template>
+  <view class="m-one-product">
+    <image src="{{list.Pimage}}" style="width: 80rpx;height: 80rpx;"></image>
+    <view class="m-right">
+      <view class="m-name">{{list.Pname}}</view>
+      <view class="m-info">
+        <view class="m-num">数量  2</view>
+        <view>￥3</view>
+      </view>
+      <view class="m-eval">
+        <view>内容：{{list.Rcontent}}</view>
+        <view class="m-star-box">
+          <view wx:for="{{arr}}" wx:key="i"  wx:for-index = "in" wx:for-item="i" >
+            <image src="/images/icon_star.png" wx:if="{{item.Rscore < (in+1)}}"  style="width: 60rpx; height: 60rpx"></image>
+            <image src="/images/icon_star_active.png" wx:if="{{item.Rscore >= (in+1)}}" style="width: 60rpx; height: 60rpx"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+
+  export default class PlaceAnOrder extends wepy.page{
+    props = {
+      list:Object
+    }
+    data = {
+      arr:[
+        1,2,3,4,5
+      ],
+    }
+    methods = {
+
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .m-one-product{
+    /*width: 94%;*/
+    margin: 0 20rpx;
+    padding: 20rpx  0;
+    border-bottom: 1px solid @border-color;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    background-color: #fff;
+    /*&:last-child{*/
+    /*border-bottom: none;*/
+    /*}*/
+    .m-right{
+      padding-left: 20rpx;
+      line-height: 42rpx;
+      font-size: 30rpx;
+      width: 75%;
+      .m-info{
+        color: @grey-font;
+        font-size: 28rpx;
+        width: 100%;
+      }
+      .m-eval{
+        border-top: 1px solid @border-color;
+        margin-top: 20rpx;
+        padding: 20rpx 0;
+      }
+    }
+  }
+</style>

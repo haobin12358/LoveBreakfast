@@ -76,7 +76,6 @@
         },
         success:function (res) {
           tip.loaded()
-          // console.log(res,'aaa')
           if(res.data.status == '200'){
             that.list_data = res.data.data.Order_items;
             for(let i=0;i<that.list_data.length;i++){

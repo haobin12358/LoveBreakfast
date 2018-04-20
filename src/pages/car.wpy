@@ -97,6 +97,11 @@
           token = res.data
           that.getAllCar(token);
           that.$apply()
+        },
+        fail:function (res) {
+          wx.navigateTo({
+            url: '/pages/login'
+          })
         }
       })
 
