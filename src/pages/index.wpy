@@ -1,10 +1,10 @@
 <style scoped lang="less" rel="stylesheet/less">
   @import "../styles/common";
-.m-index{
-  width: 100%;
-  overflow-x: hidden;
-  background-color: #f8f8f8;
-}
+  .m-index{
+    width: 100%;
+    overflow-x: hidden;
+    background-color: #f8f8f8;
+  }
   .m-location-box{
     width: 100%;
     height: 92rpx;
@@ -91,7 +91,9 @@
 
 <script >
   import wepy from 'wepy';
-  import List from '../components/common/list'
+  import List from '../components/common/list';
+  import api from '../api/api';
+  import tip from '../utils/tip'
 
 
 
@@ -100,7 +102,7 @@
       navigationBarTitleText: '商品'
     }
     components = {
-        List:List
+      List:List
     }
 
     data = {
@@ -114,54 +116,38 @@
       interval: 3500,
       duration: 500,
       name:'product',
-      list_data:[
-        {
-          Pname:'粥',
-          Pimage:'../images/test.jpeg',
-          P_sales_volume:'100',
-          Pscore:'98',
-          Pprice:'12.3',
-          Pid:'01',
-          Pabo:'',
-          Pnum: 0
-        },
-        {
-          Pname:'粥',
-          Pimage:'../images/test.jpeg',
-          P_sales_volume:'100',
-          Pscore:'98',
-          Pprice:'12.3',
-          Pid:'01',
-          Pabo:'',
-          Pnum: 0
-        },
-        {
-          Pname:'粥',
-          Pimage:'../images/test.jpeg',
-          P_sales_volume:'100',
-          Pscore:'98',
-          Pprice:'12.3',
-          Pid:'01',
-          Pabo:'',
-          Pnum: 0
-        },
-      ]
+      list_data:[]
     }
 
     computed = {
 
     }
-
+    async getProductList() {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_product_all,
+        method:'GET',
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.list_data = res.data.data;
+            that.$apply()
+          }
+        }
+      })
+    }
+    onLoad(){
+      this.getProductList();
+//      wx.setStorageSync('token','87da4341-94f3-4611-bdb9-51ff718d252e')
+    }
     methods = {
-      tap(){
-        wx.navigateTo({
-          url: '/pages/login'
-        })
-      },
       businessTap(v){
-        console.log(v)
         wx.navigateTo({
-          url: '/pages/product'
+          url: '/pages/product?Pid='+v.Pid
         })
       },
       listTap(v){

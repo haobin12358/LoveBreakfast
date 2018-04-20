@@ -19,6 +19,7 @@ const update_car = _title + '/love/breakfast/salelist/update';//更新购物车�
 const delete_car =  _title + '/love/breakfast/salelist/delete_product';//删除购物车信息
 
 //下单
+const get_line = _title + '/love/breakfast/locations/get_lline';//获取站点信息
 const get_all_location = _title + '/love/breakfast/locations/get_all_location';//获取站点信息
 const get_lno = _title + '/love/breakfast/locations/get_lno';//获取出口信息
 
@@ -33,6 +34,10 @@ const change_person_Pwd =  _title + '/love/breakfast/users/update_pwd';//修改�
 
 //评价
 // const change_person_Pwd = _title + '/love/breakfast/users/update_pwd';//修改用户信息
+const create_review = _title +'/love/breakfast/review/create_review';//添加评价
+const get_review = _title +'/love/breakfast/review/get_review';//添加评价
+
+const get_cardpkg = _title + '/love/breakfast/cardpkg/get_cardpkg';//获取优惠券
 
 module.exports = {
   get_product_all,
@@ -47,9 +52,13 @@ module.exports = {
   delete_car,
   get_all_location,
   get_lno,
+  get_line,
   login,
   register,
   get_person_info,
   change_person_info,
-  change_person_Pwd
+  change_person_Pwd,
+  create_review,
+  get_cardpkg,
+  get_review
 }
