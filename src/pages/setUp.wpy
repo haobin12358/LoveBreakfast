@@ -1,0 +1,75 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../styles/common";
+  .m-info-button {
+    border: 1px solid #fff;
+    width: 400rpx;
+    height: 100rpx;
+    font-size: 35rpx;
+    background-color: @common-color;
+    color: #ffffff;
+  }
+</style>
+<template>
+  <form bindsubmit="formSubmit">
+    <view class="m-setup">
+      <bar prefix="新密码" :syncInfo.sync="postpwd" :twoWayInfo="pwd">
+      </bar>
+      <button class="m-info-button" formType="submit"> 确认提交 </button>
+    </view>
+  </form>
+</template>
+<script>
+
+  import tip from '../utils/tip'
+  import api from '../api/api'
+  import wepy from 'wepy'
+  import Bar from '../components/common/bar';
+  export default class BaseInfo extends wepy.page {
+    config = {
+      navigationBarTitleText: '基本信息'
+    }
+    data = {
+      postpwd: '***********',
+      pwd: ''
+    }
+    components = {
+      bar: Bar
+    }
+    async formSubmit(){
+      let token = ''
+      await wx.getStorage({
+        key: 'token',
+        success: function(res){
+          token = res.data
+        }
+      })
+      let that = this;
+      tip.loading();
+      wx.request({
+        url: `${api.change_person_Pwd}?token=${token}`,
+        method: 'POST',
+        data: {
+          'Upwd':this.pwd
+        },
+        header: {
+          'content-type': 'application/json'
+        },
+        success: function(res) {
+          tip.loaded()
+//          console.log(res.data)
+          if(res.data.status=='200'){
+            wx.showToast({
+              title: '修改成功',
+              icon: 'success',
+              duration: 2000
+            })
+            setTimeout(function () {
+              wepy.navigateBack();
+            },2000);
+          }
+        }
+      })
+    }
+
+  }
+</script>

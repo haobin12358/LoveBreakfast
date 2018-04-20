@@ -1,0 +1,98 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../styles/common.less";
+  .m-info-form {
+    margin-top: 20 rpx;
+  }
+  .m-info-button {
+    border: 1px solid #fff;
+    width: 400rpx;
+    height: 100rpx;
+    font-size: 35rpx;
+    background-color: @common-color;
+    color: #ffffff;
+  }
+</style>
+<template>
+<view class="m-info-form">
+  <form bindsubmit="formSubmit">
+    <view class="barOne">
+      <bar prefix="昵称" :syncInfo.sync="nickName" :twoWayInfo="nickName">
+      </bar>
+    </view>
+    <view class="barTwo">
+      <secBar prefix="性别" :syncInfo.sync="ssex" :twoWayInfo="ssex">
+      </secBar>
+    </view>
+    <button class="m-info-button" formType="submit">确认提交</button>
+  </form>
+</view>
+</template>
+<script>
+
+  import tip from '../utils/tip';
+  import api from '../api/api'
+  import wepy from 'wepy';
+  import Bar from '../components/common/bar';
+
+  export default class BaseInfo extends wepy.page {
+    config = {
+      navigationBarTitleText: '基本信息'
+    }
+    data = {
+      nickName : '..',
+      ssex : '..'
+    };
+    components = {
+      bar: Bar,
+      secBar: Bar
+    };
+    async formSubmit(){
+      let token = ''
+      await wx.getStorage({
+        key: 'token',
+        success: function(res){
+          token = res.data
+        }
+      })
+      let that = this;
+      tip.loading();
+      wx.request({
+        url: `${api.change_person_info}?token=${token}`,
+        method: 'POST',
+        data: {
+          'Uname':this.nickName,
+          'Usex': this.ssex
+        },
+        header: {
+          'content-type': 'application/json'
+        },
+        success: function(res) {
+          tip.loaded()
+          if(res.data.status=='200'){
+            wx.showToast({
+              title: '修改成功',
+              icon: 'success',
+              duration: 2000
+            })
+            setTimeout(function () {
+              wepy.navigateBack();
+            },2000);
+          }
+        }
+      })
+
+    }
+    async onShow(){
+      this.nickName = this.$parent.globalData.userInfo.Uname
+      this.ssex = this.$parent.globalData.userInfo.Usex
+      this.$apply()
+    }
+    methods = {
+      tap(){
+        wx.navigateTo({
+          url: '/pages/login'
+        })
+      }
+    };
+  }
+</script>

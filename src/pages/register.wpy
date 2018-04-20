@@ -1,20 +1,174 @@
-<template>
-  <view class="container">
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../styles/common.less";
+  .m-section {
+    margin: 60rpx 40rpx;
+    display: flex;
+    align-items: center;
+    padding: 10rpx 30rpx;
+    border-bottom: 1px solid #dbdbdb;
+    background: #fff;
+    width: 550rpx;
+    .m-icon {
+      width: 50rpx;
+      height: 50rpx;
+      padding-right: 30rpx;
+    }
+    .m-section_title {
+      color: @grey-font;
+      width: 160rpx;
+      font-size: 36rpx;
+    }
+    .m-phone {
+      font-size: 30rpx;
+    }
+    .m-code {
+      font-size: 30rpx;
+    }
+  }
+  .m-text-box {
+    margin: 70rpx 40rpx 0 ;
+    padding: 40rpx 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 20rpx;
+    color: #353535;
+    line-height: 2em;
+    height: 300rpx;
+    .m-text {
+      overflow: scroll;
+      height: 300rpx;
+    }
+  }
+  .m-form-selector {
+    text-align: center;
+    font-size: 30rpx;
+    &{
+      padding: 40rpx;
+    }
+  }
+  .m-btn_confirm {
+    margin-top: 30rpx;
+    padding: 0 24rpx;
+    border-radius: 100px;
+  }
+  .m-button {
+    background-color: @common-color;
+    color: #ffffff;
+  }
+  .m-btn {
+    border: 1px solid #fff;
+    width: 250rpx;
+    height: 100rpx;
+    font-size: 35rpx;
+    margin: 60rpx 35rpx 80rpx;
+    display: inline-block;
+    justify-content: space-around;
+    color: @common-color;
+  }
+</style>
 
-  </view>
+<template>
+  <form bindsubmit="formSubmit" bindreset="formReset">
+    <view class="m-info">
+      <view class="m-section">
+        <image class="m-icon" src='/images/phone.png'></image>
+        <view class="m-section_title">手机号 :</view>
+        <input class="m-phone" name="tel" type="number" bindinput="phoneInput" placeholder="请输入手机号码" maxlength="11" focus="true" />
+      </view>
+      <view class="m-section">
+        <image class="m-icon" src='/images/password.png'></image>
+        <view class="m-section_title">密码 :</view>
+        <input class="m-code" name="pass" type="number" placeholder="请输入密码" />
+      </view>
+      <view class="m-section">
+        <image class="m-icon" src='/images/invite.png'></image>
+        <view class="m-section_title">邀请码 :</view>
+        <input class="m-code" name="code" type="text" placeholder="请输入邀请码" />
+      </view>
+      <view class="m-text-box" scroll-y="true" scroll-top="{{scrollTop}}" >
+        <text class="m-text">{{ text }}</text>
+      </view>
+      <view class="m-form-selector">
+        <check-group bindchange="checkboxChange" >
+          <checkbox value="clause" bindchange="checkboxChange"/> 我已阅读，并同意服务
+        </check-group>
+      </view>
+      <view class="m-btn_confirm">
+        <button class="m-button" formType="submit">注册</button>
+      </view>
+    </view>
+  </form>
 </template>
 <script >
   import wepy from 'wepy';
+  import tip from '../utils/tip';
+  import api from '../api/api';
   export default class Register extends wepy.page{
     config = {
       navigationBarTitleText: '注册'
     }
     data = {
+      text: '欢迎您使用网上订餐服务。请您务必先仔细阅读本用户协议（包括隐私权条款及法律条款），我们将按以下的方式和条件为您提供我们的服务。如果您使用我们的服务，即表示您完全同意并接受本用户协议。 \n' +
+      '\n' +
+      '一、我们的服务和义务\n' +
+      '\n' +
+      '1. 权利声明\n' +
+      '\n' +
+      '本网站出现的商标、服务标志、设计及本网站中述及的任何其他知识产权，均属公司所有、或已取得所有人的正式授权，在未取得公司的正式书面授权之前，任何人不得擅自使用，包括但不限于复制、复印、修改、出版、公布、传送、分发本网站上所载的文本、图象、影音、镜像等内容，违者将被依法追究民事乃至刑事责任。 \n' +
+      '\n' +
+      '2. 责任限制\n' +
+      '\n' +
+      '本程序将努力提供准确和及时的信息和内容，但这些信息和内容仅限于其现有状况，对其准确性和及时性，本网站不给予任何明示或默示的保证。本网站不承担因您进入或使用本网站而导致的任何直接的、间接的、意外的、因果性的损害责任。请小心使用您的软件和设备。 \n' +
+      '\n' +
+      '3．信息提交\n' +
+      '\n' +
+      '您传送至本网站的任何其他通讯或材料，包括但不限于意见、客户反馈、喜好、建议、支持、请求、问题等内容，将被当作非保密资料和非专有资料处理；而当您将这些资料传送至本网站并被接收时，即被视为您同意这些资料用作本网站的调查、统计或作内部整体无偿使用。 我们将有权将提交内容用于任何商业的或其他目的而无需对您或其他提交人予以补偿。您承认，您对所提交资料负责，并且对信息承担全部责任，包括其合法性、可靠性、适当性、独创性及著作权。\n' +
+      '\n' +
+      '4．适用法律\n' +
+      '\n' +
+      '    本使用条款及隐私权政策受中国的法律管辖。如果本网站条款或隐私权政策的任何部分失效，将不影响其余条款的有效性和可执行性。 ',
+      disable: false
+    }
+    checkboxChange (e) {
 
     }
-    methods = {
+    async formSubmit (e) {
+        wx.request({
+          url: api.register,
+          header: {
+            'content-type': 'application/json'
+          },
+          method: "POST",
+          data:{ Utel:e.detail.value.tel, Upwd:e.detail.value.pass, Uinvate:e.detail.value.code },
+          success: function(res) {
+            tip.loaded()
+            console.log(res.data.status,"ggg")
+            console.log(res)
+            if(res.data.status == '200'){
+              wx.showToast({
+                title: '注册成功！',
+                icon: 'success',
+                duration: 2000
+              })
+              setTimeout(function () {
+                wepy.navigateBack();
+              },2000);
+            }
+            else {
+              wx.showToast({
+              title: '请重新操作！',
+              icon: 'error',
+              duration: 2000
+              })
+            }
+          }
+        })
     }
+    methods = {
+
+    }
+
   }
 </script>
-<style scoped lang="less" rel="stylesheet/less">
-</style>
