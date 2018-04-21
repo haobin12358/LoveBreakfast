@@ -38,13 +38,32 @@ class CReview():
                 "statuscode": statuscode,
             }
         token_to_str = get_str(args, "token")
+        print('token'+token_to_str)
         oid_to_str = get_str(args, "Oid")
         oid_list_service = self.service_order.get_all_order_by_uid(token_to_str)
+        oid_list_control = []
+        print(oid_list_service)
+        if oid_list_service == None:
+            message, status, statuscode = import_status("messages_error_wrong_status_code", "response_error",
+                                                        "error_wrong_status_code")
+            return {
+                "message": message,
+                "status": status,
+                "statuscode": statuscode,
+            }
         for i in range(len(oid_list_service)):
-            oid_list_control = []
             oid = oid_list_service[i].Oid
             oid_list_control.append(oid)
-        if oid_to_str in oid_list_control:
+        print(oid_to_str)
+        if oid_to_str not in oid_list_control:
+            message, status, statuscode = import_status("messages_error_wrong_status_code", "response_error",
+                                                        "error_wrong_status_code")
+            return {
+                "message": message,
+                "status": status,
+                "statuscode": statuscode,
+            }
+        else:
             # 查看订单状态是否正常
             order_abo = self.service_order.get_order_abo_by_oid(oid_to_str)
             if order_abo.Ostatus != 42:
@@ -76,18 +95,19 @@ class CReview():
             order_status = {}
             order_status["Ostatus"] = 49
             self.service_order.update_status_by_oid(oid_to_str, order_status)
-            print(111)
         except Exception as e:
             print(e)
             from config.status import response_error
             from config.status_code import SYSTEM_ERROR
+            from config.messages import error_system_error
             return {
                 "message": error_system_error,
                 "status": response_error,
                 "statuscode": SYSTEM_ERROR,
             }
+        from config.messages import create_review_success
         return {
-            "message": "create review success !",
+            "message": create_review_success,
             "status": 200,
         }
 
@@ -107,8 +127,8 @@ class CReview():
         oid_to_str = get_str(args, "Oid")
         oid_list_service = self.service_order.get_all_order_by_uid(token_to_str)
         if oid_list_service != None:
+            oid_list_control = []
             for i in range(len(oid_list_service)):
-                oid_list_control = []
                 oid = oid_list_service[i].Oid
                 oid_list_control.append(oid)
             if oid_to_str in oid_list_control:
@@ -132,8 +152,9 @@ class CReview():
                 review_dic["Rscore"] = review_list_service[i].Rscore
                 review_dic["Rcontent"] = review_list_service[i].Rcontent
                 review_list_control.append(review_dic)
+            from config.messages import get_review_success
             return {
-                "message": "获取商品评论成功",
+                "message": get_review_success,
                 "status": 200,
                 "data": review_list_control
             }

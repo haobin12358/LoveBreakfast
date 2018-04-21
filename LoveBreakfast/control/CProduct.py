@@ -35,8 +35,9 @@ class CProduct():
                 pro_list_of_control.append(dic_of_pro)
 
             print(pro_list_of_control)
+            from config.messages import get_product_list_success
             return {
-                "message": "get pro_list success !",
+                "message": get_product_list_success,
                 "status": 200,
                 "data": pro_list_of_control
             }
@@ -84,9 +85,10 @@ class CProduct():
             proabo_of_controller["Pimage"] = proabo_of_service.Pimage
             proabo_of_controller["Pinfo"] = proabo_of_service.Pinfo
             proabo_of_controller["Pnum"] = 0
+            from config.messages import get_product_info_success
             return {
                 "status": 200,
-                "message": "get pro_info success !",
+                "message": get_product_info_success,
                 "data": proabo_of_controller,
             }
         else:
