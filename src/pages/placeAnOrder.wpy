@@ -390,7 +390,7 @@
           'Lboxno':1,
           "Oabo":this.Oabo,
           "Order_items":this.all_order,
-          "Carid":this.choose_card.Carid
+          "Carid":this.choose_card && this.choose_card.Carid
         }
         wx.getStorage({
           key: 'token',

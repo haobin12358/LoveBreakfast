@@ -87,15 +87,7 @@
             success:function (res) {
               if(res.confirm){
                 _that.list.Pnum = v-1;
-                let token = '';
-                wx.getStorage({
-                  key: 'token',
-                  success: function(res){
-                    token = res.data
-                    _that.dealCar(this.list,token)
-                    _that.$apply()
-                  }
-                })
+                _that.dealCar(_that.list,_that.$data.token)
 
                 _that.$apply();
               }else if(res.cancel){
@@ -105,7 +97,7 @@
         }else{
           v>0 && (v = v-1)
           this.list.Pnum = v;
-          this.dealCar(this.list,this.token)
+          this.dealCar(this.list,this.$data.token)
           this.$apply();
         }
 
@@ -113,7 +105,7 @@
       bindKeyInput(e){
 
         this.list.Pnum = e.detail.value;
-        this.dealCar(this.list,this.token)
+        this.dealCar(this.list,this.$data.token)
         this.$apply();
       },
 
@@ -121,7 +113,7 @@
 
         v = Number(v)+1;
         this.list.Pnum = v;
-        this.dealCar(this.list,this.token);
+        this.dealCar(this.list,this.$data.token);
 
         this.$apply();
       }
