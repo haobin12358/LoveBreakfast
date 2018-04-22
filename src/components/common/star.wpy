@@ -1,0 +1,41 @@
+<template>
+  <view class="m-star-box">
+    <view wx:for="{{arr}}" wx:key="item"  wx:for-index = "index" wx:for-item="item" @tap="starTap({{index}})">
+      <image src="/images/icon_star.png" wx:if="{{length < (index+1)}}"  style="width: 60rpx; height: 60rpx"></image>
+      <image src="/images/icon_star_active.png" wx:if="{{length >= (index+1)}}" style="width: 60rpx; height: 60rpx"></image>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  export default class Star extends wepy.page{
+    props={
+      length:{
+        type:String,
+        default:0,
+        twoWay:true
+      }
+    }
+    data = {
+      arr:[
+        1,2,3,4,5
+  ]
+    }
+    onLoad(){
+
+    }
+    methods = {
+      starTap(v){
+        this.length = v+1;
+        this.$emit('allStar',this.length)
+      }
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+  .m-star-box{
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+  }
+</style>

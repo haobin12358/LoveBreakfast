@@ -1,15 +1,17 @@
 <style scoped lang="less" rel="stylesheet/less">
   @import 'styles/common';
-  .container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-    background-color: #f8f8f8;
-    font-size: 30rpx;
-  }
+ 
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background-color: #f8f8f8;
+  font-size: 30rpx;
+}
+
 </style>
 
 <script>

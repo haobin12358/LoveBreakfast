@@ -10,7 +10,7 @@
       <view class="m-car">
         <!--<image src="/images/car.png" style="width: 100rpx;height: 100rpx;"></image>-->
         <!--<view class="m-num">2</view>-->
-        <view>合计：<text class="m-price">￥123</text></view>
+        <view>合计：<text class="m-price">￥{{total_money}}</text></view>
       </view>
       <view class="m-btn m-active" @tap="placeAnOrder">下单</view>
     </foot>
@@ -19,6 +19,8 @@
 <script >
   import wepy from 'wepy';
   import List from '../components/common/list'
+  import tip from '../utils/tip'
+  import api from '../api/api'
   export default class Business extends wepy.page{
     config = {
       navigationBarTitleText: '购物车'
@@ -27,6 +29,7 @@
       List:List
     }
     data = {
+      total_money:0,
       list_data:[
         {
           Pname:'粥',
@@ -60,10 +63,53 @@
         }
       ]
     }
+    async getAllCar(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_all_car,
+        method:'GET',
+        data:{token:params},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+            let total=0;
+          if(res.data.status == '200'){
+            that.list_data = res.data.data;
+            for(let i=0;i< that.list_data.length;i++){
+              total += Number(that.list_data[i].Pnum * that.list_data[i].Pprice)
+            }
+            that.total_money = total
+            //
+            that.$apply()
+          }
+        }
+      })
+    }
+    onShow(option){
+      let token = '';
+      let that = this;
+      wx.getStorage({
+        key: 'token',
+        success: function(res){
+          token = res.data
+          that.getAllCar(token);
+          that.$apply()
+        },
+        fail:function (res) {
+          wx.navigateTo({
+            url: '/pages/login'
+          })
+        }
+      })
+
+    }
     methods = {
-      productTap(){
+      productTap(v){
         wx.navigateTo({
-          url: '/pages/product'
+          url: '/pages/product?Pid='+v.Pid
         })
       },
       placeAnOrder(){

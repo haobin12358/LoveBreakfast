@@ -1,0 +1,131 @@
+<template>
+  <view class="list" @tap = "bindTap({{list}})" >
+    <image class="m-business-img" src="{{list.Order_items[0].Pimage}}"  style="width: 200rpx;height: 200rpx;"/>
+    <view class="m-business-info">
+      <view class="m-first">
+        <view class="m-first-left">
+          <view class="m-name">下单时间</view>
+          <view class="m-time m-grey" >{{list.Otime}}</view>
+        </view>
+        <view class="m-first-right {{list.Ostatus == '推荐'? 'm-recommend':''}} {{list.Ostatus == '配送中'? 'm-distribution':''}} {{list.Ostatus == '已完成'? 'm-completed':''}}" wx:if="{{list.Ostatus && list.Ostatus != ''}}">{{list.Ostatus}}</view>
+      </view>
+      <!--<view class="m-business-star score-grey" wx:if="{{list.PsalesVolume && list.Pscore}}">月销{{list.PsalesVolume}}份 好评率{{list.Pscore}}%</view>-->
+      <view class="m-business-star m-grey" >{{list.Order_items[0].Pname}}</view>
+      <view class="m-business-star m-grey" >数量：{{list.Order_items.length}}</view>
+      <view class="m-business-loc">
+        <view class="m-price">￥{{list.Oprice}}</view>
+        <view class="m-add-cut" >
+          <button class="m-btn m-cancel" wx:if="{{list.is_index == '701'}}">取消订单</button>
+          <button class="m-btn " wx:if="{{list.Ostatus == '已完成'}}" @tap="evaluateTap({{list}})">评价</button>
+          <button class="m-btn " wx:if="{{list.Ostatus == '已评价'}}" @tap="evaluateLookTap({{list}})">评价详情</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  export default class List extends wepy.component{
+    props = {
+      list:Object,
+      page:String
+    }
+    data = {
+      number:0
+    }
+
+    methods = {
+      bindTap(v){
+        this.$emit('listTap',v)
+      },
+      evaluateTap(v){
+        this.$emit('evalTap',v)
+//        wx.navigateTo({
+//          url: '/pages/commodityEvaluation'
+//        })
+      },
+      evaluateLookTap(v){
+        this.$emit('evalookTap',v)
+//        wx.navigateTo({
+//          url: '/pages/commodityDetails'
+//        })
+      }
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .list{
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    padding: @margin-interval ;
+    padding-left: 0;
+    padding-right: 40rpx;
+    border-bottom: 1px solid @border-color;
+    .m-business-img{
+      background-color: #bfbfbf;
+      margin-right: @margin-interval;
+    }
+    .m-business-info{
+      font-size: 32rpx;
+      line-height: 60rpx;
+      width: 100%;
+      padding-right: @margin-interval;
+      .m-first{
+        width: 100%;
+        display: flex;
+        flex-flow: row;
+        justify-content: space-between;
+        align-items: center;
+        .m-first-left{
+          width: 70%;
+          .m-name{
+            font-size: 32rpx;
+            line-height: 32rpx;
+          }
+          .m-time{
+            font-size: 26rpx;
+            line-height: 26rpx;
+          }
+        }
+        .m-first-right{
+          font-size: 28rpx;
+          &.m-recommend{
+            color: #f4690c;
+            border: 1px solid #f4690c;
+            padding: 0 20rpx;
+            border-radius: 20px;
+          }
+          &.m-distribution{
+            color: red;
+          }
+          &.m-completed{
+            color: #5fc16c;
+          }
+        }
+
+      }
+    }
+    .m-business-loc{
+      width: 100%;
+      font-size: 28rpx;
+      color: @grey-font;
+      display: flex;
+      flex-flow: row;
+      justify-content: space-between;
+    }
+    .m-add-cut{
+      /*width: 30%;*/
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      .m-btn{
+        font-size: 28rpx;
+        padding: 2rpx 20rpx;
+      }
+
+    }
+  }
+</style>
+

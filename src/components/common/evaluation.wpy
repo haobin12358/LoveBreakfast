@@ -1,0 +1,100 @@
+<template>
+  <view class="m-content-one">
+    <view class="m-product-title">
+      <image src="/images/icon_radio.png" style="width: 60rpx; height: 60rpx;"></image>
+      <text>{{list.Pname}}</text>
+    </view>
+    <view class="m-textarea">
+      <textarea bindblur="bindTextAreaBlur" value="{{list.Rcontent}}" auto-height placeholder="评价内容" />
+    </view>
+    <view class="m-foot">
+      <text>星级：{{list.Rscore}}</text>
+      <!--<view class="m-star-box">-->
+        <!--<view wx:for="{{arr}}" wx:key="item"  wx:for-index = "index" wx:for-item="item" @tap="StarChange({{list}})">-->
+          <!--<image src="/images/icon_star.png" wx:if="{{length < (index+1)}}"  style="width: 60rpx; height: 60rpx"></image>-->
+          <!--<image src="/images/icon_star_active.png" wx:if="{{length >= (index+1)}}" style="width: 60rpx; height: 60rpx"></image>-->
+        <!--</view>-->
+      <!--</view>-->
+        <Star @StarChange.user="StarChange" :length.sync="{{list.Rscore}}"></Star>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  import Star from './star'
+  export default class Evaluation extends wepy.page{
+    components = {
+      Star:Star
+    }
+    props={
+      list:{
+        type:Object,
+        default:null,
+        twoWay:true
+      },
+      Rscore:{
+        type:Number,
+        default:0,
+        twoWay: true
+      }
+    }
+    data = {
+      length:0,
+      arr:[
+        1,2,3,4,5
+      ]
+    }
+    onLoad(){
+      console.log(this.props.list,'aaasas')
+    }
+    methods = {
+      bindTextAreaBlur: function(e) {
+        console.log(e.detail.value)
+      },
+      StarChange(v){
+        console.log(v,'asugaiwdi')
+//        this.list.Rscore = v;
+        this.length = v;
+        this.$emit('starChange',this.list)
+      }
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .m-star-box{
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+  }
+  .m-content-one{
+    width: 95%;
+    padding: 0 @margin-interval;
+    background-color: #fff;
+    margin: 20rpx 0;
+    .m-product-title{
+      width: 100%;
+      padding: @margin-interval 0 ;
+      display: flex;
+      align-items: center;
+
+    }
+    .m-textarea{
+      min-height: 100rpx ;
+      width: 80%;
+      border: 1px solid @border-color;
+      padding: @margin-interval;
+      margin-left: 50rpx;
+      font-size: 30rpx;
+    }
+    .m-foot{
+      width: 100%;
+      display: flex;
+      flex-flow: row;
+      font-size: 30rpx;
+      align-items: center;
+      margin: 20rpx;
+    }
+
+  }
+</style>

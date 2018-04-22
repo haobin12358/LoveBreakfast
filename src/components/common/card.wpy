@@ -1,0 +1,97 @@
+<template>
+  <view class="m-one-card {{_click?'m-active':''}} {{list.Carstatus==2?'m-disable':''}} " catchtap="clickCard({{list}})" >
+    <!--<image src="/images/icon_radio.png" style="width: 60rpx;height: 60rpx;"></image>-->
+    <view class="m-modal-left">
+      <view class="m-price" wx:if="{{list.Couamount}}">￥{{list.Couamount}}</view>
+      <view class="m-price" wx:if="{{list.Coudiscount}}">{{list.Coudiscount}}</view>
+      <view>{{list.Coufilter}}</view>
+    </view>
+    <view class="m-modal-left">
+      <!--<view>{{list.}}</view>-->
+      <view>开始有效时间：{{list.Carstart}}</view>
+      <view>结束有效时间：{{list.Carend}}</view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api'
+  import tip from '../../utils/tip'
+  export default class Card extends wepy.component{
+    props = {
+      list:{
+        type:Object,
+        default:null,
+        twoWay:true
+      }
+    }
+    data = {
+      _click:false
+    }
+    async dealCar(params,token) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.update_car+'?token='+token,
+        method:'POST',
+        data:{Pid:params.Pid,Pnum:params.Pnum},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          // console.log(res,'aaa')
+          if(res.data.status == '200'){
+//            that.list_data = res.data.data;
+            wx.showToast({
+              title: '修改成功',
+              icon: 'success',
+              duration: 800
+            })
+            that.$apply()
+          }
+        }
+      })
+    }
+    onLoad(){
+      let token = '';
+      let that = this;
+      wx.getStorage({
+        key: 'token',
+        success: function(res){
+          token = res.data;
+          that.token = res.data
+          that.$apply()
+        }
+      })
+
+      console.log(this,'aaaaa')
+    }
+
+    methods = {
+      clickCard(v){
+        this._click = true;
+        this.$emit('cardTap',v)
+      }
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .m-one-card{
+    border: 1px solid @border-color;
+    border-radius: 5px;
+    margin: 40rpx;
+    padding: 40rpx;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-around;
+    &.m-active{
+      border: 1px solid #f4690c;
+    }
+    &.m-disable{
+      color: @border-color;
+    }
+  }
+</style>

@@ -1,6 +1,6 @@
 <template>
   <view class="m-one-product">
-    <image src="/images/test.jpeg" style="width: 80rpx;height: 80rpx;"></image>
+    <image src="{{Order.Pimage}}" style="width: 80rpx;height: 80rpx;"></image>
     <view class="m-right">
       <view class="m-name">{{order.Pname}}</view>
       <view class="m-info">

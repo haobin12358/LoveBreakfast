@@ -1,20 +1,26 @@
 <template>
-  <view class="m-place-order">
+  <view class="m-place-order" >
     <head class="m-head">
       <view class="m-head-back"></view>
       <view class="m-head-content">
         <repeat for="{{all_picker}}" key="index" index="index" item="item">
           <Pick :picker.sync="item" ></Pick>
         </repeat>
-        <view class="m-li-more">联系人：yayay</view>
-        <view class="m-li-more">联系方式：1223164654</view>
+        <view class="m-li-more">联系人：{{Uname}}</view>
+        <view class="m-li-more">联系方式：{{Utel}}</view>
       </view>
     </head>
     <view class="m-content">
       <repeat for="{{all_order}}" key="index" index="index" item="item">
         <Order :order.sync="item"></Order>
       </repeat>
-      <view class="m-li-more">合计：<i class="m-price">123</i></view>
+      <view class="m-li-m" catchtap="showModal">
+        <view class="m-label">优惠券</view>
+        <view class="m-coupon" wx:if="{{choose_card.Couamount }}">￥{{choose_card.Couamount}}</view>
+        <view class="m-coupon" wx:if="{{choose_card.Coudiscount }}">折扣：{{choose_card.Coudiscount }}</view>
+        <view wx:if="{{!choose_card}}">选择优惠券</view>
+      </view>
+      <view class="m-li-more">合计：<i class="m-price">￥{{total_money}}</i></view>
     </view>
     <view class="m-remark">
       <view class="m-li">
@@ -31,70 +37,112 @@
           </view>
         </picker>
       </view>
+      <view class="m-li">
+        <view class="m-input-box">
+          备注：<input class="m-input" value="{{Oabo}}" bindinput="bindKeyInput"  maxlength="200" placeholder="备注信息" />
+        </view>
+
+      </view>
     </view>
     <foot class="m-foot">
       <view class="m-car">
         <!--<image src="/images/car.png" style="width: 100rpx;height: 100rpx;"></image>-->
         <!--<view class="m-num">2</view>-->
-        <view>合计：<text class="m-price">￥123</text></view>
+        <view>合计：<text class="m-price">￥{{total_money}}</text></view>
       </view>
       <view class="m-btn m-active" @tap="placeAnOrder">支付</view>
     </foot>
+
+
+  </view>
+  <view class="m-cover" catchtouchmove="Touch" wx:if="{{show_modal}}">
+    <view class="m-modal" >
+      <view class="m-modal-head">
+        <image src="/images/icon_back.png" style="width: 60rpx; height: 60rpx;" catchtap="modalBack"></image>
+        <view class="m-sure"></view>
+        <!--<view class="m-sure" catchtap="cardSure">确定 </view>-->
+        <!--优惠券-->
+      </view>
+      <view class="m-scroll">
+        <scroll-view class="m-modal-content" scroll-y="true" catchtouchmove="modalTouch">
+
+          <view class="m-no-card">
+          <text>不使用优惠券</text>
+          <image src="/images/icon_radio_active.png" style="width: 60rpx; height: 60rpx;"></image>
+          </view>
+
+          <view class="m-modal-title">可用的优惠卷</view>
+          <view class="m-card-box">
+            <repeat for="{{card_data}}" key="index" index="index" item="item">
+              <Card :list.sync="item" @cardTap.user="cardTap"></Card>
+            </repeat>
+
+          </view>
+        </scroll-view>
+      </view>
+
+    </view>
   </view>
 </template>
 <script >
   import wepy from 'wepy';
   import Pick from '../components/common/picker'
   import Order from '../components/common/order'
-
+  import tip from '../utils/tip'
+  import api from '../api/api'
+  import Card from '../components/common/card'
   export default class PlaceAnOrder extends wepy.page{
     config = {
       navigationBarTitleText: ''
     }
     components = {
       Pick:Pick,
-      Order:Order
+      Order:Order,
+      Card:Card
     }
     data = {
+      Oabo:'',
       all_picker:[
         {
           sort:'选择地铁线路',
-          array: ['1号线', '近江', '西兴', '滨和路'],
+          array: ['1号线', '2号线', '4号线'],
+          id:['1号线'],
           index:0,
+          type:''
         },
         {
           sort:'选择取餐站点',
-          array: ['江陵路', '近江', '西兴', '滨和路'],
+          array: [],
+          id:[],
           index:0,
+          type:''
         },
         {
           sort:'选择出站口',
-          array: ['A', 'B', 'C', 'D'],
+          array: [],
+          id:[],
           index:0,
+          type:''
         },
         {
-          sort:'时间',
-          array: ['A', 'B', 'C', 'D'],
-          index:0,
+          sort:'取餐日期',
+          value:'2018-04-06',
+          type:'date'
+        },
+        {
+          sort:'最早时间',
+          value:'08:00',
+          type:'time'
+        },
+        {
+          sort:'最晚时间',
+          value:'08:00',
+          type:'time'
         },
       ],
-      all_order:[
-        {
-          Pname:'粥',
-          Pnum:1,
-          Pprice:12
-        },
-        {
-          Pname:'粥',
-          Pnum:1,
-          Pprice:12
-        },
-        {
-          Pname:'粥',
-          Pnum:1,
-          Pprice:12
-        }
-      ],
+      all_order:[],
+      Uname:'',
+      Utel:'',
       payment_method:
         {
           sort:'支付方式',
@@ -106,30 +154,189 @@
         array: ['1', '2', '3', '4','5','6','7','8','9','10'],
         index:0,
       },
-
-
-
-      list_data:[
-        {
-          name: '粥',
-          price: '12.3',
-          id: '01',
-          remarks: '',
-          number: 1
-        },
-        {
-          name: '粥',
-          price: '12.3',
-          id: '01',
-          remarks: '',
-          number: 1
-        }
-      ]
+      total_money:0,
+      show_modal:false,
+      card_data:[],
+      choose_card:null
     }
     events = {
       'pickerChange':function(e){
+        if(e.sort == '选择取餐站点'){
+          this.getExitInfo(e.id[e.index])
+        }else if(e.sort == '选择地铁线路'){
+          this.getCationInfo(e.array[e.index])
+        }
         this.$apply();
       }
+    }
+    async getLineInfo(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_line,
+        method:'GET',
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.all_picker[0].array = that.deal_arr(res.data.data,'Lline');
+            that.$apply()
+          }
+        }
+      })
+    }
+    async getCationInfo(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_all_location,
+        method:'GET',
+        data:{Lline:params},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.all_picker[1].array = that.deal_arr(res.data.data,'Lname');
+            that.all_picker[1].id = that.deal_arr(res.data.data,'Lid');
+            that.$apply()
+          }
+        }
+      })
+    }
+    async getExitInfo(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_lno,
+        method:'GET',
+        data:{Lid:params},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.all_picker[2].array = that.deal_arr(res.data.data,'Lno');
+            that.$apply()
+          }
+        }
+      })
+    }
+    async getPersonInfo(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_order_user,
+        method:'GET',
+        data:{token:params},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.Uname = res.data.data.Uname;
+            that.Utel = res.data.data.Utel;
+            that.$apply()
+          }
+        }
+      })
+    }
+    async getAllCar(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_all_car,
+        method:'GET',
+        data:{token:params},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          that.total_money = 0;
+          if(res.data.status == '200'){
+            that.all_order = res.data.data;
+            for(let i=0;i< that.all_order.length;i++){
+              that.total_money += Number(that.all_order[i].Pnum * that.all_order[i].Pprice)
+            }
+            //
+            that.$apply()
+          }
+        }
+      })
+    }
+    async getAllYou(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_cardpkg,
+        method:'GET',
+        data:{token:params},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+//          that.total_money = 0;
+          if(res.data.status == '200'){
+            that.card_data = res.data.data;
+            console.log(res)
+            that.$apply();
+          }
+        }
+      })
+    }
+    async submitAll(token,params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.make_main_order+'?token='+token,
+        method:'POST',
+        data:params,
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          that.total_money = 0;
+          if(res.data.status == '200'){
+            that.all_order = res.data.data;
+            for(let i=0;i< that.all_order.length;i++){
+              that.total_money += Number(that.all_order[i].Pnum * that.all_order[i].Pprice)
+            }
+            //
+            that.$apply()
+          }
+        }
+      })
+    }
+    deal_arr(data,name){
+      let _arr = [];
+      for(let i = 0;i<data.length;i++){
+        _arr.push(data[i][name])
+      }
+      return _arr;
+    }
+    onLoad(option){
+      let date = new Date();
+      let token ='';
+      let that = this;
+      this.all_picker[3].value = date.getFullYear() + '-' + ((date.getMonth()+1)>=10 ?(date.getMonth()+1):'0'+(date.getMonth()+1) ) + '-' +(date.getDate()>=10?date.getDate():'0'+date.getDate())
+      this.getLineInfo();
+      wx.getStorage({
+        key: 'token',
+        success: function(res){
+          token = res.data
+          that.getPersonInfo(token);
+          that.getAllCar(token);
+          that.$apply()
+        }
+      })
     }
     methods = {
       PickerChangeWay: function(e) {
@@ -140,6 +347,94 @@
         this.number_of_meals.index = e.detail.value;
         this.$apply()
       },
+      bindKeyInput(e){
+        this.Oabo = e.detail.value;
+        this.$apply();
+      },
+      placeAnOrder(){
+        let params = {};
+        let that = this;
+        let token = '';
+        let date = new Date();
+        if(this.all_picker[1].index == ''){
+          wx.showToast({
+            title: '请选择站点',
+            icon: 'none',
+            duration: 1000
+          });
+          return;
+        }
+        if(this.all_picker[0].index == ''){
+          wx.showToast({
+            title: '请选择线路',
+            icon: 'none',
+            duration: 1000
+          });
+          return;
+        }
+        if(this.all_picker[1].index == ''){
+          wx.showToast({
+            title: '请选择出口',
+            icon: 'none',
+            duration: 1000
+          })
+          return;
+        }
+        params ={
+          "Otime":date.getFullYear() + '-' + ((date.getMonth()+1)>=10 ?(date.getMonth()+1):'0'+(date.getMonth()+1) ) + '-' +(date.getDate()>=10?date.getDate():'0'+date.getDate())+' '+date.getHours()+':'+date.getMinutes(),
+          "Omintime":this.all_picker[3].value + ' '+this.all_picker[4].value ,
+          "Omaxtime":this.all_picker[3].value + ' '+this.all_picker[5].value,
+          "Lname":this.all_picker[1].array[this.all_picker[1].index],
+          "Lno":this.all_picker[0].array[this.all_picker[0].index],
+          "Lline":this.all_picker[2].array[this.all_picker[2].index],
+          'Lboxno':1,
+          "Oabo":this.Oabo,
+          "Order_items":this.all_order,
+          "Carid":this.choose_card.Carid
+        }
+        wx.getStorage({
+          key: 'token',
+          success: function(res){
+            token = res.data
+            that.submitAll(token,params)
+            that.$apply()
+          }
+        })
+
+
+
+      },
+      Touch(e){
+//        console.log(e)
+//        e.preventDefault()
+        return;
+      },
+      modalBack(){
+        this.show_modal = false;
+      },
+      showModal(){
+        this.show_modal = true;
+        let date = new Date();
+        let token ='';
+        let that = this;
+        this.all_picker[3].value = date.getFullYear() + '-' + ((date.getMonth()+1)>=10 ?(date.getMonth()+1):'0'+(date.getMonth()+1) ) + '-' +(date.getDate()>=10?date.getDate():'0'+date.getDate())
+        this.getLineInfo();
+        wx.getStorage({
+          key: 'token',
+          success: function(res){
+            token = res.data
+            that.getAllYou(token);
+            that.$apply()
+          }
+        })
+      },
+      cardTap(v){
+        this.show_modal = false;
+        this.choose_card = v;
+      },
+      modalTouch(e){
+        console.log(e)
+      }
     }
   }
 </script>
@@ -150,7 +445,7 @@
     background-color: #f8f8f8;
     .m-head{
       width: 100%;
-      height: 400rpx;
+      height: 600rpx;
       .m-head-back{
         background-color: @common-color;
         height: 296rpx;
@@ -161,7 +456,7 @@
         top: 0;
         left: 40rpx;
         width: 630rpx;
-        height: 550rpx;
+        height: 750rpx;
         background-color: #fff;
         border-radius: 2px;
         padding: 0 20rpx;
@@ -178,7 +473,7 @@
       }
     }
     .m-content{
-      margin: 270rpx 40rpx 40rpx 40rpx;
+      margin: 470rpx 40rpx 40rpx 40rpx;
       background-color: #fff;
       border: 1px solid #f8f8f8;
       .m-li-more{
@@ -186,6 +481,29 @@
         margin: 0 20rpx;
         padding: 20rpx;
         text-align: right;
+      }
+      .m-li-m{
+        margin: 0 20rpx;
+        padding: 20rpx  0;
+        font-size: 30rpx;
+        border-bottom: 1px solid @border-color;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: space-between;
+        .m-label{
+          padding: 5rpx 10rpx;
+          color: #f4690c;
+          background-color: #FEF0F4;
+          border: 1px solid #f4690c;
+          border-radius: 5px;
+        }
+        .m-coupon{
+
+        }
+        .m-total{
+
+        }
       }
     }
     .m-remark{
@@ -212,10 +530,18 @@
             }
           }
         }
+        .m-input-box{
+          display: flex;
+          flex-flow: row;
+          align-items: center;
+          .m-input{
+
+          }
+        }
       }
-      .m-li:last-child{
-        border-bottom: none;
-      }
+      /*.m-li:last-child{*/
+        /*border-bottom: none;*/
+      /*}*/
     }
     .m-foot{
       position: fixed;
@@ -228,6 +554,7 @@
       flex-flow: row;
       justify-content: space-between;
       align-items: center;
+      z-index: 100;
       /*background-color: rgba(0,0,0,0.5);*/
       .m-car{
         position: relative;
@@ -261,5 +588,81 @@
         }
       }
     }
+
   }
+  .m-cover{
+    position: fixed;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background-color: rgba(0,0,0,0.5);
+    .m-modal{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 60%;
+
+      background-color: #f8f8f8;
+      .m-modal-head{
+        background-color: @common-color;
+        color: #fff;
+        z-index: 1001;
+        /*display: flex;*/
+        /*flex-flow: row;*/
+        /*align-items: center;*/
+        /*font-size: 30rpx;*/
+        /*justify-content: space-between;*/
+
+        /*text-align: center;*/
+        padding: 20rpx ;
+      }
+      .m-scroll{
+        height: 100%;
+        overflow-y: auto;
+
+        background-color: #fff;
+        .m-modal-content{
+          /*min-height: 80%;*/
+          padding-bottom: 75rpx;
+          .m-modal-title{
+            padding: 10rpx;
+            border-bottom: 1px solid @border-color;
+            font-size: 30rpx;
+          }
+          .m-no-card{
+            display: flex;
+            flex-flow: row;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid @border-color;
+            padding: 10rpx;
+          }
+          .m-card-box{
+            margin-top: 20rpx;
+            .m-one-card{
+              border: 1px solid @border-color;
+              border-radius: 5px;
+              margin: 40rpx;
+              padding: 40rpx;
+              display: flex;
+              flex-flow: row;
+              align-items: center;
+              justify-content: space-around;
+              &.m-active{
+                border: 1px solid #f4690c;
+              }
+              &.m-disable{
+                color: @border-color;
+              }
+            }
+          }
+        }
+      }
+
+    }
+  }
+
 </style>
