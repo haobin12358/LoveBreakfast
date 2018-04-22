@@ -23,10 +23,11 @@ const get_line = _title + '/love/breakfast/locations/get_lline';//获取站点�
 const get_all_location = _title + '/love/breakfast/locations/get_all_location';//获取站点信息
 const get_lno = _title + '/love/breakfast/locations/get_lno';//获取出口信息
 
-//登录
-const login =  _title + '/love/breakfast/users/register';
+//登
+const login =  _title + '/love/breakfast/users/login';
 //注册
-const register =  _title + '/love/breakfast/users/login';
+const register =  _title + '/love/breakfast/users/register';
+
 //个人中心
 const get_person_info = _title + '/love/breakfast/users/all_info';//获取用户信息
 const change_person_info = _title + '/love/breakfast/users/update_info';//修改用户信息

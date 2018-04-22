@@ -1,0 +1,58 @@
+<template>
+  <view class="m-bar">
+    <view class="m-info-prefix"> {{prefix}}</view>
+    <input class="m-info-content" bindinput="bindInput" value="{{ syncInfo }}"/>
+  </view>
+</template>
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .m-bar{
+    width: 100%;
+    font-size: 30rpx;
+    float: left;
+    border-bottom: 1rpx solid @border-color;
+    padding: 30rpx 0;
+    margin: 20rpx 0;
+    .m-info-prefix{
+      float: left;
+      margin: 0 40rpx;
+    }
+    .m-info-content{
+      float: right;
+      text-align: right;
+      margin: 0 40rpx;
+      color: @grey-font;
+    }
+  }
+</style>
+<script>
+  import wepy from 'wepy';
+
+  export default class Bar extends wepy.component  {
+    props = {
+      //静态传值
+      prefix: String,
+      syncInfo: {
+        type: String,
+        default: 'content'
+      },
+      twoWayInfo: {
+        type: String,
+        default: '',
+        twoWay: true
+      }
+    }
+    data = {
+
+    }
+    methods = {
+      bindInput (e) {
+        this.twoWayInfo = e.detail.value
+        this.$parent.twoWayInfo = this.twoWayInfo
+        this.$parent.$apply();
+        console.log(this.$parent.twoWayInfo, 'hhh')
+      }
+    }
+  }
+</script>
+

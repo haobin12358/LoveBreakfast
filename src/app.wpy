@@ -1,5 +1,6 @@
 <style scoped lang="less" rel="stylesheet/less">
   @import 'styles/common';
+ 
 .container {
   height: 100%;
   display: flex;
@@ -10,108 +11,111 @@
   background-color: #f8f8f8;
   font-size: 30rpx;
 }
+
 </style>
 
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
+  import wepy from 'wepy'
+  import 'wepy-async-function'
 
-import { setStore } from 'wepy-redux'
-import configStore from './store'
+  import { setStore } from 'wepy-redux'
+  import configStore from './store'
 
-const store = configStore()
-setStore(store)
+  const store = configStore()
+  setStore(store)
 
-export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/index',
-      'pages/login',
-      'pages/register',
-      'pages/myOrder',
-      'pages/oneOrder',
-      'pages/personal',
-      'pages/placeAnOrder',
-      'pages/business',
-      'pages/commodityDetails',
-      'pages/commodityEvaluation',
-      'pages/product',
-      'pages/car'
-    ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#00A0EC',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'white'
-    },
-    "tabBar": {
-      "color": "#bfbfbf",
-      "selectedColor": "#00A0EC",
-      "backgroundColor": "#ffffff",
-      "borderStyle": "black",
-      "list": [{
-        "pagePath": "pages/index",
-        "text": "商品",
-        "iconPath": "images/icon_home.png",
-        "selectedIconPath": "images/icon_home_active.png"
-      }, {
-        "pagePath": "pages/myOrder",
-        "text": "订单",
-        "iconPath": "images/icon_order.png",
-        "selectedIconPath": "images/icon_order_active.png"
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/index',
+        'pages/login',
+        'pages/register',
+        'pages/myOrder',
+        'pages/oneOrder',
+        'pages/personal',
+        'pages/placeAnOrder',
+        'pages/business',
+        'pages/commodityDetails',
+        'pages/commodityEvaluation',
+        'pages/product',
+        'pages/car',
+        'pages/baseInfo',
+        'pages/setUp'
+      ],
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#00A0EC',
+        navigationBarTitleText: 'WeChat',
+        navigationBarTextStyle: 'white'
       },
-        {
-          "pagePath": "pages/car",
-          "text": "购物车",
-          "iconPath": "images/icon_car.png",
-          "selectedIconPath": "images/icon_car_active.png"
-        },{
-        "pagePath": "pages/personal",
-        "text": "我的",
-        "iconPath": "images/icon_person.png",
-        "selectedIconPath": "images/icon_person_active.png"
-      }]
-    }
-  }
-
-  globalData = {
-    userInfo: null,
-
-  }
-
-  constructor () {
-    super()
-    this.use('requestfix')
-  }
-
-  onLaunch() {
-    this.testAsync()
-  }
-
-  sleep (s) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('promise resolved')
-      }, s * 1000)
-    })
-  }
-
-  async testAsync () {
-    const data = await this.sleep(3)
-    console.log(data)
-  }
-
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
+      "tabBar": {
+        "color": "#bfbfbf",
+        "selectedColor": "#00A0EC",
+        "backgroundColor": "#ffffff",
+        "borderStyle": "black",
+        "list": [{
+          "pagePath": "pages/index",
+          "text": "商品",
+          "iconPath": "images/icon_home.png",
+          "selectedIconPath": "images/icon_home_active.png"
+        }, {
+          "pagePath": "pages/myOrder",
+          "text": "订单",
+          "iconPath": "images/icon_order.png",
+          "selectedIconPath": "images/icon_order_active.png"
+        },
+          {
+            "pagePath": "pages/car",
+            "text": "购物车",
+            "iconPath": "images/icon_car.png",
+            "selectedIconPath": "images/icon_car_active.png"
+          },{
+            "pagePath": "pages/personal",
+            "text": "我的",
+            "iconPath": "images/icon_person.png",
+            "selectedIconPath": "images/icon_person_active.png"
+          }]
       }
-    })
+    }
+
+    globalData = {
+      userInfo: null,
+
+    }
+
+    constructor () {
+      super()
+      this.use('requestfix')
+    }
+
+    onLaunch() {
+      this.testAsync()
+    }
+
+    sleep (s) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve('promise resolved')
+        }, s * 1000)
+      })
+    }
+
+    async testAsync () {
+      const data = await this.sleep(3)
+      console.log(data)
+    }
+
+    getUserInfo(cb) {
+      const that = this
+      if (this.globalData.userInfo) {
+        return this.globalData.userInfo
+      }
+      wepy.getUserInfo({
+        success (res) {
+          that.globalData.userInfo = res.userInfo
+          cb && cb(res.userInfo)
+        }
+      })
+    }
   }
-}
 </script>

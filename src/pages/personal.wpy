@@ -55,47 +55,91 @@
 </style>
 <template>
 <view class="container">
+  <view></view>
   <view class="m-header-box">
     <view class="m-header-content">
       <image class="m-avatar" src="../images/test.jpeg"></image>
-      <view class="m-nickname">{{ nickname }}林 杨</view>
+      <view class="m-nickname">{{ userInfo.Uname }}</view>
+      <view wx:if="{{ isToken == false }}" bindtap="tap">
+        <button class="m-button">请登录</button>
+      </view>
     </view>
   </view>
   <view class="m-info_block-list">
-    <navigator class="m-item" url="/pages/">
+    <navigator class="m-item" url="/pages/baseInfo?name={{userInfo.Uname}}&sex={{userInfo.Usex}}">
       <view class="m-item_content">
         <image class="m-item_img" src="../images/edit.png"></image>
         <view class="m-text">基本信息</view>
       </view>
       <image class="m-arrow" src="../images/more.png"></image>
     </navigator>
+
     <navigator class="m-item" url="/pages/myOrder">
-      <view class="m-item_content">
-        <image class="m-item_img" src="../images/order.png"></image>
-        <view class="m-text">订单</view>
-      </view>
-      <image class="m-arrow" src="../images/more.png"></image>
-    </navigator>
-    <navigator class="m-item" url="/pages/">
+
       <view class="m-item_content">
         <image class="m-item_img" src="../images/set.png"></image>
         <view class="m-text">设置</view>
       </view>
       <image class="m-arrow" src="../images/more.png"></image>
     </navigator>
+    <navigator class="m-item">
+      <view class="m-item_content">
+        <image class="m-item_img" src="../images/order.png"></image>
+        <view class="m-text">积分</view>
+      </view>
+      <view class="m-arrow">{{ userInfo.Ucoin }}</view>
+    </navigator>
   </view>
 </view>
 </template>
 <script >
   import wepy from 'wepy';
+  import tip from '../utils/tip'
+  import api from '../api/api'
   export default class Personal extends wepy.page{
     config = {
       navigationBarTitleText: '个人中心'
     }
     data = {
-
+      userInfo: { nickname: '林杨', sex :'男'},
+      isToken: false
+//      userInfo: this.$parent.globalData.userInfo
     }
+    async getPersonInfo() {
+      let that = this;
+      tip.loading();
+      let token = wx.getStorageSync('token')
+      wx.request({
+        url:api.get_person_info,
+        method:'GET',
+        data:{token:token},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.$parent.globalData.userInfo = res.data.data;
+            that.userInfo = res.data.data;
+            that.$apply();
+          }
+        }
+      })
+    }
+    async onShow(){
+      let that = this;
+      let token = wx.getStorageSync('token')
+      if(token) this.isToken = true
+      this.getPersonInfo(token)
+//      console.log(token, 'successfully get token')
+    }
+
     methods = {
+      tap(){
+        wx.navigateTo({
+          url: '/pages/login'
+        })
+      }
     }
   }
 </script>
