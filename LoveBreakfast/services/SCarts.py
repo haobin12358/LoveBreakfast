@@ -28,7 +28,7 @@ class SCarts(SBase):
 
     @close_session
     def del_carts(self, caid):
-        self.session.query(Cart).filter(Cart.Caid == caid).update({"Castatus": 2, "Pnum": 0})
+        self.session.query(Cart).filter(Cart.Caid == caid).delete()
 
     @close_session
     def update_num_cart(self, pnum, caid):

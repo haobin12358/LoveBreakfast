@@ -68,6 +68,13 @@ class CCarts():
         uid = args.get("token")
         pid = data.get("Pid")
         pnum = data.get("Pnum")
+        if pnum <= 0:
+            # from config.messages import error_messages_pnum_illegal as msg
+            # from config.status import response_error as status
+            # from config.status_code import error_pnum_illegal as code
+            # return {"status": status, "statuscode": code, "message": msg}
+            # elif pnum == 0:
+            return self.del_cart()
 
         try:
             if not self.spro.get_product_all_by_pid(pid):
@@ -77,15 +84,7 @@ class CCarts():
                 return {"status": status, "statuscode": code, "message": msg}
             cart = self.scart.get_cart_by_uid_pid(uid, pid)
             if cart:
-                if cart.Pnum + pnum < 0:
-                    from config.messages import error_messages_pnum_illegal as msg
-                    from config.status import response_error as status
-                    from config.status_code import error_pnum_illegal as code
-                    return {"status": status, "statuscode": code, "message": msg}
-                elif cart.Pnum + pnum == 0:
-                    self.scart.del_carts(cart.Caid)
-                else:
-                    self.scart.update_num_cart(pnum + cart.Pnum, cart.Caid)
+                self.scart.update_num_cart(pnum, cart.Caid)
             else:
                 self.scart.add_carts(
                     **{
@@ -113,7 +112,7 @@ class CCarts():
         pid = data.get("Pid")
         try:
             cart = self.scart.get_cart_by_uid_pid(uid, pid)
-            if not cart or cart.Castatus == 2:
+            if not cart:
                 from config.status import response_system_error as status
                 from config.status_code import error_cart_no_pro as code
                 from config.messages import error_messages_cart_no_pro as msg
