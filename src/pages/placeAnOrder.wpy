@@ -295,6 +295,7 @@
     async submitAll(token,params) {
       let that = this;
       tip.loading();
+
       wx.request({
         url:api.make_main_order+'?token='+token,
         method:'POST',
@@ -306,12 +307,17 @@
           tip.loaded()
           that.total_money = 0;
           if(res.data.status == '200'){
-            that.all_order = res.data.data;
-            for(let i=0;i< that.all_order.length;i++){
-              that.total_money += Number(that.all_order[i].Pnum * that.all_order[i].Pprice)
-            }
+
             //
-            that.$apply()
+            that.$apply();
+            wx.showToast({
+              title: '下单成功',
+              icon: 'success',
+              duration: 1000
+            });
+//            wx.redirectTo({
+//              url:'../pages/oneOrder?Oid='+res.data.data.Oid
+//            })
           }
         }
       })
@@ -357,30 +363,30 @@
         let that = this;
         let token = '';
         let date = new Date();
-//        if(this.all_picker[1].index == ''){
-//          wx.showToast({
-//            title: '请选择站点',
-//            icon: 'none',
-//            duration: 1000
-//          });
-//          return;
-//        }
-//        if(this.all_picker[0].index == ''){
-//          wx.showToast({
-//            title: '请选择线路',
-//            icon: 'none',
-//            duration: 1000
-//          });
-//          return;
-//        }
-//        if(this.all_picker[1].index == ''){
-//          wx.showToast({
-//            title: '请选择出口',
-//            icon: 'none',
-//            duration: 1000
-//          })
-//          return;
-//        }
+        if(this.all_picker[1].index == ''){
+          wx.showToast({
+            title: '请选择站点',
+            icon: 'none',
+            duration: 1000
+          });
+          return;
+        }
+        if(this.all_picker[0].index == ''){
+          wx.showToast({
+            title: '请选择线路',
+            icon: 'none',
+            duration: 1000
+          });
+          return;
+        }
+        if(this.all_picker[1].index == ''){
+          wx.showToast({
+            title: '请选择出口',
+            icon: 'none',
+            duration: 1000
+          })
+          return;
+        }
         params ={
           "Otime":date.getFullYear() + '-' + ((date.getMonth()+1)>=10 ?(date.getMonth()+1):'0'+(date.getMonth()+1) ) + '-' +(date.getDate()>=10?date.getDate():'0'+date.getDate())+' '+date.getHours()+':'+date.getMinutes(),
           "Omintime":this.all_picker[3].value + ' '+this.all_picker[4].value ,
