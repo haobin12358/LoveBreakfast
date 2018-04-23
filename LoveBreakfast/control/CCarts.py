@@ -8,7 +8,7 @@ import uuid
 from config.status import response_ok as ok
 from common.get_model_return_list import get_model_return_list
 from common.lovebreakfast_error import dberror
-
+from common.TransformToList import add_model
 
 class CCarts():
     def __init__(self):
@@ -86,7 +86,7 @@ class CCarts():
             if cart:
                 self.scart.update_num_cart(pnum, cart.Caid)
             else:
-                self.scart.add_model("Cart",
+                add_model("Cart",
                     **{
                         "Caid": str(uuid.uuid4()),
                         "Pnum": pnum,
