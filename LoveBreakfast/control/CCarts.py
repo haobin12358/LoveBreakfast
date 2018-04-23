@@ -86,7 +86,7 @@ class CCarts():
             if cart:
                 self.scart.update_num_cart(pnum, cart.Caid)
             else:
-                self.scart.add_carts(
+                self.scart.add_model("Cart",
                     **{
                         "Caid": str(uuid.uuid4()),
                         "Pnum": pnum,
