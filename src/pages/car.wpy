@@ -5,6 +5,7 @@
       <repeat for="{{list_data}}" key="index" index="index" item="item">
         <List :list="item" page="car" @listTap.user="productTap"></List>
       </repeat>
+      <view wx:if="{{list_data.length <=0}}" class="m-no">暂无商品</view>
     </view>
     <foot class="m-foot">
       <view class="m-car">
