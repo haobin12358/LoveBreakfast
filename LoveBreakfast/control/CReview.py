@@ -30,7 +30,7 @@ class CReview():
     def create_review(self):
         args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
         # 判断url参数是否异常
-        if len(args) != 2 or "token" not in args.keys() or "OMid" not in args.keys():
+        if len(args) != 2 or "token" not in args.keys() or "Oid" not in args.keys():
             message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
             return {
                 "message": message,
@@ -39,7 +39,7 @@ class CReview():
             }
         token_to_str = get_str(args, "token")
         print('token'+token_to_str)
-        oid_to_str = get_str(args, "OMid")
+        oid_to_str = get_str(args, "Oid")
         oid_list_service = self.service_order.get_all_order_by_uid(token_to_str)
         oid_list_control = []
         print(oid_list_service)
@@ -115,7 +115,7 @@ class CReview():
     def get_review(self):
         args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
         # 判断url参数是否异常
-        if len(args) != 2 or "OMid" not in args.keys() or "token" not in args.keys():
+        if len(args) != 2 or "Oid" not in args.keys() or "token" not in args.keys():
             message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
             return {
                 "message": message,
@@ -124,7 +124,7 @@ class CReview():
             }
         # 验证是否存在该订单
         token_to_str = get_str(args, "token")
-        oid_to_str = get_str(args, "OMid")
+        oid_to_str = get_str(args, "Oid")
         oid_list_service = self.service_order.get_all_order_by_uid(token_to_str)
         if oid_list_service != None:
             oid_list_control = []
@@ -142,7 +142,7 @@ class CReview():
                         "status": status,
                         "statuscode": statuscode,
                     }
-            oid_to_str = get_str(args, "OMid")
+            oid_to_str = get_str(args, "Oid")
             review_list_service = self.service_review.get_review(oid_to_str)
             print(review_list_service)
             review_list_control = []
@@ -168,6 +168,7 @@ class CReview():
                 "status_code": SYSTEM_ERROR
 
             }
+
     def get_user_review(self):
         args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
         # 判断url参数是否异常
