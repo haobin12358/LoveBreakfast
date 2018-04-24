@@ -15,13 +15,13 @@ Base = declarative_base()
 
 class Users(Base):
     __tablename__ = "Users"
-    Uid = Column(String(64), primary_key=True)
-    Utel = Column(String(14), nullable=False)
-    Upwd = Column(String(32), nullable=False)
-    Uname = Column(String(64))
-    Usex = Column(Integer)
-    Ucoin = Column(Float)
-    Uinvate = Column(String(64))
+    USid = Column(String(64), primary_key=True)
+    UStelphone = Column(String(14), nullable=False) # 用户联系方式
+    USpassword = Column(String(32), nullable=False) # 用户密码
+    USname = Column(String(64))  # 用户昵称
+    USsex = Column(Integer)  # 用户性别 {101男， 102女}
+    UScoin = Column(Float)  # 用户积分，根据用户购买商品生成
+    USinvatecode = Column(String(64))   # 用户邀请码，算法生成待设计
 
 class Locations(Base):
     __tablename__ = "Locations"
@@ -101,18 +101,18 @@ class Cart(Base):
 
 class Coupons(Base):
     __tablename__ = "Coupon"
-    Couid = Column(String(64), primary_key=True)
-    Coufilter = Column(Float)      # 优惠券优惠条件
-    Coudiscount = Column(Float)    # 折扣
-    Couamount = Column(Float)      # 优惠金额
-    Coustart = Column(String(14))  # 优惠券的生命周期
-    Couend = Column(String(14))
+    COid = Column(String(64), primary_key=True)
+    COfilter = Column(Float)      # 优惠券优惠条件，到达金额
+    COdiscount = Column(Float)    # 折扣，值为0-1，其中0为免单
+    COamount = Column(Float)      # 优惠金额，减免金额，限制最大数目
+    COstart = Column(String(14))  # 优惠券的开始时间
+    Couend = Column(String(14))   # 优惠券的结束时间
 
 class Cardpackage(Base):
     __tablename__ = "Cardpackage"
-    Carid = Column(String(64), primary_key=True)
-    Uid = Column(String(64), nullable=False)
-    Carstatus = Column(Integer, default=1)  # 卡包中优惠券的状态 {1:可使用，2: 不可使用}
-    Carstart = Column(String(14))
-    Carend = Column(String(14))
-    Couid = Column(String(64), nullable=False)
+    CAid = Column(String(64), primary_key=True)
+    USid = Column(String(64), nullable=False)
+    CAstatus = Column(Integer, default=1)  # 卡包中优惠券的状态 {1:可使用，2: 不可使用}
+    CAstart = Column(String(14))  # 卡包中优惠券的开始时间
+    CAend = Column(String(14))   # 卡包中的优惠券结束时间
+    COid = Column(String(64), nullable=False)

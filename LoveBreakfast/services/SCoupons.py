@@ -15,10 +15,10 @@ class SCoupons(SBase):
     def get_cardpackage_by_uid(self, uid):
 
         return self.session.query(
-            Cardpackage.Couid, Cardpackage.Carid,
-            Cardpackage.Uid, Cardpackage.Carstart,
-            Cardpackage.Carend, Cardpackage.Carstatus
-        ).filter(Cardpackage.Uid == uid).all()
+            Cardpackage.COid, Cardpackage.CAid,
+            Cardpackage.USid, Cardpackage.CAstart,
+            Cardpackage.CAend, Cardpackage.CAstatus
+        ).filter(Cardpackage.USid == uid).all()
 
     @close_session
     def add_coupons(self, **kwargs):
@@ -38,19 +38,19 @@ class SCoupons(SBase):
 
     @close_session
     def update_carbackage(self, cardid):
-        self.session.query(Cardpackage).filter(Cardpackage.Carid == cardid).update({"Carstatus": 2})
+        self.session.query(Cardpackage).filter(Cardpackage.CAid == cardid).update({"CAstatus": 2})
 
     @close_session
     def get_card_by_uid_couid(self, uid, couid):
         return self.session.query(
-            Cardpackage.Couid, Cardpackage.Carid, Cardpackage.Carstatus,
-            Cardpackage.Carend, Cardpackage.Carstart, Cardpackage.Uid
-        ).filter(Cardpackage.Uid == uid, Cardpackage.Couid == couid).first()
+            Cardpackage.COid, Cardpackage.CAid, Cardpackage.CAstatus,
+            Cardpackage.CAend, Cardpackage.CAstart, Cardpackage.USid
+        ).filter(Cardpackage.USid == uid, Cardpackage.COid == couid).first()
 
 
     @close_session
     def get_coupons_by_couid(self, couid):
         return self.session.query(
-            Coupons.Couid, Coupons.Couamount, Coupons.Coudiscount,
-            Coupons.Coustart, Coupons.Couend, Coupons.Coustart
-        ).filter(Coupons.Couid == couid).first()
+            Coupons.COid, Coupons.COamount, Coupons.COdiscount,
+            Coupons.COstart, Coupons.COend, Coupons.COfilter
+        ).filter(Coupons.COid == couid).first()

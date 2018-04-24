@@ -125,14 +125,14 @@ class CUsers():
         users = {}
         if "Uname" in data:
             Uname = data["Uname"]
-            users["Uname"] = Uname
+            users["USname"] = Uname
         if "Usex" in data:
             Usex = data["Usex"]
             if Usex == "男":
                 Usex = 101
             elif Usex == "女":
                 Usex = 102
-            users["Usex"] = Usex
+            users["USsex"] = Usex
 
         from services.SUsers import SUsers
         susers = SUsers()
@@ -162,7 +162,7 @@ class CUsers():
 
         users = {}
         Upwd = data["Upwd"]
-        users["Upwd"] = Upwd
+        users["USpassword"] = Upwd
 
         from services.SUsers import SUsers
         susers = SUsers()
@@ -192,20 +192,25 @@ class CUsers():
             return self.system_error
 
         response_user_info = {}
-        Utel = users_info.Utel
+        Utel = users_info.UStelphone
         response_user_info["Utel"] = Utel
-        if users_info.Uname not in ["", None]:
-            Uname = users_info.Uname
+        if users_info.USname not in ["", None]:
+            Uname = users_info.USname
             response_user_info["Uname"] = Uname
         else:
             response_user_info["Uname"] = None
-        if users_info.Usex not in["", None]:
-            Usex = users_info.Usex
-            response_user_info["Usex"] = Usex
+        if users_info.USsex not in["", None]:
+            Usex = users_info.USsex
+            if Usex == 101:
+                response_user_info["Usex"] = "男"
+            elif Usex == 102:
+                response_user_info["Usex"] = "女"
+            else:
+                response_user_info["Usex"] = "未知性别"
         else:
             response_user_info["Usex"] = None
-        response_user_info["Ucoin"] = users_info.Ucoin
-        response_user_info["Uinvate"] = users_info.Uinvate
+        response_user_info["Ucoin"] = users_info.UScoin
+        response_user_info["Uinvate"] = users_info.USinvatecode
 
         response_of_get_all = {}
         response_of_get_all["status"] = response_ok

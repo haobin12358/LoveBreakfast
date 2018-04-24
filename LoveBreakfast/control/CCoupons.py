@@ -41,20 +41,20 @@ class CCoupons():
             cart_pkg = self.scoupons.get_card_by_uid_couid(uid, couid)
             cend = get_db_time_str()  # 后期补充优惠券截止日期计算方法
             if cart_pkg:
-                if cart_pkg.Carstatus == 2:
+                if cart_pkg.CAstatus == 2:
                     from config.status import response_error as status
                     from config.status_code import error_coupon_used as code
                     from config.messages import error_coupons_used as msg
-                    return {"status": status, "statuscode": code, "message": msg}
-                self.scoupons.update_carbackage(cart_pkg.Carid)
+                    return {"status": status, "status_code": code, "message": msg}
+                self.scoupons.update_carbackage(cart_pkg.CAid)
             else:
                 self.scoupons.add_cardpackage(**{
-                    "Carid": str(uuid.uuid4()),
-                    "Uid": uid,
-                    "Carstatus": 1,
-                    "Carstart": get_db_time_str(),
-                    "Carend": cend,
-                    "Couid": couid
+                    "CAid": str(uuid.uuid4()),
+                    "USid": uid,
+                    "CAstatus": 1,
+                    "CAstart": get_db_time_str(),
+                    "CAend": cend,
+                    "COid": couid
                 })
         except dberror:
             return self.system_error
@@ -75,9 +75,9 @@ class CCoupons():
             cart_list = []
             cart_pkgs = get_model_return_list(self.scoupons.get_cardpackage_by_uid(uid))
             for cart_pkg in cart_pkgs:
-                if cart_pkg.get("Carstatus") == 2:
+                if cart_pkg.get("CAstatus") == 2:
                     continue
-                coupon = get_model_return_dict(self.scoupons.get_coupons_by_couid(cart_pkg.get("Couid")))
+                coupon = get_model_return_dict(self.scoupons.get_coupons_by_couid(cart_pkg.get("COid")))
                 for key in coupon.keys():
                     cart_pkg[key] = coupon.get(key)
                 cart_list.append(cart_pkg)

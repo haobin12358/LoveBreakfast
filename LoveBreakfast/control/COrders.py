@@ -139,8 +139,8 @@ class COrders():
         from services.SUsers import SUsers
         susers = SUsers()
         users = susers.get_uname_utel_by_uid(Uid)
-        data["Utel"] = users.Utel
-        data["Uname"] = users.Uname
+        data["Utel"] = users.UStelphone
+        data["Uname"] = users.USname
         data["Oabo"] = order_abo.Oabo
         data["Order_items"] = []
         order_items = sorders.get_order_item_by_oid(Oid)
@@ -313,15 +313,15 @@ class COrders():
             return self.system_error
 
         response_user_info = {}
-        Utel = users_info.Utel
+        Utel = users_info.UStel
         response_user_info["Utel"] = Utel
-        if users_info.Uname not in ["", None]:
-            Uname = users_info.Uname
+        if users_info.USname not in ["", None]:
+            Uname = users_info.USname
             response_user_info["Uname"] = Uname
         else:
             response_user_info["Uname"] = None
-        if users_info.Usex not in ["", None]:
-            Usex = users_info.Usex
+        if users_info.USsex not in ["", None]:
+            Usex = users_info.USsex
             response_user_info["Usex"] = Usex
         else:
             response_user_info["Usex"] = None

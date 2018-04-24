@@ -18,7 +18,7 @@ class SUsers():
     def get_all_user_tel(self):
         all_tel = None
         try:
-            all_tel = self.session.query(model.Users.Utel).all()
+            all_tel = self.session.query(model.Users.UStelphone).all()
         except Exception as e:
             print(e.message)
         finally:
@@ -34,13 +34,13 @@ class SUsers():
         """
         try:
             new_user = model.Users()
-            new_user.Uid = str(uuid.uuid4())
-            new_user.Utel = utel
-            new_user.Upwd = upwd
-            new_user.Uname = None
-            new_user.Usex = None
-            new_user.Ucoin = 0
-            new_user.Uinvate = str(uuid.uuid4())  # 待设计
+            new_user.USid = str(uuid.uuid4())
+            new_user.UStelphone = utel
+            new_user.USpassword = upwd
+            new_user.USname = None
+            new_user.USsex = None
+            new_user.UScoin = 0
+            new_user.USinvatecode = str(uuid.uuid4())  # 待设计
             self.session.add(new_user)
             self.session.commit()
             self.session.close()
@@ -54,7 +54,7 @@ class SUsers():
     def get_upwd_by_utel(self, utel):
         upwd = None
         try:
-            upwd = self.session.query(model.Users.Upwd).filter_by(Utel=utel).scalar()
+            upwd = self.session.query(model.Users.USpwd).filter_by(UStelphone=utel).scalar()
         except Exception as e:
             print(e.message)
         finally:
@@ -64,7 +64,7 @@ class SUsers():
     def get_uid_by_utel(self, utel):
         uid = None
         try:
-            uid = self.session.query(model.Users.Uid).filter_by(Utel=utel).scalar()
+            uid = self.session.query(model.Users.USid).filter_by(UStelphone=utel).scalar()
         except Exception as e:
             print(e.message)
         finally:
@@ -73,7 +73,7 @@ class SUsers():
 
     def update_users_by_uid(self, uid, users):
         try:
-            self.session.query(model.Users).filter_by(Uid=uid).update(users)
+            self.session.query(model.Users).filter_by(USid=uid).update(users)
             self.session.commit()
             self.session.close()
             return True
@@ -83,12 +83,12 @@ class SUsers():
             self.session.close()
             return False
 
-    def get_all_users_info(self, uid):
+    def get_all_users_info(self, usid):
         users_info = None
         try:
-            users_info = self.session.query(model.Users.Uname, model.Users.Utel, model.Users.Usex, model.Users.Ucoin,
-                                            model.Users.Uinvate)\
-                .filter_by(Uid=uid).first()
+            users_info = self.session.query(model.Users.USname, model.Users.UStelphone, model.Users.USsex, model.Users.UScoin,
+                                            model.Users.USinvatecode)\
+                .filter_by(USid=usid).first()
         except Exception as e:
             print(e.message)
             self.session.rollback()
@@ -99,7 +99,7 @@ class SUsers():
     def get_uname_utel_by_uid(self, uid):
         users = None
         try:
-            users = self.session.query(model.Users.Uname, model.Users.Utel).filter_by(Uid=uid).first()
+            users = self.session.query(model.Users.USname, model.Users.UStelphone).filter_by(USid=uid).first()
         except Exception as e:
             print(e.message)
             self.session.rollback()

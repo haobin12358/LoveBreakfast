@@ -54,12 +54,12 @@ class MakeData():
     def add_conpons(self, conid):
         for i in range(info_count):
             self.cou.add_coupons(**{
-                "Couid": i,
-                "Coufilter": float("1%02d.00" % i),
-                "Coudiscount": 0.2,
-                "Couamount": 10.1,
-                "Coustart": "2018011421%02d00" % i,
-                "Couend": "2018041421%02d00" % i
+                "COid": i,
+                "COfilter": float("1%02d.00" % i),
+                "COdiscount": 0.2,
+                "COamount": 10.1,
+                "COstart": "2018011421%02d00" % i,
+                "COend": "2018041421%02d00" % i
             })
 
 if __name__ == "__main__":
