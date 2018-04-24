@@ -28,8 +28,8 @@ class COrders():
 
         from services.SUsers import SUsers
         self.susers = SUsers()
-        Ostatus_list = ("已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价")
         global Ostatus_list
+        Ostatus_list = ("已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价")
 
     def get_order_list(self):
         args = request.args.to_dict()
@@ -44,31 +44,19 @@ class COrders():
         data = []
         for row in order_list:
             data_item = {}
-            data_item["OMid"] = row.Oid
+            data_item["Oid"] = row.OMid
             print str(row.Otime)
             Otime = row.Otime
             data_item["Otime"] = self.deal_string_to_time(str(Otime))
             data_item["Ostatus"] = self.get_status_name_by_status(row.Ostatus)
             data_item["Oprice"] = row.Oprice
-            data_item["Oimage"] = row.Opic
+            data_item["Opic"] = row.Oimage
             dt = datetime.datetime.now()
             day = datetime.datetime.now().day + 1
             month = datetime.datetime.now().month
             year = datetime.datetime.now().year
             month_day_list = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-            if year % 4 == 0:
-                if year % 100 != 0:
-                    month_day_list[2] = 29
-                if year % 400 == 0:
-                    month_day_list[2] = 29
-            if day > month_day_list[month]:
-                month = month + 1
-                day = day - month_day_list[month]
-                if month > 12:
-                    month = 1
-                    year = year + 1
-            dt_pass = datetime.datetime(year, month, day, 6, 0, 0)
-            if (dt_pass - dt).seconds < 28800 or row.Ostatus > 21 or row.Ostatus == 0:
+            if True:
                 data_item["is_index"] = 702
             else:
                 data_item["is_index"] = 701
@@ -97,19 +85,19 @@ class COrders():
 
     def get_order_abo(self):
         args = request.args.to_dict()
-        if "token" not in args or "OMid" not in args:
+        if "token" not in args or "Oid" not in args:
             return self.param_miss
-        Oid = args["OMid"]
+        Oid = args["Oid"]
         Uid = args["token"]
         from services.SOrders import SOrders
         sorders = SOrders()
         order_abo = sorders.get_order_abo_by_oid(Oid)
         data = {}
-        data["OMid"] = Oid
+        data["Oid"] = Oid
         data["Otime"] = self.deal_string_to_time(order_abo.Otime)
         data["Ostatus"] = self.get_status_name_by_status(order_abo.Ostatus)
         data["Oprice"] = order_abo.Oprice
-        data["Oimage"] = order_abo.Opic
+        data["Opic"] = order_abo.Oimage
         Lid = order_abo.Lid
         labo = sorders.get_lname_lno_lboxno_by_lid(Lid)
         data["Lname"] = labo.Lname
@@ -183,7 +171,7 @@ class COrders():
         Otruetimemax = timeformate.get_db_time_str(data["Omaxtime"])
         Ostatus = 7
 
-        if "Lname" not in data or "Lno" not in data or "Lboxno" not in data:
+        if "Lname" not in data or "Lno" not in data:
             from config.status import response_error
             from config.status_code import error_no_location
             from config.messages import messages_no_location
@@ -195,7 +183,7 @@ class COrders():
 
         Lname = data["Lname"]
         Lno = data["Lno"]
-        Lboxno = data["Lboxno"]
+        Lboxno = 1  # 后面从其他地方获取 && 智能推荐
 
         from services.SOrders import SOrders
         sorders = SOrders()
@@ -264,7 +252,7 @@ class COrders():
 
         if "token" not in args:
             return self.param_miss
-        if "Ostatus" not in data or "OMid" not in data:
+        if "Ostatus" not in data or "Oid" not in data:
             return self.param_miss
 
         from services.SOrders import SOrders
@@ -282,7 +270,7 @@ class COrders():
             wrong_status_code["status_code"] = error_wrong_status_code
             wrong_status_code["messages"] = messages_error_wrong_status_code
             return wrong_status_code
-        Oid = data["OMid"]
+        Oid = data["Oid"]
 
         update_ostatus = {}
         update_ostatus["Ostatus"] = self.get_status_by_status_name(Ostatus)
@@ -334,7 +322,6 @@ class COrders():
         return response_of_get_all
 
     def get_status_name_by_status(self, status):
-
         return Ostatus_list[status/7]
 
     def get_status_by_status_name(self, status_name):
