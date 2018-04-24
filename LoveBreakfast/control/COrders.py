@@ -7,6 +7,7 @@ import json
 import uuid
 from config.status import response_ok
 import datetime
+from common import timeformate
 
 class COrders():
 
@@ -27,6 +28,8 @@ class COrders():
 
         from services.SUsers import SUsers
         self.susers = SUsers()
+        Ostatus_list = ("已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价")
+        global Ostatus_list
 
     def get_order_list(self):
         args = request.args.to_dict()
@@ -41,13 +44,13 @@ class COrders():
         data = []
         for row in order_list:
             data_item = {}
-            data_item["Oid"] = row.Oid
+            data_item["OMid"] = row.Oid
             print str(row.Otime)
             Otime = row.Otime
             data_item["Otime"] = self.deal_string_to_time(str(Otime))
             data_item["Ostatus"] = self.get_status_name_by_status(row.Ostatus)
             data_item["Oprice"] = row.Oprice
-            data_item["Opic"] = row.Opic
+            data_item["Oimage"] = row.Opic
             dt = datetime.datetime.now()
             day = datetime.datetime.now().day + 1
             month = datetime.datetime.now().month
@@ -94,19 +97,19 @@ class COrders():
 
     def get_order_abo(self):
         args = request.args.to_dict()
-        if "token" not in args or "Oid" not in args:
+        if "token" not in args or "OMid" not in args:
             return self.param_miss
-        Oid = args["Oid"]
+        Oid = args["OMid"]
         Uid = args["token"]
         from services.SOrders import SOrders
         sorders = SOrders()
         order_abo = sorders.get_order_abo_by_oid(Oid)
         data = {}
-        data["Oid"] = Oid
+        data["OMid"] = Oid
         data["Otime"] = self.deal_string_to_time(order_abo.Otime)
         data["Ostatus"] = self.get_status_name_by_status(order_abo.Ostatus)
         data["Oprice"] = order_abo.Oprice
-        data["Opic"] = order_abo.Opic
+        data["Oimage"] = order_abo.Opic
         Lid = order_abo.Lid
         labo = sorders.get_lname_lno_lboxno_by_lid(Lid)
         data["Lname"] = labo.Lname
@@ -175,9 +178,9 @@ class COrders():
         if "Order_items" not in data:
             return self.system_error
         Uid = args["token"]
-        Otime = data["Otime"]
-        Otruetimemin = data["Omintime"]
-        Otruetimemax = data["Omaxtime"]
+        Otime = timeformate.get_db_time_str(data["Otime"])
+        Otruetimemin = timeformate.get_db_time_str(data["Omintime"])
+        Otruetimemax = timeformate.get_db_time_str(data["Omaxtime"])
         Ostatus = 7
 
         if "Lname" not in data or "Lno" not in data or "Lboxno" not in data:
@@ -261,7 +264,7 @@ class COrders():
 
         if "token" not in args:
             return self.param_miss
-        if "Ostatus" not in data or "Oid" not in data:
+        if "Ostatus" not in data or "OMid" not in data:
             return self.param_miss
 
         from services.SOrders import SOrders
@@ -270,7 +273,6 @@ class COrders():
 
         Ostatus = data["Ostatus"]
 
-        Ostatus_list = ["已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价"]
         if Ostatus not in Ostatus_list:
             from config.status import response_error
             from config.status_code import error_wrong_status_code
@@ -280,7 +282,7 @@ class COrders():
             wrong_status_code["status_code"] = error_wrong_status_code
             wrong_status_code["messages"] = messages_error_wrong_status_code
             return wrong_status_code
-        Oid = data["Oid"]
+        Oid = data["OMid"]
 
         update_ostatus = {}
         update_ostatus["Ostatus"] = self.get_status_by_status_name(Ostatus)
@@ -332,14 +334,13 @@ class COrders():
         return response_of_get_all
 
     def get_status_name_by_status(self, status):
-        status_name = ["已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价"]
-        return status_name[status/7]
+
+        return Ostatus_list[status/7]
 
     def get_status_by_status_name(self, status_name):
-        status_list = ["已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价"]
         i = 0
         while i < 7:
-            if status_name == status_list[i]:
+            if status_name == Ostatus_list[i]:
                 return i*7
             i = i + 1
 
@@ -349,6 +350,7 @@ class COrders():
         time_string = str(time[0,3]) + str(time[5,6]) + str(time[8,9]) + str(time[11,12]) + str(time[14,15]) + \
                       str(time[17,18])
         return time_string
+
     def deal_string_to_time(self, time_string):
         # time_string = int(time_string)
         time = time_string[0]\

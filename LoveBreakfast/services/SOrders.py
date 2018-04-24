@@ -40,7 +40,7 @@ class SOrders():
         try:
             new_add_order = model.Ordermain()
             Oid = str(uuid.uuid4())
-            new_add_order.Oid = Oid
+            new_add_order.OMid = Oid
             new_add_order.Otime = Otime
             new_add_order.Otruetimemin = Otruetimemin
             new_add_order.Otruetimemax = Otruetimemax
@@ -70,7 +70,7 @@ class SOrders():
             new_order_item = model.Orderpart()
             OPid = str(uuid.uuid4())
             new_order_item.OPid = OPid
-            new_order_item.Oid = Oid
+            new_order_item.OMid = Oid
             new_order_item.Pid = Pid
             new_order_item.Pnum = Pnum
             self.session.add(new_order_item)
@@ -111,8 +111,8 @@ class SOrders():
     def get_all_order_by_uid(self, uid):
         all_order = None
         try:
-            all_order = self.session.query(model.Ordermain.Oid, model.Ordermain.Otime, model.Ordermain.Ostatus,
-                                           model.Ordermain.Oprice, model.Ordermain.Opic).filter_by(Uid=uid).all()
+            all_order = self.session.query(model.Ordermain.OMid, model.Ordermain.Otime, model.Ordermain.Ostatus,
+                                           model.Ordermain.Oprice, model.Ordermain.Oimage).filter_by(Uid=uid).all()
         except Exception as e:
             print(e.message)
             self.session.rollback()
@@ -135,7 +135,7 @@ class SOrders():
         order_abo = None
         try:
             order_abo = self.session.query(model.Ordermain.Otime, model.Ordermain.Ostatus, model.Ordermain.Oprice,
-                                           model.Ordermain.Lid, model.Ordermain.Oabo, model.Ordermain.Opic)\
+                                           model.Ordermain.Lid, model.Ordermain.Oabo, model.Ordermain.Oimage)\
                 .filter_by(Oid=oid).first()
         except Exception as e:
             print(e.message)

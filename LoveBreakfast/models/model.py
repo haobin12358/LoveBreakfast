@@ -6,13 +6,11 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, create_engine, Integer, String, Text, Float
 from config import dbconfig as cfg
-from sqlalchemy.orm import sessionmaker
-import pymysql
-from sqlalchemy.dialects.mysql import INTEGER
+
 
 DB_PARAMS = "{0}://{1}:{2}@{3}/{4}?charset={5}".format(
     cfg.sqlenginename, cfg.username, cfg.password, cfg.host, cfg.database, cfg.charset)
-mysql_engine = create_engine(DB_PARAMS, echo=True)
+mysql_engine = create_engine(DB_PARAMS, echo=False)
 Base = declarative_base()
 
 class Users(Base):
@@ -74,23 +72,24 @@ class Shops(Base):
 
 class Ordermain(Base):
     __tablename__ = "OrderMain"
-    Oid = Column(String(64), primary_key=True)
-    Otime = Column(String(14), nullable=False)
-    Otruetimemin = Column(String(14), nullable=False)
-    Otruetimemax = Column(String(14), nullable=False)
-    Ostatus = Column(Integer, nullable=False)
-    Oprice = Column(Float)
-    Uid = Column(String(64))
-    Lid = Column(String(64))
-    Opic = Column(String(64))
-    Oabo = Column(Text)
+    OMid = Column(String(64), primary_key=True)        # 主订单id
+    Otime = Column(String(14), nullable=False)         # 下单时间
+    Otruetimemin = Column(String(14), nullable=False)  # 取餐时间段-起始时间
+    Otruetimemax = Column(String(14), nullable=False)  # 取餐时间段-最晚时间
+    Ostatus = Column(Integer, nullable=False)          # 订单状态 具体状态如下：
+    # {0 : 已取消, 7 : 未支付, 14 : 已支付, 21 : 已接单, 28 : 已配送, 35 : 已装箱, 42 : 已完成,  49 : 已评价}
+    Oprice = Column(Float)                             # 订单总额
+    Uid = Column(String(64))                           # 用户id
+    Lid = Column(String(64))                           # 站点id
+    Oimage = Column(String(64))                        # 订单二维码
+    Oabo = Column(Text)                                # 订单备注
 
 class Orderpart(Base):
     __tablename__ = "OrderPart"
-    OPid = Column(String(64), primary_key=True)
-    Oid = Column(String(64), nullable=False)
-    Pid = Column(String(64), nullable=False)
-    Pnum = Column(Integer, nullable=False)
+    OPid = Column(String(64), primary_key=True)  # 分订单id
+    OMid = Column(String(64), nullable=False)    # 主订单id
+    Pid = Column(String(64), nullable=False)     # 商品id
+    Pnum = Column(Integer, nullable=False)       # 商品数量
 
 class Cart(Base):
     __tablename__ = "Cart"
@@ -98,7 +97,7 @@ class Cart(Base):
     Uid = Column(String(64), nullable=False)
     Pid = Column(String(64), nullable=False)
     Pnum = Column(Integer)
-    Castatus = Column(Integer, default=1)  # 商品在购物车状态，1 在购物车， 2 已从购物车移除
+    Castatus = Column(Integer, default=1)  # 商品在购物车状态，1 在购物车， 2 已从购物车移除 目前直接从数据库中移除
 
 class Coupons(Base):
     __tablename__ = "Coupon"
@@ -117,58 +116,3 @@ class Cardpackage(Base):
     Carstart = Column(String(14))
     Carend = Column(String(14))
     Couid = Column(String(64), nullable=False)
-
-
-class databse_deal():
-    def __init__(self):
-        self.conn = pymysql.connect(host=cfg.host, user=cfg.username, passwd=cfg.password, charset=cfg.charset)
-        self.cursor = self.conn.cursor()
-
-    def create_database(self):
-        sql = "create database if not exists {0} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;".format(
-            cfg.database)
-        print sql
-        try:
-            self.cursor.execute(sql)
-        except Exception, e:
-            print(e)
-        finally:
-            self.conn_close()
-
-    def drop_database(self):
-        sql = "drop database if exists {0} ;".format(
-            cfg.database)
-        print sql
-        try:
-            self.cursor.execute(sql)
-        except Exception, e:
-            print(e)
-
-        finally:
-            self.conn_close()
-
-    def conn_close(self):
-        self.conn.close()
-
-
-def create():
-    databse_deal().create_database()
-    Base.metadata.create_all(mysql_engine)
-
-
-def drop():
-    databse_deal().drop_database()
-
-
-if __name__ == "__main__":
-    '''
-    运行该文件就可以在对应的数据库里生成本文件声明的所有table
-    如果需要清除数据库，输入drop
-    如果需要创建数据库 输入任意不包含drop的字符
-    '''
-    action = raw_input("create database?")
-    if "drop" in action:
-        drop()
-
-    else:
-        create()
