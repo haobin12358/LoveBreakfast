@@ -106,3 +106,17 @@ class SUsers():
         finally:
             self.session.close()
         return users
+
+    def add_users(self, **kwargs):
+        try:
+            user = model.Users()
+            for key in user.__table__.columns.keys():
+                if key in kwargs:
+                    setattr(user, key, kwargs.get(key))
+            self.session.add(user)
+            self.session.commit()
+        except Exception as e:
+            print e.message
+            self.session.rollback()
+        finally:
+            self.session.close()

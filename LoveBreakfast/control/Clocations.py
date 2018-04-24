@@ -32,7 +32,8 @@ class Clocations():
         Lline_no = self.get_lline_no_by_lline(Lline)
         if Lline_no == -1:
             return self.param_miss
-        all_location = slocations.get_all(int(Lline_no))
+        print Lline_no
+        all_location = slocations.get_all(int(Lline_no + 1))
         print all_location
         data = []
         for row in all_location:
