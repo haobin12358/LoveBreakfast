@@ -69,11 +69,11 @@ class COrders():
                 order_item["Pnum"] = raw.Pnum
                 Pid = raw.Pid
                 product = sproduct.get_product_all_by_pid(Pid)
-                order_item["Pname"] = product.Pname
-                order_item["Psalenum"] = product.P_sales_volume
-                order_item["Plevel"] = product.Pscore
-                order_item["Pprice"] = product.Pprice
-                order_item["Pimage"] = product.Pimage
+                order_item["Pname"] = product.PRname
+                order_item["Psalenum"] = product.PRsalesvolume
+                order_item["Plevel"] = product.PRscore
+                order_item["Pprice"] = product.PRprice
+                order_item["Pimage"] = product.PRimage
                 data_item["Order_items"].append(order_item)
             data.append(data_item)
 
@@ -141,11 +141,11 @@ class COrders():
             from services.SProduct import SProduct
             sproduct = SProduct()
             product = sproduct.get_product_all_by_pid(row.Pid)
-            order_item["Pname"] = product.Pname
-            order_item["Psalenum"] = product.P_sales_volume
-            order_item["Plevel"] = product.Pscore
-            order_item["Pprice"] = product.Pprice
-            order_item["Pimage"] = product.Pimage
+            order_item["Pname"] = product.PRname
+            order_item["Psalenum"] = product.PRsalesvolume
+            order_item["Plevel"] = product.PRscore
+            order_item["Pprice"] = product.PRprice
+            order_item["Pimage"] = product.PRimage
             data["Order_items"].append(order_item)
 
         response_make_main_order = {}

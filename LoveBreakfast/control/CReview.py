@@ -52,7 +52,7 @@ class CReview():
                 "statuscode": statuscode,
             }
         for i in range(len(oid_list_service)):
-            oid = oid_list_service[i].Oid
+            oid = oid_list_service[i].OMid
             oid_list_control.append(oid)
         print(oid_to_str)
         if oid_to_str not in oid_list_control:
@@ -81,13 +81,13 @@ class CReview():
         for i in range(len(pro_list)):
             review = model.Review()
             Rid = uuid.uuid4()
-            review.Rid = str(Rid)
-            review.Oid = oid_to_str
-            review.Pid = pro_list[i].get("Pid")
-            review.Uid = token_to_str
-            review.Rscore = pro_list[i].get("Rscore")
-            review.Rcontent = pro_list[i].get("Rcontent")
-            review.Rstatus = "on"
+            review.REid = str(Rid)
+            review.OMid = oid_to_str
+            review.PRid = pro_list[i].get("Pid")
+            review.USid = token_to_str
+            review.REscore = pro_list[i].get("Rscore")
+            review.REcontent = pro_list[i].get("Rcontent")
+            review.REstatus = 1
             result = self.service_review.create_review(review)
             print(result)
         # 更新订单状态
@@ -129,7 +129,7 @@ class CReview():
         if oid_list_service != None:
             oid_list_control = []
             for i in range(len(oid_list_service)):
-                oid = oid_list_service[i].Oid
+                oid = oid_list_service[i].OMid
                 oid_list_control.append(oid)
             if oid_to_str in oid_list_control:
                 # 查看订单状态是否正常
@@ -148,9 +148,9 @@ class CReview():
             review_list_control = []
             for i in range(len(review_list_service)):
                 review_dic = {}
-                review_dic["Pid"] = review_list_service[i].Pid
-                review_dic["Rscore"] = review_list_service[i].Rscore
-                review_dic["Rcontent"] = review_list_service[i].Rcontent
+                review_dic["Pid"] = review_list_service[i].PRid
+                review_dic["Rscore"] = review_list_service[i].REscore
+                review_dic["Rcontent"] = review_list_service[i].REcontent
                 review_list_control.append(review_dic)
             from config.messages import get_review_success
             return {
@@ -169,40 +169,40 @@ class CReview():
 
             }
 
-    def get_user_review(self):
-        args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
-        # 判断url参数是否异常
-        if len(args) != 1 or "Uid" not in args.keys():
-            message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
-            return {
-                "message": message,
-                "status": status,
-                "statuscode": statuscode,
-            }
-        uid_to_str = get_str(args, "Uid")
-        uid_list = []
-        if uid_to_str not in uid_list:
-            message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
-            return {
-                "message": message,
-                "status": status,
-                "statuscode": statuscode,
-            }
-        review_of_control = self.service_review.get_user_review(uid_to_str)
-        review_list = []
-        for i in range(len(review_of_control)):
-            dict_of_review = {}
-            dict_of_review["Rid"] = review_of_control[i].get("Rid")
-            dict_of_review["Rpname"] = review_of_control[i].get("Rpname")
-            dict_of_review["Rpimage"] = review_of_control[i].get("Rpimage")
-            dict_of_review["Rscore"] = review_of_control[i].get("Rscore")
-            dict_of_review["Rcontent"] = review_of_control[i].get("Rcontent")
-            review_list.append(dict_of_review)
-        return {
-            "message": "get user revirew success !",
-            "status": 200,
-            "statuscode": review_list
-        }
+    # def get_user_review(self):
+    #     args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
+    #     # 判断url参数是否异常
+    #     if len(args) != 1 or "Uid" not in args.keys():
+    #         message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
+    #         return {
+    #             "message": message,
+    #             "status": status,
+    #             "statuscode": statuscode,
+    #         }
+    #     uid_to_str = get_str(args, "Uid")
+    #     uid_list = []
+    #     if uid_to_str not in uid_list:
+    #         message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
+    #         return {
+    #             "message": message,
+    #             "status": status,
+    #             "statuscode": statuscode,
+    #         }
+    #     review_of_control = self.service_review.get_user_review(uid_to_str)
+    #     review_list = []
+    #     for i in range(len(review_of_control)):
+    #         dict_of_review = {}
+    #         dict_of_review["Rid"] = review_of_control[i].get("Rid")
+    #         dict_of_review["Rpname"] = review_of_control[i].get("Rpname")
+    #         dict_of_review["Rpimage"] = review_of_control[i].get("Rpimage")
+    #         dict_of_review["Rscore"] = review_of_control[i].get("Rscore")
+    #         dict_of_review["Rcontent"] = review_of_control[i].get("Rcontent")
+    #         review_list.append(dict_of_review)
+    #     return {
+    #         "message": "get user revirew success !",
+    #         "status": 200,
+    #         "statuscode": review_list
+    #     }
 
     def delete_user_review(self):
         args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
