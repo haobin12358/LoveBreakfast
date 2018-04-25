@@ -96,6 +96,8 @@ class COrders():
         data["Oid"] = Oid
         data["Otime"] = self.deal_string_to_time(order_abo.Otime)
         data["Ostatus"] = self.get_status_name_by_status(order_abo.Ostatus)
+        data["Otruetimemin"] = self.deal_string_to_time(order_abo.Otruetimemin)
+        data["Otruetimemax"] = self.deal_string_to_time(order_abo.Otruetimemax)
         data["Oprice"] = order_abo.Oprice
         data["Opic"] = order_abo.Oimage
         Lid = order_abo.Lid
@@ -205,6 +207,8 @@ class COrders():
         response_make_main_order = {}
         response_make_main_order["status"] = response_ok
         response_make_main_order["messages"] = messages_add_main_order_success
+        response_make_main_order["data"] = {}
+        response_make_main_order["data"]["Oid"] = add_main_order
         return response_make_main_order
 
     def add_order_items(self, order_item_list, oid):
