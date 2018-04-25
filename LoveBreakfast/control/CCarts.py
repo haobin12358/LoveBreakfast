@@ -45,7 +45,7 @@ class CCarts():
             cart_list = self.scart.get_carts_by_Uid(uid)
             for cart in cart_list:
                 cart_info = get_model_return_list(self.spro.get_all_pro_fro_carts(cart.Pid))[0]
-                cart_info["Pnum"] = cart.CAnumber
+                cart_info["Pnum"] = cart.Pnum
                 if cart.Castatus != 1:
                     continue
                 cart_info_list.append(cart_info)
