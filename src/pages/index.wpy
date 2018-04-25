@@ -125,7 +125,7 @@
     async getProductList() {
       let that = this;
       tip.loading();
-     
+
      wx.request({
         url:api.get_product_all,
         method:'GET',

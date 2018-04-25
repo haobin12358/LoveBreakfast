@@ -10,10 +10,10 @@
       <repeat for="{{all_order}}" key="index" index="index" item="item">
         <Order :order.sync="item"></Order>
       </repeat>
-      <view class="m-li">
-        <view class="m-label">优惠券</view>
-        <view class="m-coupon">满30减40</view>
-      </view>
+      <!--<view class="m-li" wx:if="false">-->
+        <!--<view class="m-label">优惠券</view>-->
+        <!--<view class="m-coupon">满30减40</view>-->
+      <!--</view>-->
       <view class="m-li">
         <view></view>
         <view >实际支付：<i class="m-price">￥{{Oprice}} </i></view>
@@ -108,6 +108,36 @@
         }
       })
     }
+    async getCardInfo(params) {
+      let that = this;
+      tip.loading();
+      wx.request({
+        url:api.get_order_abo,
+        method:'GET',
+        data:{token:params.token,Oid:params.Oid},
+        header:{
+          'content-type':'application/json',
+        },
+        success:function (res) {
+          tip.loaded()
+          if(res.data.status == '200'){
+            that.Lboxno = res.data.data.Lboxno;
+            that.Lname = res.data.data.Lname;
+            that.Lno = res.data.data.Lno;
+            that.Oabo = res.data.data.Oabo;
+            that.Oid = res.data.data.Oid;
+            that.Oprice = res.data.data.Oprice;
+            that.Ostatus = res.data.data.Ostatus;
+            that.Otime = res.data.data.Otime;
+            that.Uname = res.data.data.Uname;
+            that.Utel = res.data.data.Utel;
+            that.all_order = res.data.data.Order_items;
+            that.Opic = res.data.data.Opic;
+            that.$apply()
+          }
+        }
+      })
+    }
     async changeOrder(params) {
       let that = this;
       tip.loading();
@@ -127,9 +157,19 @@
               duration: 800
             })
             that.$apply()
-            wx.navigateBack({
-              delta:1
+            setTimeout(function(){
+              wx.navigateBack({
+                delta:1
+              })
+            },800)
+
+          }else{
+            wx.showToast({
+              title: '删除失败，请稍后再试',
+              icon: 'none',
+              duration: 800
             })
+            that.$apply()
           }
         }
       })

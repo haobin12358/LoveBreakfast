@@ -16,7 +16,7 @@
         <view class="m-price">￥{{list.Pprice}}</view>
         <view class="m-add-cut" wx:if="{{page != 'myOrder' && page != 'product_info' }}">
           <image src="/images/cut.png" style="width: 48rpx;height: 48rpx;" wx:if="{{list.Pnum > 0 && page != 'index'}}" @tap.stop="cutTap({{list.Pnum}})"/>
-          <input type="number" value="{{list.Pnum}}" wx:if="{{list.Pnum > 0 && page != 'index'}}" bindblur="bindKeyInput" />
+          <input type="number" value="{{list.Pnum}}" wx:if="{{list.Pnum > 0 && page != 'index'}}" bindblur="bindKeyInput" disabled="true"/>
           <image src="/images/add.png" style="width: 48rpx;height: 48rpx;" @tap.stop="addTap({{list.Pnum}})"/>
         </view>
       </view>
@@ -34,7 +34,8 @@
     }
     data = {
       number:0,
-      token:''
+      token:'',
+      focus:false
     }
     async dealCar(params,token) {
       let that = this;
@@ -56,24 +57,32 @@
               icon: 'success',
               duration: 800
             })
+            if(that.page == 'car'){
+              that.$emit('cutnumberChange',res);
+            }
             that.$apply()
           }
         }
       })
     }
-    onLoad(){
+    async onLaunch(){
+
       let token = '';
       let that = this;
-      wx.getStorage({
-        key: 'token',
-        success: function(res){
-          token = res.data;
-          that.token = res.data
-          that.$apply()
-        }
-      })
-    }
+      setTimeout(function () {
+        wx.getStorage({
+          key: 'token',
+          success: function(res){
+            console.log(res,'get')
+            token = res.data;
+            that.token = res.data
+            that.$apply()
+          }
+        })
+      },0)
 
+
+    }
     methods = {
       bindTap(v){
         this.$emit('listTap',v)
@@ -86,35 +95,98 @@
             content:'确定要删除该商品吗？',
             success:function (res) {
               if(res.confirm){
-                _that.list.Pnum = v-1;
-                _that.dealCar(_that.list,_that.$data.token)
+                setTimeout(function () {
+                  v = Number(v)-1;
+                  _that.list.Pnum = v;
+                  wx.getStorage({
+                    key: 'token',
+                    success: function(res){
+                      _that.token = res.data;
+                      console.log(_that)
+                      _that.dealCar(_that.list,res.data);
+                      _that.$apply()
+                    },
+                    fail:function (res) {
+                      wx.navigateTo({
+                        url: '/pages/login'
+                      })
+                    }
+                  })
 
                 _that.$apply();
-              }else if(res.cancel){
+              },0)
+              } else if(res.cancel){
               }
             }
           })
         }else{
-          v>0 && (v = v-1)
-          this.list.Pnum = v;
-          this.dealCar(this.list,this.$data.token)
+
+          let _that = this;
+          setTimeout(function () {
+            v>0 && (v = v-1)
+            _that.list.Pnum = v;
+            wx.getStorage({
+              key: 'token',
+              success: function(res){
+                _that.token = res.data;
+                _that.dealCar(_that.list,res.data);
+                _that.$apply()
+              },
+              fail:function (res) {
+                wx.navigateTo({
+                  url: '/pages/login'
+                })
+              }
+            })
+          },0)
+
           this.$apply();
         }
 
+        this.$apply()
       },
       bindKeyInput(e){
-
-        this.list.Pnum = e.detail.value;
-        this.dealCar(this.list,this.$data.token)
+        let _that = this;
+        setTimeout(function () {
+          _that.list.Pnum = Number(e.detail.value);
+          wx.getStorage({
+            key: 'token',
+            success: function(res){
+              _that.token = res.data;
+              _that.dealCar(_that.list,res.data);
+              _that.$apply()
+            },
+            fail:function (res) {
+              wx.navigateTo({
+                url: '/pages/login'
+              })
+            }
+          })
+        },0)
+        this.$emit('numberChange',e)
         this.$apply();
       },
 
       addTap(v){
+        let that = this;
+        setTimeout(function () {
+          v = Number(v)+1;
+          that.list.Pnum = v
+          wx.getStorage({
+            key: 'token',
+            success: function(res){
+              that.token = res.data;
+              that.dealCar(that.list,res.data);
+              that.$apply()
+            },
+            fail:function (res) {
+              wx.navigateTo({
+                url: '/pages/login'
+              })
+            }
+          })
 
-        v = Number(v)+1;
-        this.list.Pnum = v;
-        this.dealCar(this.list,this.$data.token);
-
+        },0);
         this.$apply();
       }
     }

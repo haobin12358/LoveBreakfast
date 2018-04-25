@@ -107,7 +107,7 @@
         {
           sort:'选择地铁线路',
           array: ['1号线', '2号线', '4号线'],
-          id:['1号线'],
+          id:[],
           index:0,
           type:''
         },
@@ -315,9 +315,13 @@
               icon: 'success',
               duration: 1000
             });
-//            wx.redirectTo({
-//              url:'../pages/oneOrder?Oid='+res.data.data.Oid
-//            })
+            setTimeout(function () {
+              wx.redirectTo({
+//                url:'../pages/oneOrder?Oid='+res.data.data.Oid
+                url:'../pages/oneOrder'
+              })
+            },2000);
+
           }
         }
       })
@@ -379,7 +383,7 @@
           });
           return;
         }
-        if(this.all_picker[1].index == ''){
+        if(this.all_picker[2].index == ''){
           wx.showToast({
             title: '请选择出口',
             icon: 'none',
@@ -392,8 +396,8 @@
           "Omintime":this.all_picker[3].value + ' '+this.all_picker[4].value ,
           "Omaxtime":this.all_picker[3].value + ' '+this.all_picker[5].value,
           "Lname":this.all_picker[1].array[this.all_picker[1].index],
-          "Lno":this.all_picker[0].array[this.all_picker[0].index],
-          "Lline":this.all_picker[2].array[this.all_picker[2].index],
+          "Lno":this.all_picker[2].array[this.all_picker[2].index],
+          "Lline":this.all_picker[0].array[this.all_picker[0].index],
           'Lboxno':1,
           "Oabo":this.Oabo,
           "Order_items":this.all_order,
