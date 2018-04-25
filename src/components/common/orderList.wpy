@@ -15,6 +15,7 @@
       <view class="m-business-loc">
         <view class="m-price">￥{{list.Oprice}}</view>
         <view class="m-add-cut" >
+          <button class="m-btn m-pay" wx:if="{{list.Ostatus == '未支付'}}">立即支付</button>
           <button class="m-btn m-cancel" wx:if="{{list.is_index == '701'}}">取消订单</button>
           <button class="m-btn " wx:if="{{list.Ostatus == '已完成'}}" @tap="evaluateTap({{list}})">评价</button>
           <button class="m-btn " wx:if="{{list.Ostatus == '已评价'}}" @tap="evaluateLookTap({{list}})">评价详情</button>
@@ -123,6 +124,12 @@
       .m-btn{
         font-size: 28rpx;
         padding: 2rpx 20rpx;
+        &.m-pay{
+          color: @common-color;
+          background-color: #fff;
+          border: 1px solid @common-color;
+          margin-right: 20rpx;
+        }
       }
 
     }

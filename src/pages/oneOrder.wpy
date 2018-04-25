@@ -41,7 +41,8 @@
         <view >{{Otime}}</view>
       </view>
       <view class="m-li">
-        <button class="m-btn" @tap="cancelOrder">取消订单</button>
+        <button class="m-btn m-cancel" @tap="bindChangeOrder('已取消')">取消订单</button>
+        <button class="m-btn m-pay" @tap="bindChangeOrder('已支付')" wx:if="{{Ostatus == '未支付'}}" >支付订单</button>
       </view>
       <!--<view class="m-li">-->
         <!--<button class="m-btn m-active">评价</button>-->
@@ -138,13 +139,13 @@
         }
       })
     }
-    async changeOrder(params) {
+    async changeOrder(params,status) {
       let that = this;
       tip.loading();
       wx.request({
         url:api.update_order_status+'?token='+params,
         method:'POST',
-        data:{Ostatus:that.Ostatus,Oid:that.Oid},
+        data:{Ostatus:status,Oid:that.Oid},
         header:{
           'content-type':'application/json',
         },
@@ -152,7 +153,7 @@
           tip.loaded()
           if(res.data.status == '200'){
             wx.showToast({
-              title: '删除成功',
+              title: '操作成功',
               icon: 'success',
               duration: 800
             })
@@ -193,7 +194,7 @@
 
     }
     methods = {
-      cancelOrder(){
+      bindChangeOrder(v){
         let that = this;
         wx.getStorage({
           key: 'token',
@@ -205,7 +206,7 @@
               content:'确定要删除该商品吗？',
               success:function (res) {
                 if(res.confirm){
-                  that.changeOrder(that.token)
+                  that.changeOrder(that.token,v)
                   that.$apply();
 
                 }else if(res.cancel){
@@ -216,7 +217,7 @@
           }
         })
 
-      }
+      },
     }
   }
 </script>
@@ -285,7 +286,14 @@
         }
         .m-btn{
           line-height: 2;
-          width: 100%;
+          &.m-cancel{
+
+          }
+          &.m-pay{
+            color: #fff;
+            border-color: @common-color;
+            background-color: @common-color;
+          }
         }
       }
     }
