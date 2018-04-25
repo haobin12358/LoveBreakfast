@@ -34,26 +34,24 @@ class Locations(Base):
 
 class Products(Base):
     __tablename__ = "Products"
-    Pid = Column(String(64), primary_key=True)
-    Pname = Column(String(64), nullable=False)
-    Pprice = Column(Float, nullable=False)
-    Sid = Column(String(64), nullable=True, default="0")
-    Cid = Column(String(64), nullable=True, default="0")
-    Pstatus = Column(String(64), nullable=False)  # 商品状态，分为on_sale和off_sale
-    Pimage = Column(String(64), nullable=False)
-    Pinfo = Column(Text)  # 商品介绍
-    P_sales_volume = Column(Integer, nullable=False)  # 商品销量
-    Pscore = Column(Float, nullable=True)  # 商品评分
+    PRid = Column(String(64), primary_key=True)  # 商品id
+    PRname = Column(String(64), nullable=False)  # 商品名称
+    PRprice = Column(Float, nullable=False)  # 商品价格
+    PRstatus = Column(Integer, default=1)  # 商品状态 {1:在售状态 2:下架状态}
+    PRimage = Column(String(64), nullable=False)  # 商品图片存放地址
+    PRinfo = Column(Text)  # 商品介绍
+    PRsalesvolume = Column(Integer, nullable=False)  # 商品销量
+    PRscore = Column(Float, nullable=True)  # 商品评分
 
 class Review(Base):
     __tablename__ = "Review"
-    Rid = Column(String(64), primary_key=True)
-    Oid = Column(String(64), nullable=False)  # 对应的订单编号
-    Pid = Column(String(64), nullable=False)  # 对应的商品编号
-    Uid = Column(String(64), nullable=False)  # 用户id
-    Rscore = Column(Integer, nullable=True)  # 对应的商品评分
-    Rcontent = Column(Text, nullable=True)  # 评价内容
-    Rstatus = Column(String(64))  # 对应的评价状态.分为on和off
+    REid = Column(String(64), primary_key=True)  # 评论id
+    OMid = Column(String(64), nullable=False)  # 对应的订单编号
+    PRid = Column(String(64), nullable=False)  # 对应的商品编号
+    USid = Column(String(64), nullable=False)  # 用户id
+    REscore = Column(Integer, nullable=True)  # 对应的商品评分
+    REcontent = Column(Text, nullable=True)  # 评价内容
+    REstatus = Column(Integer, default=1)  # 对应的评价状态 {1:有效评价 2:无效状态}
 
 class Category(Base):
     __tablename__ = "Category"
@@ -93,10 +91,10 @@ class Orderpart(Base):
 
 class Cart(Base):
     __tablename__ = "Cart"
-    Caid = Column(String(64), primary_key=True)
-    Uid = Column(String(64), nullable=False)
-    Pid = Column(String(64), nullable=False)
-    Pnum = Column(Integer)
+    Caid = Column(String(64), primary_key=True)  # 购物车id
+    Uid = Column(String(64), nullable=False)  # 用户id
+    Pid = Column(String(64), nullable=False)  # 产品id
+    Pnum = Column(Integer)  # 商品在购物车中的数量
     Castatus = Column(Integer, default=1)  # 商品在购物车状态，1 在购物车， 2 已从购物车移除 目前直接从数据库中移除
 
 class Coupons(Base):

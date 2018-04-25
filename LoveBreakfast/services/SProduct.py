@@ -24,10 +24,10 @@ class SProduct():
     def get_all(self):
         pro_list_of_service = None
         try:
-            pro_list_of_service = self.session.query(model.Products.Pid, model.Products.Pname,
-                                                     model.Products.Pprice,model.Products.Pimage,
-                                                     model.Products.P_sales_volume,model.Products.Pscore
-                                                     ).filter_by(Pstatus="on_sale").all()
+            pro_list_of_service = self.session.query(model.Products.PRid, model.Products.PRname,
+                                                     model.Products.PRprice,model.Products.PRimage,
+                                                     model.Products.PRsalesvolume,model.Products.PRscore
+                                                     ).filter_by(PRstatus=1).all()
         except Exception as e:
             print e.message
         finally:
@@ -39,8 +39,8 @@ class SProduct():
     def get_pro_info_by_pid(self, pid):
         pro_abo = None
         try:
-            pro_abo = self.session.query(model.Products.Pname, model.Products.Pprice,
-                                         model.Products.Pimage, model.Products.Pinfo).filter_by(Pid=pid).first()
+            pro_abo = self.session.query(model.Products.PRname, model.Products.PRprice,
+                                         model.Products.PRimage, model.Products.PRinfo).filter_by(PRid=pid).first()
         except Exception as e:
             print e.message
         finally:
@@ -50,8 +50,9 @@ class SProduct():
 
     @trans_params
     def get_all_pid(self):
+        pid_list = None
         try:
-            pid_list = self.session.query(model.Products.Pid).all()
+            pid_list = self.session.query(model.Products.PRid).all()
         except Exception as e:
             print e.message
         finally:
@@ -59,16 +60,16 @@ class SProduct():
         return pid_list
 
     # 根据分类id获取全部商品信息
-    def get_pro_id_by_cid(self, cid):
-        proid_list = None
-        try:
-            proid_list = self.session.query(model.Products.Pname, model.Products.Pprice, model.Products.Pimage
-                                            ).filter_by(Cid=cid).all()
-        except Exception as e:
-            print(e.message)
-        finally:
-            self.session.close()
-        return proid_list
+    # def get_pro_id_by_cid(self, cid):
+    #     proid_list = None
+    #     try:
+    #         proid_list = self.session.query(model.Products.Pname, model.Products.Pprice, model.Products.Pimage
+    #                                         ).filter_by(Cid=cid).all()
+    #     except Exception as e:
+    #         print(e.message)
+    #     finally:
+    #         self.session.close()
+    #     return proid_list
 
     #向数据库中插入数据，用于初始化数据
     def add_product(self, product):
@@ -84,7 +85,7 @@ class SProduct():
     def get_pprice_by_pid(self, pid):
         pprice = None
         try:
-            pprice = self.session.query(model.Products.Pprice).filter_by(Pid=pid).scalar()
+            pprice = self.session.query(model.Products.PRprice).filter_by(PRid=pid).scalar()
         except Exception as e:
             print(e.message)
             self.session.rollback()
@@ -95,8 +96,8 @@ class SProduct():
     def get_product_all_by_pid(self, pid):
         product = None
         try:
-            product = self.session.query(model.Products.Pname, model.Products.P_sales_volume, model.Products.Pscore,
-                                         model.Products.Pprice, model.Products.Pimage).filter_by(Pid = pid).first()
+            product = self.session.query(model.Products.PRname, model.Products.PRsalesvolume, model.Products.PRscore,
+                                         model.Products.PRprice, model.Products.PRimage).filter_by(PRid=pid).first()
         except Exception as e:
             print(e.message)
             self.session.rollback()
@@ -112,11 +113,11 @@ class SProduct():
         """
         try:
             res = self.session.query(
-                model.Products.Pid, model.Products.Pimage,
-                model.Products.Pname, model.Products.Pstatus,
-                model.Products.P_sales_volume, model.Products.Pprice,
-                model.Products.Pscore
-            ).filter_by(Pid=pid).all()
+                model.Products.PRid, model.Products.PRimage,
+                model.Products.PRname, model.Products.PRstatus,
+                model.Products.PRsalesvolume, model.Products.PRprice,
+                model.Products.PRscore
+            ).filter_by(PRid=pid).all()
             return res
         except Exception as e:
             self.session.rollback()
