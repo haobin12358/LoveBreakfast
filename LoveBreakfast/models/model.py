@@ -91,11 +91,11 @@ class Orderpart(Base):
 
 class Cart(Base):
     __tablename__ = "Cart"
-    Caid = Column(String(64), primary_key=True)  # 购物车id
-    Uid = Column(String(64), nullable=False)  # 用户id
-    Pid = Column(String(64), nullable=False)  # 产品id
-    Pnum = Column(Integer)  # 商品在购物车中的数量
-    Castatus = Column(Integer, default=1)  # 商品在购物车状态，1 在购物车， 2 已从购物车移除 目前直接从数据库中移除
+    CAid = Column(String(64), primary_key=True)  # 购物车id
+    USid = Column(String(64), nullable=False)  # 用户id
+    PRid = Column(String(64), nullable=False)  # 产品id
+    CAnumber = Column(Integer)  # 商品在购物车中的数量
+    CAstatus = Column(Integer, default=1)  # 商品在购物车状态，1 在购物车， 2 已从购物车移除 目前直接从数据库中移除
 
 class Coupons(Base):
     __tablename__ = "Coupon"
