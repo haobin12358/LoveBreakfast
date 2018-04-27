@@ -28,8 +28,8 @@ class COrders():
 
         from services.SUsers import SUsers
         self.susers = SUsers()
-        global Ostatus_list
-        Ostatus_list = ("已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价")
+        global OMstatus_list
+        OMstatus_list = ("已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价")
 
     def get_order_list(self):
         args = request.args.to_dict()
@@ -45,12 +45,12 @@ class COrders():
         for row in order_list:
             data_item = {}
             data_item["Oid"] = row.OMid
-            print str(row.Otime)
-            Otime = row.Otime
-            data_item["Otime"] = self.deal_string_to_time(str(Otime))
-            data_item["Ostatus"] = self.get_status_name_by_status(row.Ostatus)
-            data_item["Oprice"] = row.Oprice
-            data_item["Opic"] = row.Oimage
+            print str(row.OMtime)
+            OMtime = row.OMtime
+            data_item["Otime"] = self.deal_string_to_time(str(OMtime))
+            data_item["Ostatus"] = self.get_status_name_by_status(row.OMstatus)
+            data_item["Oprice"] = row.OMtotal
+            data_item["Opic"] = row.OMimage
             dt = datetime.datetime.now()
             day = datetime.datetime.now().day + 1
             month = datetime.datetime.now().month
@@ -66,7 +66,7 @@ class COrders():
             sproduct = SProduct()
             for raw in order_items:
                 order_item = {}
-                order_item["Pnum"] = raw.Pnum
+                order_item["Pnum"] = raw.OPamount
                 Pid = raw.Pid
                 product = sproduct.get_product_all_by_pid(Pid)
                 order_item["Pname"] = product.PRname
@@ -94,17 +94,17 @@ class COrders():
         order_abo = sorders.get_order_abo_by_oid(Oid)
         data = {}
         data["Oid"] = Oid
-        data["Otime"] = self.deal_string_to_time(order_abo.Otime)
-        data["Ostatus"] = self.get_status_name_by_status(order_abo.Ostatus)
-        data["Otruetimemin"] = self.deal_string_to_time(order_abo.Otruetimemin)
-        data["Otruetimemax"] = self.deal_string_to_time(order_abo.Otruetimemax)
-        data["Oprice"] = order_abo.Oprice
-        data["Opic"] = order_abo.Oimage
-        Lid = order_abo.Lid
-        labo = sorders.get_lname_lno_lboxno_by_lid(Lid)
-        data["Lname"] = labo.Lname
-        data["Lno"] = labo.Lno
-        data["Lboxno"] = labo.Lboxno
+        data["Otime"] = self.deal_string_to_time(order_abo.OMtime)
+        data["Ostatus"] = self.get_status_name_by_status(order_abo.OMstatus)
+        data["Otruetimemin"] = self.deal_string_to_time(order_abo.OMmealTimeMin)
+        data["Otruetimemax"] = self.deal_string_to_time(order_abo.OMmealTimeMax)
+        data["Oprice"] = order_abo.OMtotal
+        data["Opic"] = order_abo.OMimage
+        LOid = order_abo.LOid
+        labo = sorders.get_loname_loexitnumber_loboxcode_by_loid(LOid)
+        data["Lname"] = labo.LOname
+        data["Lno"] = labo.LOexitNumber
+        data["Lboxno"] = labo.LOboxCode
         dt = datetime.datetime.now()
         day = datetime.datetime.now().day + 1
         month = datetime.datetime.now().month
@@ -122,7 +122,7 @@ class COrders():
                 month = 1
                 year = year + 1
         dt_pass = datetime.datetime(year, month, day, 6, 0, 0)
-        if (dt_pass - dt).seconds < 28800 or order_abo.Ostatus > 21 or order_abo.Ostatus == 0:
+        if (dt_pass - dt).seconds < 28800 or order_abo.OMstatus > 21 or order_abo.OMstatus == 0:
             data["is_index"] = 702
         else:
             data["is_index"] = 701
@@ -131,12 +131,12 @@ class COrders():
         users = susers.get_uname_utel_by_uid(Uid)
         data["Utel"] = users.UStelphone
         data["Uname"] = users.USname
-        data["Oabo"] = order_abo.Oabo
+        data["Oabo"] = order_abo.OMabo
         data["Order_items"] = []
         order_items = sorders.get_order_item_by_oid(Oid)
         for row in order_items:
             order_item = {}
-            order_item["Pnum"] = row.Pnum
+            order_item["Pnum"] = row.OPamount
             order_item["Pid"] = row.Pid
             from services.SProduct import SProduct
             sproduct = SProduct()
@@ -168,10 +168,10 @@ class COrders():
         if "Order_items" not in data:
             return self.system_error
         Uid = args["token"]
-        Otime = timeformate.get_db_time_str(data["Otime"])
-        Otruetimemin = timeformate.get_db_time_str(data["Omintime"])
-        Otruetimemax = timeformate.get_db_time_str(data["Omaxtime"])
-        Ostatus = 7
+        OMtime = timeformate.get_db_time_str(data["Otime"])
+        OMmealTimeMin = timeformate.get_db_time_str(data["Omintime"])
+        OMmealTimeMax = timeformate.get_db_time_str(data["Omaxtime"])
+        OMstatus = 7
 
         if "Lname" not in data or "Lno" not in data:
             from config.status import response_error
@@ -183,20 +183,20 @@ class COrders():
             no_location["messages"] = messages_no_location
             return no_location
 
-        Lname = data["Lname"]
-        Lno = data["Lno"]
-        Lboxno = 1  # 后面从其他地方获取 && 智能推荐
+        LOname = data["Lname"]
+        LOexitNumber = data["Lno"]
+        LOboxCode = 1  # 后面从其他地方获取 && 智能推荐
 
         from services.SOrders import SOrders
         sorders = SOrders()
-        Lid = sorders.get_lid_by_lname_lno_lboxno(Lname, Lno, Lboxno)
-        if not Lid:
+        LOid = sorders.get_loid_by_loname_loexitNumber_loboxCode(LOname, LOexitNumber, LOboxCode)
+        if not LOid:
             return self.system_error
-        Oabo = None
+        OMabo = None
         if "Oabo" in data:
-            Oabo = data["Oabo"]
+            OMabo = data["Oabo"]
 
-        add_main_order = sorders.add_main_order(Otime, Otruetimemin, Otruetimemax, Ostatus, None, Uid, Lid, Oabo)
+        add_main_order = sorders.add_main_order(OMtime, OMmealTimeMin, OMmealTimeMax, OMstatus, None, Uid, LOid, OMabo)
         if not add_main_order:
             return self.system_error
 
@@ -219,8 +219,8 @@ class COrders():
         sorders = SOrders()
         for row in order_item_list:
             Pid = row["Pid"]
-            Pnum = row["Pnum"]
-            add_order_item = sorders.add_order_item(oid, Pid, Pnum)
+            OPamount = row["Pnum"]
+            add_order_item = sorders.add_order_item(oid, Pid, OPamount)
             if not add_order_item:
                 return self.system_error
             from services.SProduct import SProduct
@@ -238,7 +238,7 @@ class COrders():
         from services.SOrders import SOrders
         sorders = SOrders()
         update_main_order = {}
-        update_main_order["Oprice"] = order_price
+        update_main_order["OMtotal"] = order_price
         response_update_main_order = sorders.update_price_by_oid(oid, update_main_order)
 
         if not response_update_main_order:
@@ -263,9 +263,9 @@ class COrders():
         sorders = SOrders()
         # 处理token过程，这里未设计
 
-        Ostatus = data["Ostatus"]
+        OMstatus = data["Ostatus"]
 
-        if Ostatus not in Ostatus_list:
+        if OMstatus not in OMstatus_list:
             from config.status import response_error
             from config.status_code import error_wrong_status_code
             from config.messages import messages_error_wrong_status_code
@@ -276,10 +276,10 @@ class COrders():
             return wrong_status_code
         Oid = data["Oid"]
 
-        update_ostatus = {}
-        update_ostatus["Ostatus"] = self.get_status_by_status_name(Ostatus)
+        update_OMstatus = {}
+        update_OMstatus["OMstatus"] = self.get_status_by_status_name(OMstatus)
 
-        response_update_order_status = sorders.update_status_by_oid(Oid, update_ostatus)
+        response_update_order_status = sorders.update_status_by_oid(Oid, update_OMstatus)
 
         if not response_update_order_status:
             return self.system_error
@@ -326,12 +326,12 @@ class COrders():
         return response_of_get_all
 
     def get_status_name_by_status(self, status):
-        return Ostatus_list[status/7]
+        return OMstatus_list[status/7]
 
     def get_status_by_status_name(self, status_name):
         i = 0
         while i < 7:
-            if status_name == Ostatus_list[i]:
+            if status_name == OMstatus_list[i]:
                 return i*7
             i = i + 1
 

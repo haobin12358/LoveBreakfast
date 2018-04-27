@@ -18,8 +18,8 @@ class Slocations():
     def get_all(self, lline):
         all_location = None
         try:
-            all_location = self.session.query(model.Locations.Lid, model.Locations.Lname, model.Locations.Litem)\
-                .filter_by(Litem=lline).all()
+            all_location = self.session.query(model.Locations.LOid, model.Locations.LOname, model.Locations.LOnumber)\
+                .filter_by(LOnumber=lline).all()
         except Exception as e:
             print(e.message)
             self.session.rollback()
@@ -27,13 +27,13 @@ class Slocations():
             self.session.close()
         return all_location
 
-    def get_all_lno_by_lid(self, lid):
-        all_lno = None
+    def get_all_LOexitNumber_by_LOid(self, LOid):
+        all_LOexitNumber = None
         try:
-            all_lno = self.session.query(model.Locations.Lno).filter_by(Lid=lid).all()
+            all_LOexitNumber = self.session.query(model.Locations.LOexitNumber).filter_by(LOid=LOid).all()
         except Exception as e:
             print(e.message)
             self.session.rollback()
         finally:
             self.session.close()
-        return all_lno
+        return all_LOexitNumber

@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.getcwd()))
 import uuid
 import DBSession
 from models import model
-from common.TransformToList import trans_params
+
 
 class SOrders():
     def __init__(self):
@@ -14,41 +14,41 @@ class SOrders():
         except Exception as e:
             print(e.message)
 
-    def get_lid_by_lname_lno_lboxno(self, lname, lno, lboxno):
-        Lid = None
+    def get_loid_by_loname_loexitNumber_loboxCode(self, LOname, LOexitNumber, LOboxCode):
+        LOid = None
         try:
-            Lid = self.session.query(model.Locations.Lid)\
-                .filter_by(Lname=lname).filter_by(Lno=lno).filter_by(Lboxno=lboxno).scalar()
+            LOid = self.session.query(model.Locations.LOid)\
+                .filter_by(LOname=LOname).filter_by(LOexitNumber=LOexitNumber).filter_by(LOboxCode=LOboxCode).scalar()
         except Exception as e:
             print(e.message)
         finally:
             self.session.close()
-        return Lid
+        return LOid
 
-    def add_main_order(self, Otime, Otruetimemin, Otruetimemax, Ostatus, Oprice, Uid, Lid, Oabo):
+    def add_main_order(self, OMtime, OMmealTimeMin, OMmealTimeMax, OMstatus, OMtotal, Uid, LOid, OMabo):
         """
-        :param Otime:
-        :param Otruetimemin:
-        :param Otruetimemax:
-        :param Ostatus:
-        :param Oprice:
+        :param OMtime:
+        :param OMmealTimeMin:
+        :param OMmealTimeMax:
+        :param OMstatus:
+        :param OMtotal:
         :param Uid:
-        :param Lid:
-        :param Oabo:
+        :param LOid:
+        :param OMabo:
         :return:
         """
         try:
             new_add_order = model.Ordermain()
             Oid = str(uuid.uuid4())
             new_add_order.OMid = Oid
-            new_add_order.Otime = Otime
-            new_add_order.Otruetimemin = Otruetimemin
-            new_add_order.Otruetimemax = Otruetimemax
-            new_add_order.Ostatus = Ostatus
-            new_add_order.Oprice = Oprice
+            new_add_order.OMtime = OMtime
+            new_add_order.OMmealTimeMin = OMmealTimeMin
+            new_add_order.OMmealTimeMax = OMmealTimeMax
+            new_add_order.OMstatus = OMstatus
+            new_add_order.OMtotal = OMtotal
             new_add_order.Uid = Uid
-            new_add_order.Lid = Lid
-            new_add_order.Oabo = Oabo
+            new_add_order.LOid = LOid
+            new_add_order.OMabo = OMabo
             self.session.add(new_add_order)
             self.session.commit()
             self.session.close()
@@ -59,11 +59,11 @@ class SOrders():
             self.session.close()
             return False
 
-    def add_order_item(self, Oid, Pid, Pnum):
+    def add_order_item(self, Oid, Pid, OPamount):
         """
         :param Oid:
         :param Pid:
-        :param Pnum:
+        :param OPamount:
         :return:
         """
         try:
@@ -72,7 +72,7 @@ class SOrders():
             new_order_item.OPid = OPid
             new_order_item.OMid = Oid
             new_order_item.Pid = Pid
-            new_order_item.Pnum = Pnum
+            new_order_item.OPamount = OPamount
             self.session.add(new_order_item)
             self.session.commit()
             self.session.close()
@@ -111,8 +111,8 @@ class SOrders():
     def get_all_order_by_uid(self, uid):
         all_order = None
         try:
-            all_order = self.session.query(model.Ordermain.OMid, model.Ordermain.Otime, model.Ordermain.Ostatus,
-                                           model.Ordermain.Oprice, model.Ordermain.Oimage).filter_by(Uid=uid).all()
+            all_order = self.session.query(model.Ordermain.OMid, model.Ordermain.OMtime, model.Ordermain.OMstatus,
+                                           model.Ordermain.OMtotal, model.Ordermain.OMimage).filter_by(Uid=uid).all()
         except Exception as e:
             print(e.message)
             self.session.rollback()
@@ -123,7 +123,7 @@ class SOrders():
     def get_order_item_by_oid(self, oid):
         order_item = None
         try:
-            order_item = self.session.query(model.Orderpart.Pnum, model.Orderpart.Pid).filter_by(OMid=oid).all()
+            order_item = self.session.query(model.Orderpart.OPamount, model.Orderpart.Pid).filter_by(OMid=oid).all()
         except Exception as e:
             print(e.message)
             self.session.rollback()
@@ -134,9 +134,9 @@ class SOrders():
     def get_order_abo_by_oid(self, oid):
         order_abo = None
         try:
-            order_abo = self.session.query(model.Ordermain.Otime, model.Ordermain.Ostatus, model.Ordermain.Oprice,
-                                           model.Ordermain.Lid, model.Ordermain.Oabo, model.Ordermain.Oimage,
-                                           model.Ordermain.Otruetimemax, model.Ordermain.Otruetimemin)\
+            order_abo = self.session.query(model.Ordermain.OMtime, model.Ordermain.OMstatus, model.Ordermain.OMtotal,
+                                           model.Ordermain.LOid, model.Ordermain.OMabo, model.Ordermain.OMimage,
+                                           model.Ordermain.OMmealTimeMax, model.Ordermain.OMmealTimeMin)\
                 .filter_by(OMid=oid).first()
         except Exception as e:
             print(e.message)
@@ -145,11 +145,11 @@ class SOrders():
             self.session.close()
         return order_abo
 
-    def get_lname_lno_lboxno_by_lid(self, lid):
+    def get_loname_loexitnumber_loboxcode_by_loid(self, LOid):
         location = None
         try:
-            location = self.session.query(model.Locations.Lname, model.Locations.Lno, model.Locations.Lboxno)\
-                .filter_by(Lid=lid).first()
+            location = self.session.query(model.Locations.LOname, model.Locations.LOexitNumber, model.Locations.LOboxCode)\
+                .filter_by(LOid=LOid).first()
         except Exception as e:
             print(e.message)
             self.session.rollback()
@@ -159,4 +159,4 @@ class SOrders():
 
 if __name__ == "__main__":
     sorder = SOrders()
-    print sorder.get_lid_by_lname_lno_lboxno("江陵路",1,555)
+    print sorder.get_loid_by_loname_loexitNumber_loboxCode("江陵路", 1, 555)

@@ -66,7 +66,7 @@ class CReview():
         else:
             # 查看订单状态是否正常
             order_abo = self.service_order.get_order_abo_by_oid(oid_to_str)
-            if order_abo.Ostatus != 42:
+            if order_abo.OMstatus != 42:
                 message, status, statuscode = import_status("messages_error_wrong_status_code", "response_error",
                                                             "error_wrong_status_code")
                 return {
@@ -93,7 +93,7 @@ class CReview():
         # 更新订单状态
         try:
             order_status = {}
-            order_status["Ostatus"] = 49
+            order_status["OMstatus"] = 49
             self.service_order.update_status_by_oid(oid_to_str, order_status)
         except Exception as e:
             print(e)
@@ -134,7 +134,7 @@ class CReview():
             if oid_to_str in oid_list_control:
                 # 查看订单状态是否正常
                 order_abo = self.service_order.get_order_abo_by_oid(oid_to_str)
-                if order_abo.Ostatus != 49:
+                if order_abo.OMstatus != 49:
                     message, status, statuscode = import_status("messages_error_wrong_status_code", "response_error",
                                                                 "error_wrong_status_code")
                     return {

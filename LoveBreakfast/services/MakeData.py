@@ -187,61 +187,61 @@ class MakeData():
         except Exception as e:
             print e.message
 
-    def set_lid(self):
-        lid_list = []
-        lid_list.append(str(uuid.uuid4()))
-        lid_list.append(str(uuid.uuid4()))
-        lid_list.append(str(uuid.uuid4()))
-        lid_list.append(str(uuid.uuid4()))
-        lid_list.append(str(uuid.uuid4()))
-        return lid_list
+    def set_LOid(self):
+        LOid_list = []
+        LOid_list.append(str(uuid.uuid4()))
+        LOid_list.append(str(uuid.uuid4()))
+        LOid_list.append(str(uuid.uuid4()))
+        LOid_list.append(str(uuid.uuid4()))
+        LOid_list.append(str(uuid.uuid4()))
+        return LOid_list
 
-    def add_location(self, lid):
+    def add_location(self, LOid):
         try:
             add_model("Locations",
                       **{
-                          "Lid":lid[0],
-                          "Litem":1,
-                          "Lname":"江陵路",
-                          "Lno":1,
-                          "Lboxno":1,
-                          "Lstatus":301
+                          "LOid":LOid[0],
+                          "LOnumber":1,
+                          "LOname":"江陵路",
+                          "LOexitNumber":1,
+                          "LOboxCode":1,
+                          "LOstatus":301
                       })
             add_model("Locations",
                       **{
-                          "Lid": lid[1],
-                          "Litem": 2,
-                          "Lname": "钱江世纪城",
-                          "Lno": 1,
-                          "Lboxno": 1,
-                          "Lstatus": 301
+                          "LOid": LOid[1],
+                          "LOnumber": 2,
+                          "LOname": "钱江世纪城",
+                          "LOexitNumber": 1,
+                          "LOboxCode": 1,
+                          "LOstatus": 301
                       })
             add_model("Locations",
                       **{
-                          "Lid": lid[2],
-                          "Litem": 1,
-                          "Lname": "滨和路",
-                          "Lno": 1,
-                          "Lboxno": 1,
-                          "Lstatus": 301
+                          "LOid": LOid[2],
+                          "LOnumber": 1,
+                          "LOname": "滨和路",
+                          "LOexitNumber": 1,
+                          "LOboxCode": 1,
+                          "LOstatus": 301
                       })
             add_model("Locations",
                       **{
-                          "Lid": lid[3],
-                          "Litem": 1,
-                          "Lname": "西兴",
-                          "Lno": 1,
-                          "Lboxno": 1,
-                          "Lstatus": 301
+                          "LOid": LOid[3],
+                          "LOnumber": 1,
+                          "LOname": "西兴",
+                          "LOexitNumber": 1,
+                          "LOboxCode": 1,
+                          "LOstatus": 301
                       })
             add_model("Locations",
                       **{
-                          "Lid": lid[4],
-                          "Litem": 1,
-                          "Lname": "滨康路",
-                          "Lno": 1,
-                          "Lboxno": 1,
-                          "Lstatus": 301
+                          "LOid": LOid[4],
+                          "LOnumber": 1,
+                          "LOname": "滨康路",
+                          "LOexitNumber": 1,
+                          "LOboxCode": 1,
+                          "LOstatus": 301
                       })
         except Exception as e:
             print e.message
@@ -258,111 +258,111 @@ class MakeData():
         oid_list.append(str(uuid.uuid4()))
         return oid_list
 
-    def add_ordermain(self, oid, uid, lid):
+    def add_ordermain(self, oid, uid, LOid):
         try:
             add_model("Ordermain",
                       **{
                           "OMid":oid[0],
-                          "Otime":"20180423210000",
-                          "Otruetimemin":"20180424060000",
-                          "Otruetimemax":"20180424063000",
-                          "Ostatus":0,
-                          "Oprice":18.88,
-                          "Lid":lid[0],
+                          "OMtime":"20180423210000",
+                          "OMmealTimeMin":"20180424060000",
+                          "OMmealTimeMax":"20180424063000",
+                          "OMstatus":0,
+                          "OMtotal":18.88,
+                          "LOid":LOid[0],
                           "Uid":uid,
-                          "Oimage":"http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Oabo":"测试备注"
+                          "OMimage":"http://120.79.182.43:7444/imgs/hello.jpg",
+                          "OMabo":"测试备注"
                       })
             add_model("Ordermain",
                       **{
                           "OMid": oid[1],
-                          "Otime": "20180422210000",
-                          "Otruetimemin": "20180423060000",
-                          "Otruetimemax": "20180423063000",
-                          "Ostatus": 7,
-                          "Oprice": 18.88,
-                          "Lid": lid[0],
+                          "OMtime": "20180422210000",
+                          "OMmealTimeMin": "20180423060000",
+                          "OMmealTimeMax": "20180423063000",
+                          "OMstatus": 7,
+                          "OMtotal": 18.88,
+                          "LOid": LOid[0],
                           "Uid": uid,
-                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Oabo": "测试备注"
+                          "OMimage": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "OMabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
                           "OMid": oid[2],
-                          "Otime": "20180421210000",
-                          "Otruetimemin": "20180422060000",
-                          "Otruetimemax": "20180422063000",
-                          "Ostatus": 14,
-                          "Oprice": 18.88,
-                          "Lid": lid[0],
+                          "OMtime": "20180421210000",
+                          "OMmealTimeMin": "20180422060000",
+                          "OMmealTimeMax": "20180422063000",
+                          "OMstatus": 14,
+                          "OMtotal": 18.88,
+                          "LOid": LOid[0],
                           "Uid": uid,
-                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Oabo": "测试备注"
+                          "OMimage": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "OMabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
                           "OMid": oid[3],
-                          "Otime": "20180420210000",
-                          "Otruetimemin": "20180421060000",
-                          "Otruetimemax": "20180421063000",
-                          "Ostatus": 21,
-                          "Oprice": 18.88,
-                          "Lid": lid[0],
+                          "OMtime": "20180420210000",
+                          "OMmealTimeMin": "20180421060000",
+                          "OMmealTimeMax": "20180421063000",
+                          "OMstatus": 21,
+                          "OMtotal": 18.88,
+                          "LOid": LOid[0],
                           "Uid": uid,
-                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Oabo": "测试备注"
+                          "OMimage": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "OMabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
                           "OMid": oid[4],
-                          "Otime": "20180419210000",
-                          "Otruetimemin": "20180420060000",
-                          "Otruetimemax": "20180420063000",
-                          "Ostatus": 28,
-                          "Oprice": 18.88,
-                          "Lid": lid[0],
+                          "OMtime": "20180419210000",
+                          "OMmealTimeMin": "20180420060000",
+                          "OMmealTimeMax": "20180420063000",
+                          "OMstatus": 28,
+                          "OMtotal": 18.88,
+                          "LOid": LOid[0],
                           "Uid": uid,
-                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Oabo": "测试备注"
+                          "OMimage": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "OMabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
                           "OMid": oid[5],
-                          "Otime": "20180418210000",
-                          "Otruetimemin": "20180419060000",
-                          "Otruetimemax": "20180419063000",
-                          "Ostatus": 35,
-                          "Oprice": 18.88,
-                          "Lid": lid[0],
+                          "OMtime": "20180418210000",
+                          "OMmealTimeMin": "20180419060000",
+                          "OMmealTimeMax": "20180419063000",
+                          "OMstatus": 35,
+                          "OMtotal": 18.88,
+                          "LOid": LOid[0],
                           "Uid": uid,
-                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Oabo": "测试备注"
+                          "OMimage": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "OMabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
                           "OMid": oid[6],
-                          "Otime": "20180417210000",
-                          "Otruetimemin": "20180418060000",
-                          "Otruetimemax": "20180418063000",
-                          "Ostatus": 42,
-                          "Oprice": 18.88,
-                          "Lid": lid[0],
+                          "OMtime": "20180417210000",
+                          "OMmealTimeMin": "20180418060000",
+                          "OMmealTimeMax": "20180418063000",
+                          "OMstatus": 42,
+                          "OMtotal": 18.88,
+                          "LOid": LOid[0],
                           "Uid": uid,
-                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Oabo": "测试备注"
+                          "OMimage": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "OMabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
                           "OMid": oid[7],
-                          "Otime": "20180416210000",
-                          "Otruetimemin": "20180417060000",
-                          "Otruetimemax": "20180417063000",
-                          "Ostatus": 49,
-                          "Oprice": 18.88,
-                          "Lid": lid[0],
+                          "OMtime": "20180416210000",
+                          "OMmealTimeMin": "20180417060000",
+                          "OMmealTimeMax": "20180417063000",
+                          "OMstatus": 49,
+                          "OMtotal": 18.88,
+                          "LOid": LOid[0],
                           "Uid": uid,
-                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Oabo": "测试备注"
+                          "OMimage": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "OMabo": "测试备注"
                       })
         except Exception as e:
             print e.message
@@ -401,14 +401,14 @@ if __name__ == "__main__":
     pid = makedata.set_pid()
     oid = makedata.set_oid()
     coid = makedata.setCOid()
-    lid = makedata.set_lid()
+    LOid = makedata.set_LOid()
 
     makedata.add_user(uid)
     makedata.add_coupons(coid)
     makedata.add_cardpackage(coid, uid)
     makedata.add_product(pid)
     makedata.add_cart(uid, pid)
-    makedata.add_location(lid)
-    makedata.add_ordermain(oid, uid, lid)
+    makedata.add_location(LOid)
+    makedata.add_ordermain(oid, uid, LOid)
     makedata.add_orderpart(oid, pid)
     makedata.add_review(oid, pid, uid)

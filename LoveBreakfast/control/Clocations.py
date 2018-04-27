@@ -38,9 +38,9 @@ class Clocations():
         data = []
         for row in all_location:
             data_item = {}
-            data_item["Lid"] = row.Lid
-            data_item["Lname"] = row.Lname
-            data_item["Lline"] = row.Litem
+            data_item["Lid"] = row.LOid
+            data_item["Lname"] = row.LOname
+            data_item["Lline"] = row.LOnumber
             data.append(data_item)
         response = {}
         response["status"] = response_ok
@@ -52,14 +52,14 @@ class Clocations():
         args = request.args.to_dict()
         if "Lid" not in args:
             return self.param_miss
-        Lid = args["Lid"]
+        LOid = args["Lid"]
         from services.Slocations import Slocations
         slocations = Slocations()
-        all_lno = slocations.get_all_lno_by_lid(Lid)
+        all_LOexitNumber = slocations.get_all_LOexitNumber_by_LOid(LOid)
         data = []
-        for row in all_lno:
+        for row in all_LOexitNumber:
             data_item = {}
-            data_item["Lno"] = row.Lno
+            data_item["Lno"] = row.LOexitNumber
             data.append(data_item)
         response = {}
         response["status"] = response_ok
