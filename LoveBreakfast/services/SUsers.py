@@ -54,7 +54,7 @@ class SUsers():
     def get_upwd_by_utel(self, utel):
         upwd = None
         try:
-            upwd = self.session.query(model.Users.USpwd).filter_by(UStelphone=utel).scalar()
+            upwd = self.session.query(model.Users.USpassword).filter_by(UStelphone=utel).scalar()
         except Exception as e:
             print(e.message)
         finally:

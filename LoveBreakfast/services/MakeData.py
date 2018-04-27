@@ -24,13 +24,13 @@ class MakeData():
         try:
             add_model("Users",
                 **{
-                    "Uid":uid,
-                    "Utel":"17706441101",
-                    "Upwd":"123",
-                    "Uname":"测试账号",
-                    "Usex":101,
-                    "Ucoin":100.1,
-                    "Uinvate":"ETECH007"
+                    "USid":uid,
+                    "UStelphone":"17706441101",
+                    "USpassword":"123",
+                    "USname":"测试账号",
+                    "USsex":101,
+                    "UScoin":100.1,
+                    "USinvatecode":"ETECH007"
                 })
         except Exception as e:
             print e.message
@@ -47,12 +47,12 @@ class MakeData():
             for row in coid:
                 add_model("Coupons",
                           **{
-                              "Couid":row,
-                              "Coufilter":20,
-                              "Coudiscount":1,
-                              "Couamount":None,
-                              "Coustart":None,
-                              "Couend":None
+                              "COid":row,
+                              "COfilter":20,
+                              "COdiscount":1,
+                              "COamount":None,
+                              "COstart":None,
+                              "COend":None
                           })
         except Exception as e:
             print e.message
@@ -61,30 +61,30 @@ class MakeData():
         try:
             add_model("Cardpackage",
                       **{
-                          "Carid":str(uuid.uuid4()),
-                          "Uid":uid,
-                          "Couid":coid[0],
-                          "Carstatus":1,
-                          "Carstart":"20180423000000",
-                          "Carend":"20180429000000"
+                          "CAid":str(uuid.uuid4()),
+                          "USid":uid,
+                          "COid":coid[0],
+                          "CAstatus":1,
+                          "CAstart":"20180423000000",
+                          "CAend":"20180429000000"
                       })
             add_model("Cardpackage",
                       **{
-                          "Carid": str(uuid.uuid4()),
-                          "Uid": uid,
-                          "Couid": coid[1],
-                          "Carstatus": 2,
-                          "Carstart": "20180429000000",
-                          "Carend": "20180522000000"
+                          "CAid": str(uuid.uuid4()),
+                          "USid": uid,
+                          "COid": coid[1],
+                          "CAstatus": 2,
+                          "CAstart": "20180429000000",
+                          "CAend": "20180522000000"
                       })
             add_model("Cardpackage",
                       **{
-                          "Carid": str(uuid.uuid4()),
-                          "Uid": uid,
-                          "Couid": coid[2],
-                          "Carstatus": 2,
-                          "Carstart": "20180329000000",
-                          "Carend": "20180419000000"
+                          "CAid": str(uuid.uuid4()),
+                          "USid": uid,
+                          "COid": coid[2],
+                          "CAstatus": 2,
+                          "CAstart": "20180329000000",
+                          "CAend": "20180419000000"
                       })
         except Exception as e:
             print e.message
@@ -102,68 +102,58 @@ class MakeData():
         try:
             add_model("Products",
                       **{
-                          "Pid":pid[0],
-                          "Pname":"测试套餐1",
-                          "Pprice":28.88,
-                          "Sid":None,
-                          "Cid":None,
-                          "Pstatus":"on_sale",
-                          "Pimage":"http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Pinfo":"测试数据",
-                          "P_sales_volume":100,
-                          "Pscore":4.2
+                          "PRid":pid[0],
+                          "PRname":"测试套餐1",
+                          "PRprice":28.88,
+                          "PRstatus":1,
+                          "PRimage":"http://120.79.182.43:7444/imgs/hello.jpg",
+                          "PRinfo":"测试数据",
+                          "PRsalesvolume":100,
+                          "PRscore":4.2
                       })
             add_model("Products",
                       **{
-                          "Pid": pid[1],
-                          "Pname": "测试套餐2",
-                          "Pprice": 18.88,
-                          "Sid": None,
-                          "Cid": None,
-                          "Pstatus": "on_sale",
-                          "Pimage": "http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Pinfo": "测试数据",
-                          "P_sales_volume": 300,
-                          "Pscore": 3.2
+                          "PRid": pid[1],
+                          "PRname": "测试套餐2",
+                          "PRprice": 18.88,
+                          "PRstatus": 1,
+                          "PRimage": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "PRinfo": "测试数据",
+                          "PRsalesvolume": 300,
+                          "PRscore": 3.2
                       })
             add_model("Products",
                       **{
-                          "Pid": pid[2],
-                          "Pname": "测试套餐3",
-                          "Pprice": 9.88,
-                          "Sid": None,
-                          "Cid": None,
-                          "Pstatus": "on_sale",
-                          "Pimage": "http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Pinfo": "测试数据",
-                          "P_sales_volume": 120,
-                          "Pscore": 3.5
+                          "PRid": pid[2],
+                          "PRname": "测试套餐3",
+                          "PRprice": 9.88,
+                          "PRstatus": 1,
+                          "PRimage": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "PRinfo": "测试数据",
+                          "PRsalesvolume": 120,
+                          "PRscore": 3.5
                       })
             add_model("Products",
                       **{
-                          "Pid": pid[3],
-                          "Pname": "测试套餐4",
-                          "Pprice": 15.88,
-                          "Sid": None,
-                          "Cid": None,
-                          "Pstatus": "on_sale",
-                          "Pimage": "http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Pinfo": "测试数据",
-                          "P_sales_volume": 1001,
-                          "Pscore": 2.1
+                          "PRid": pid[3],
+                          "PRname": "测试套餐4",
+                          "PRprice": 15.88,
+                          "PRstatus": 1,
+                          "PRimage": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "PRinfo": "测试数据",
+                          "PRsalesvolume": 1001,
+                          "PRscore": 2.1
                       })
             add_model("Products",
                       **{
-                          "Pid": pid[4],
-                          "Pname": "测试套餐5",
-                          "Pprice": 13.88,
-                          "Sid": None,
-                          "Cid": None,
-                          "Pstatus": "on_sale",
-                          "Pimage": "http://120.79.182.43:7444/imgs/hello.jpg",
-                          "Pinfo": "测试数据",
-                          "P_sales_volume": 5,
-                          "Pscore": 1.6
+                          "PRid": pid[4],
+                          "PRname": "测试套餐5",
+                          "PRprice": 13.88,
+                          "PRstatus": 1,
+                          "PRimage": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "PRinfo": "测试数据",
+                          "PRsalesvolume": 5,
+                          "PRscore": 1.6
                       })
         except Exception as e:
             print e.message
@@ -172,27 +162,27 @@ class MakeData():
         try:
             add_model("Cart",
                       **{
-                          "Caid":str(uuid.uuid4()),
-                          "Uid":uid,
-                          "Pid":pid[2],
-                          "Pnum":2,
-                          "Castatus":1
+                          "CAid":str(uuid.uuid4()),
+                          "USid":uid,
+                          "PRid":pid[2],
+                          "CAnumber":2,
+                          "CAstatus":1
                       })
             add_model("Cart",
                       **{
-                          "Caid": str(uuid.uuid4()),
-                          "Uid": uid,
-                          "Pid": pid[3],
-                          "Pnum": 5,
-                          "Castatus": 1
+                          "CAid": str(uuid.uuid4()),
+                          "USid": uid,
+                          "PRid": pid[3],
+                          "CAnumber": 5,
+                          "CAstatus": 1
                       })
             add_model("Cart",
                       **{
-                          "Caid": str(uuid.uuid4()),
-                          "Uid": uid,
-                          "Pid": pid[0],
-                          "Pnum": 1,
-                          "Castatus": 2
+                          "CAid": str(uuid.uuid4()),
+                          "USid": uid,
+                          "PRid": pid[0],
+                          "CAnumber": 1,
+                          "CAstatus": 2
                       })
         except Exception as e:
             print e.message
@@ -272,7 +262,7 @@ class MakeData():
         try:
             add_model("Ordermain",
                       **{
-                          "Oid":oid[0],
+                          "OMid":oid[0],
                           "Otime":"20180423210000",
                           "Otruetimemin":"20180424060000",
                           "Otruetimemax":"20180424063000",
@@ -280,12 +270,12 @@ class MakeData():
                           "Oprice":18.88,
                           "Lid":lid[0],
                           "Uid":uid,
-                          "Opic":"http://120.79.182.43:7444/imgs/hello.jpg",
+                          "Oimage":"http://120.79.182.43:7444/imgs/hello.jpg",
                           "Oabo":"测试备注"
                       })
             add_model("Ordermain",
                       **{
-                          "Oid": oid[1],
+                          "OMid": oid[1],
                           "Otime": "20180422210000",
                           "Otruetimemin": "20180423060000",
                           "Otruetimemax": "20180423063000",
@@ -293,12 +283,12 @@ class MakeData():
                           "Oprice": 18.88,
                           "Lid": lid[0],
                           "Uid": uid,
-                          "Opic": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
                           "Oabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
-                          "Oid": oid[2],
+                          "OMid": oid[2],
                           "Otime": "20180421210000",
                           "Otruetimemin": "20180422060000",
                           "Otruetimemax": "20180422063000",
@@ -306,12 +296,12 @@ class MakeData():
                           "Oprice": 18.88,
                           "Lid": lid[0],
                           "Uid": uid,
-                          "Opic": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
                           "Oabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
-                          "Oid": oid[3],
+                          "OMid": oid[3],
                           "Otime": "20180420210000",
                           "Otruetimemin": "20180421060000",
                           "Otruetimemax": "20180421063000",
@@ -319,12 +309,12 @@ class MakeData():
                           "Oprice": 18.88,
                           "Lid": lid[0],
                           "Uid": uid,
-                          "Opic": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
                           "Oabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
-                          "Oid": oid[4],
+                          "OMid": oid[4],
                           "Otime": "20180419210000",
                           "Otruetimemin": "20180420060000",
                           "Otruetimemax": "20180420063000",
@@ -332,12 +322,12 @@ class MakeData():
                           "Oprice": 18.88,
                           "Lid": lid[0],
                           "Uid": uid,
-                          "Opic": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
                           "Oabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
-                          "Oid": oid[5],
+                          "OMid": oid[5],
                           "Otime": "20180418210000",
                           "Otruetimemin": "20180419060000",
                           "Otruetimemax": "20180419063000",
@@ -345,12 +335,12 @@ class MakeData():
                           "Oprice": 18.88,
                           "Lid": lid[0],
                           "Uid": uid,
-                          "Opic": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
                           "Oabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
-                          "Oid": oid[6],
+                          "OMid": oid[6],
                           "Otime": "20180417210000",
                           "Otruetimemin": "20180418060000",
                           "Otruetimemax": "20180418063000",
@@ -358,12 +348,12 @@ class MakeData():
                           "Oprice": 18.88,
                           "Lid": lid[0],
                           "Uid": uid,
-                          "Opic": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
                           "Oabo": "测试备注"
                       })
             add_model("Ordermain",
                       **{
-                          "Oid": oid[7],
+                          "OMid": oid[7],
                           "Otime": "20180416210000",
                           "Otruetimemin": "20180417060000",
                           "Otruetimemax": "20180417063000",
@@ -371,7 +361,7 @@ class MakeData():
                           "Oprice": 18.88,
                           "Lid": lid[0],
                           "Uid": uid,
-                          "Opic": "http://120.79.182.43:7444/imgs/hello.jpg",
+                          "Oimage": "http://120.79.182.43:7444/imgs/hello.jpg",
                           "Oabo": "测试备注"
                       })
         except Exception as e:
@@ -383,7 +373,7 @@ class MakeData():
                 add_model("Orderpart",
                           **{
                               "OPid":str(uuid.uuid4()),
-                              "Oid":row,
+                              "OMid":row,
                               "Pid":pid[1],
                               "Pnum":1
                           })
@@ -394,13 +384,13 @@ class MakeData():
         try:
             add_model("Review",
                       **{
-                          "Rid":str(uuid.uuid4()),
-                          "Oid":oid[7],
-                          "Pid":pid[1],
-                          "Uid":uid,
-                          "Rscore":4,
-                          "Rcontent":"测试评价",
-                          "Rstatus":"off"
+                          "REid":str(uuid.uuid4()),
+                          "OMid":oid[7],
+                          "PRid":pid[1],
+                          "USid":uid,
+                          "REscore":4,
+                          "REcontent":"测试评价",
+                          "REstatus":1
                       })
         except Exception as e:
             print e.message
