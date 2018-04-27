@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.getcwd()))
 import uuid
 # import DBsession
 from models.model import Cart
-# from common.TransformToList import trans_params
+
 from SBase import SBase, close_session
 
 

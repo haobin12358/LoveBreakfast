@@ -25,12 +25,12 @@ class Users(Base):
 
 class Locations(Base):
     __tablename__ = "Locations"
-    Lid = Column(String(64), primary_key=True)
-    Litem = Column(Integer, nullable=False)
-    Lname = Column(String(64), nullable=False)
-    Lno = Column(Integer, nullable=False)
-    Lstatus = Column(Integer, nullable=False)
-    Lboxno = Column(Integer, nullable=False)
+    Lid = Column(String(64), primary_key=True)  # 站点id
+    Litem = Column(Integer, nullable=False)     # 线路编号
+    Lname = Column(String(64), nullable=False)  # 站点名称
+    Lno = Column(Integer, nullable=False)       # 站点出站口编号
+    Lstatus = Column(Integer, nullable=False)   # 站点开放状态 {301 : 开放}
+    Lboxno = Column(Integer, nullable=False)    # 箱码，具体等待业务方提供
 
 class Products(Base):
     __tablename__ = "Products"
