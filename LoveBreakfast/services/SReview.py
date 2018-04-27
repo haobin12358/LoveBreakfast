@@ -7,7 +7,6 @@ sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
 # 引用项目类
 from models import model
 import DBSession
-from common.TransformToList import trans_params
 
 
 # 操作user表的相关方法
@@ -37,8 +36,8 @@ class SReview():
     def get_review(self, oid):
         review_list = None
         try:
-            review_list = self.session.query(model.Review.Pid, model.Review.Rscore,
-                                             model.Review.Rcontent).filter_by(Oid=oid).all()
+            review_list = self.session.query(model.Review.PRid, model.Review.REscore,
+                                             model.Review.REcontent).filter_by(OMid=oid).all()
         except Exception as e:
             print e.message
         finally:
@@ -46,20 +45,21 @@ class SReview():
         return review_list
 
     # 根据用户id获取评论信息
-    def get_user_review(self, uid):
-        try:
-            review_of_service = self.session.query(model.Review.Rid, model.Review.Rscore, model.Review.Rpname, model.Review.Rpimage,
-                                                   model.Review.Rcontent).filter_by(Uid=uid, Rstatus="on").all()
-        except Exception as e:
-            print e.message
-        finally:
-            self.session.close()
-        return review_of_service
+    # def get_user_review(self, uid):
+    #     try:
+    #         review_of_service = self.session.query(model.Review.REid, model.Review.REscore, model.Review.Rpname, model.Review.Rpimage,
+    #                                                model.Review.Rcontent).filter_by(Uid=uid, Rstatus="on").all()
+    #     except Exception as e:
+    #         print e.message
+    #     finally:
+    #         self.session.close()
+    #     return review_of_service
 
     # 根据用户id获取评论id列表
     def get_rid_by_uid(self, uid):
+        review_list = None
         try:
-            review_list = self.session.query(model.Review.Rid).filter_by(Uid=uid).all()
+            review_list = self.session.query(model.Review.REid).filter_by(USid=uid).all()
         except Exception as e:
             print e.message
         finally:

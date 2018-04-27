@@ -69,11 +69,11 @@ class COrders():
                 order_item["Pnum"] = raw.Pnum
                 Pid = raw.Pid
                 product = sproduct.get_product_all_by_pid(Pid)
-                order_item["Pname"] = product.Pname
-                order_item["Psalenum"] = product.P_sales_volume
-                order_item["Plevel"] = product.Pscore
-                order_item["Pprice"] = product.Pprice
-                order_item["Pimage"] = product.Pimage
+                order_item["Pname"] = product.PRname
+                order_item["Psalenum"] = product.PRsalesvolume
+                order_item["Plevel"] = product.PRscore
+                order_item["Pprice"] = product.PRprice
+                order_item["Pimage"] = product.PRimage
                 data_item["Order_items"].append(order_item)
             data.append(data_item)
 
@@ -96,6 +96,8 @@ class COrders():
         data["Oid"] = Oid
         data["Otime"] = self.deal_string_to_time(order_abo.Otime)
         data["Ostatus"] = self.get_status_name_by_status(order_abo.Ostatus)
+        data["Otruetimemin"] = self.deal_string_to_time(order_abo.Otruetimemin)
+        data["Otruetimemax"] = self.deal_string_to_time(order_abo.Otruetimemax)
         data["Oprice"] = order_abo.Oprice
         data["Opic"] = order_abo.Oimage
         Lid = order_abo.Lid
@@ -139,11 +141,11 @@ class COrders():
             from services.SProduct import SProduct
             sproduct = SProduct()
             product = sproduct.get_product_all_by_pid(row.Pid)
-            order_item["Pname"] = product.Pname
-            order_item["Psalenum"] = product.P_sales_volume
-            order_item["Plevel"] = product.Pscore
-            order_item["Pprice"] = product.Pprice
-            order_item["Pimage"] = product.Pimage
+            order_item["Pname"] = product.PRname
+            order_item["Psalenum"] = product.PRsalesvolume
+            order_item["Plevel"] = product.PRscore
+            order_item["Pprice"] = product.PRprice
+            order_item["Pimage"] = product.PRimage
             data["Order_items"].append(order_item)
 
         response_make_main_order = {}
@@ -205,6 +207,8 @@ class COrders():
         response_make_main_order = {}
         response_make_main_order["status"] = response_ok
         response_make_main_order["messages"] = messages_add_main_order_success
+        response_make_main_order["data"] = {}
+        response_make_main_order["data"]["Oid"] = add_main_order
         return response_make_main_order
 
     def add_order_items(self, order_item_list, oid):

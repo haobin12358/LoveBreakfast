@@ -44,10 +44,18 @@ class CCarts():
             cart_info_list = []
             cart_list = self.scart.get_carts_by_Uid(uid)
             for cart in cart_list:
-                cart_info = get_model_return_list(self.spro.get_all_pro_fro_carts(cart.Pid))[0]
-                cart_info["Pnum"] = cart.Pnum
-                if cart.Castatus != 1:
+                if cart.CAstatus != 1:
                     continue
+                cart_service_info = self.spro.get_all_pro_fro_carts(cart.PRid)
+                cart_info = {}
+                cart_info["Pid"] = cart_service_info.PRid
+                cart_info["Pimage"] = cart_service_info.PRimage
+                cart_info["Pname"] = cart_service_info.PRname
+                cart_info["Pstatus"] = cart_service_info.PRstatus
+                cart_info["P_sales_volume"] = cart_service_info.PRsalesvolume
+                cart_info["Pprice"] = cart_service_info.PRprice
+                cart_info["Pscore"] = cart_service_info.PRscore
+                cart_info["Pnum"] = cart.CAnumber
                 cart_info_list.append(cart_info)
             res_get_all["data"] = cart_info_list
             res_get_all["status"] = ok
@@ -84,15 +92,15 @@ class CCarts():
                 return {"status": status, "statuscode": code, "message": msg}
             cart = self.scart.get_cart_by_uid_pid(uid, pid)
             if cart:
-                self.scart.update_num_cart(pnum, cart.Caid)
+                self.scart.update_num_cart(pnum, cart.CAid)
             else:
                 add_model("Cart",
                     **{
-                        "Caid": str(uuid.uuid4()),
-                        "Pnum": pnum,
-                        "Uid": uid,
-                        "Castatus": 1,
-                        "Pid": pid
+                        "CAid": str(uuid.uuid4()),
+                        "CAnumber": pnum,
+                        "USid": uid,
+                        "CAstatus": 1,
+                        "PRid": pid
                     })
         except dberror:
             return self.system_error
@@ -117,7 +125,7 @@ class CCarts():
                 from config.status_code import error_cart_no_pro as code
                 from config.messages import error_messages_cart_no_pro as msg
                 return {"status": status, "statuscode": code, "message": msg}
-            self.scart.del_carts(cart.Caid)
+            self.scart.del_carts(cart.CAid)
             from config.messages import messages_del_cart as msg
             return {"status": ok, "message": msg}
         except Exception as e:

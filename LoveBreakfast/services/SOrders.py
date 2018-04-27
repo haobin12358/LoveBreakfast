@@ -135,7 +135,8 @@ class SOrders():
         order_abo = None
         try:
             order_abo = self.session.query(model.Ordermain.Otime, model.Ordermain.Ostatus, model.Ordermain.Oprice,
-                                           model.Ordermain.Lid, model.Ordermain.Oabo, model.Ordermain.Oimage)\
+                                           model.Ordermain.Lid, model.Ordermain.Oabo, model.Ordermain.Oimage,
+                                           model.Ordermain.Otruetimemax, model.Ordermain.Otruetimemin)\
                 .filter_by(OMid=oid).first()
         except Exception as e:
             print(e.message)

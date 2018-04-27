@@ -3,7 +3,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
-from services.SCoupons import SCoupons
+#from services.SCoupons import SCoupons
 import model
 import pymysql
 change_index = 10  # 循环中改变type的点
@@ -116,9 +116,9 @@ if __name__ == "__main__":
 
     else:
         create()
-        data = MakeData()
-        tshop_ids = data.make_id()
+        #data = MakeData()
+        #tshop_ids = data.make_id()
         # data.add_shops(tshop_ids)
         # data.add_products(tshop_ids)
-        data.add_conpons(tshop_ids)
+        #data.add_conpons(tshop_ids)
         print("over")

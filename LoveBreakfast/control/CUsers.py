@@ -49,7 +49,7 @@ class CUsers():
             repeated_tel["messages"] = messages_repeat_tel
             return repeated_tel
 
-        if data["Uinvate"] in data:
+        if "Uinvate" in data:
             Uinvate = data["Uinvate"]
             # 创建优惠券
 

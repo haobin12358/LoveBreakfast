@@ -1,6 +1,6 @@
 
 database = "lovebreakfast"
-host = "localhost"
+host = "123.207.97.185"
 port = ""
 username = "root"
 password = "root"
