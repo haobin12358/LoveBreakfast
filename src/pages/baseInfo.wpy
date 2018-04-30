@@ -23,7 +23,7 @@
       <secBar prefix="性别" :syncInfo.sync="ssex" :twoWayInfo="ssex">
       </secBar>
     </view>
-    <button class="m-info-button" formType="submit">确认提交</button>
+    <button class="m-info-button" formType="submit">修改</button>
   </form>
 </view>
 </template>
@@ -39,29 +39,24 @@
       navigationBarTitleText: '基本信息'
     }
     data = {
-      nickName : '..',
-      ssex : '..'
+      nickName : '',
+      ssex : ''
     };
     components = {
       bar: Bar,
       secBar: Bar
     };
     async formSubmit(){
-      let token = ''
-      await wx.getStorage({
-        key: 'token',
-        success: function(res){
-          token = res.data
-        }
-      })
+      let res = await wepy.getStorage({ key: 'token' })
+      let token = res.data
       let that = this;
       tip.loading();
       wx.request({
         url: `${api.change_person_info}?token=${token}`,
         method: 'POST',
         data: {
-          'Uname':this.nickName,
-          'Usex': this.ssex
+          "Uname":this.nickName,
+          "Usex": this.ssex
         },
         header: {
           'content-type': 'application/json'
@@ -88,11 +83,6 @@
       this.$apply()
     }
     methods = {
-      tap(){
-        wx.navigateTo({
-          url: '/pages/login'
-        })
-      }
     };
   }
 </script>

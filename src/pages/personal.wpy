@@ -4,6 +4,16 @@
     width: 100%;
     height: 280rpx;
   }
+    .login_block {
+      width: 100%;
+      height: 280rpx;
+      display: flex;
+      align-items: center;
+      float: right;
+    }
+      .m-button {
+        width: 400rpx;
+      }
     .m-header-content {
       width: 100%;
       margin: 0 auto;
@@ -21,16 +31,18 @@
     }
   .m-info_block-list {
     margin-top: 10rpx;
-    padding: 0rpx 80rpx 0rpx 80rpx;
+    padding: 0rpx 60rpx;
     width: 100%;
     font-size: 30rpx;
+    box-sizing: border-box;
     .m-item {
       border-top: 2rpx solid #dbdbdb;
       background: #fff;
-      padding: 34rpx 60rpx;
+      padding: 34rpx 0rpx;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      width: 100%;
     }
     .m-item:last-child {
       border-bottom: 2rpx solid #dbdbdb;
@@ -38,6 +50,7 @@
       .m-item_content {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         .m-item_img {
           width: 42rpx;
           height: 42rpx;
@@ -47,22 +60,21 @@
           color: @grey-font;
         }
       }
-    .m-arrow {
-      width: 30rpx;
-      height: 15px;
-    }
+      .m-arrow {
+        width: 30rpx;
+        height: 30rpx;
+      }
+      .m-item-info {
+        width: auto;
+        height: 15px;
+      }
   }
 </style>
 <template>
-<view class="container">
-  <view></view>
   <view class="m-header-box">
     <view class="m-header-content">
       <image class="m-avatar" src="../images/test.jpeg"></image>
       <view class="m-nickname">{{ userInfo.Uname }}</view>
-      <view wx:if="{{ isToken == false }}" bindtap="tap">
-        <button class="m-button">请登录</button>
-      </view>
     </view>
   </view>
   <view class="m-info_block-list">
@@ -74,7 +86,7 @@
       <image class="m-arrow" src="../images/more.png"></image>
     </navigator>
 
-    <navigator class="m-item" url="/pages/myOrder">
+    <navigator class="m-item" url="/pages/setUp">
 
       <view class="m-item_content">
         <image class="m-item_img" src="../images/set.png"></image>
@@ -82,35 +94,45 @@
       </view>
       <image class="m-arrow" src="../images/more.png"></image>
     </navigator>
-    <navigator class="m-item">
+    <view class="m-item">
       <view class="m-item_content">
         <image class="m-item_img" src="../images/order.png"></image>
         <view class="m-text">积分</view>
       </view>
-      <view class="m-arrow">{{ userInfo.Ucoin }}</view>
-    </navigator>
+      <view class="m-item-info">{{ userInfo.Ucoin }}</view>
+    </view>
+    <view class="m-item">
+      <view class="m-item_content">
+        <image class="m-item_img" src="../images/invite.png"></image>
+        <view class="m-text">专属邀请码</view>
+      </view>
+      <view class="m-item-info">{{ userInfo.Uinvate }}</view>
+    </view>
   </view>
-</view>
 </template>
+
 <script >
   import wepy from 'wepy';
-  import tip from '../utils/tip'
-  import api from '../api/api'
+  import tip from '../utils/tip';
+  import api from '../api/api';
+
+
+
   export default class Personal extends wepy.page{
     config = {
       navigationBarTitleText: '个人中心'
     }
     data = {
-      userInfo: { nickname: '林杨', sex :'男'},
+      userInfo: { Uname: '', Usex: ''},
       isToken: false
-//      userInfo: this.$parent.globalData.userInfo
     }
-    async getPersonInfo() {
+    async getPersonInfo(params) {
+      let token = params
       let that = this;
       tip.loading();
-      let token = wx.getStorageSync('token')
+      let test = api.get_person_info + `?token=${token}`
       wx.request({
-        url:api.get_person_info,
+        url:api.get_person_info + `?token=${token}`,
         method:'GET',
         data:{token:token},
         header:{
@@ -121,25 +143,26 @@
           if(res.data.status == '200'){
             that.$parent.globalData.userInfo = res.data.data;
             that.userInfo = res.data.data;
+            if(that.userInfo.Uname == null) that.userInfo.Uname = ''
             that.$apply();
           }
         }
       })
     }
-    async onShow(){
+    async onShow() {
+      let token = '';
       let that = this;
-      let token = wx.getStorageSync('token')
-      if(token) this.isToken = true
-      this.getPersonInfo(token)
-//      console.log(token, 'successfully get token')
-    }
-
-    methods = {
-      tap(){
+      try {
+        let res = await wepy.getStorage({key: 'token'})
+        token = res.data
+      }catch(err){
         wx.navigateTo({
-          url: '/pages/login'
-        })
+            url: '/pages/login'
+          })
       }
+      that.getPersonInfo(token)
+    }
+    methods = {
     }
   }
 </script>
