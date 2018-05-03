@@ -24,8 +24,11 @@ api.add_resource(AOrders, "/love/breakfast/orders/<string:orders>")
 api.add_resource(ALocations, "/love/breakfast/locations/<string:locations>")
 api.add_resource(ACoupons, "/love/breakfast/cardpkg/<string:card>")
 
-
+'''
 if __name__ == '__main__':
     bk.run('0.0.0.0', 443, debug=True, ssl_context=(
         "/etc/nginx/cert/1525609592348.pem"
     ))
+'''
+if __name__ == '__main__':
+    bk.run('0.0.0.0', 7444, debug=True)

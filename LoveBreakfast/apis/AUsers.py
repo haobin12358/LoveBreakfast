@@ -24,7 +24,8 @@ class AUsers(Resource):
             "register":"control_user.register()",
             "login":"control_user.login()",
             "update_info":"control_user.update_info()",
-            "update_pwd":"control_user.update_pwd()"
+            "update_pwd":"control_user.update_pwd()",
+            "get_inforcode":"control_user.get_inforcode()"
         }
 
         if users in apis:

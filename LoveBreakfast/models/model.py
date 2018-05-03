@@ -114,3 +114,16 @@ class Cardpackage(Base):
     CAstart = Column(String(14))  # 卡包中优惠券的开始时间
     CAend = Column(String(14))   # 卡包中的优惠券结束时间
     COid = Column(String(64), nullable=False)
+
+class IdentifyingCode(Base):
+    __tablename__ = "IdentifyingCode"
+    ICid = Column(String(64), primary_key=True)
+    ICtelphone = Column(String(14), nullable=False)  # 获取验证码的手机号
+    ICcode = Column(String(8), nullable=False)    # 获取到的验证码
+    ICtime = Column(String(14), nullable=False)    # 获取的时间，格式为20180503100322
+
+class BlackUsers(Base):
+    __tablename__ = "BlackUsers"
+    BUid = Column(String(64), primary_key=True)
+    BUtelphone = Column(String(14), nullable=False)   # 黑名单电话
+    BUreason = Column(Text)   # 加入黑名单的原因
