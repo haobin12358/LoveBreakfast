@@ -26,4 +26,6 @@ api.add_resource(ACoupons, "/love/breakfast/cardpkg/<string:card>")
 
 
 if __name__ == '__main__':
-    bk.run('0.0.0.0', 7444, debug=True)
+    bk.run('0.0.0.0', 443, debug=True, ssl_context=(
+        "/etc/nginx/cert/1525609592348.pem"
+    ))
