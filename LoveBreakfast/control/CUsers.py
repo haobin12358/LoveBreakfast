@@ -29,7 +29,7 @@ class CUsers():
         print(data)
         data = json.loads(data)
 
-        if "Utel" not in data or "Upwd" not in data:
+        if "Utel" not in data or "Upwd" not in data or "code" not in data:
             return self.param_miss
 
         from services.SUsers import SUsers
@@ -52,7 +52,14 @@ class CUsers():
         if "Uinvate" in data:
             Uinvate = data["Uinvate"]
             # 创建优惠券
-
+        code_in_db = susers.get_code_by_utel(data["Utel"])
+        print code_in_db.ICcode
+        if code_in_db.ICcode != data["code"]:
+            return {
+                "status":405,
+                "status_code":405303,
+                "messages":"请输入正确的验证码"
+            }
         is_register = susers.login_users(data["Utel"], data["Upwd"])
         if is_register:
             from config.messages import messages_regist_ok
@@ -218,4 +225,69 @@ class CUsers():
         response_of_get_all["messages"] = messages_get_item_ok
         response_of_get_all["data"] = response_user_info
         return response_of_get_all
-        
+
+
+    def get_inforcode(self):
+        data = request.data
+        data = json.loads(data)
+        print("=====================data=================")
+        print(data)
+        print("=====================data=================")
+        if "Utel" not in data:
+            return self.param_miss
+        Utel = data["Utel"]
+        # 拼接验证码字符串（6位）
+        code = ""
+        while len(code) < 6:
+            import random
+            item = random.randint(1,9)
+            code = code + str(item)
+
+        # 获取当前时间，与上一次获取的时间进行比较，小于60秒的获取直接报错
+        import datetime
+        time_time = datetime.datetime.now()
+        time_str = datetime.datetime.strftime(time_time, "%Y%m%d%H%M%S")
+        from services.SUsers import SUsers
+        susers = SUsers()
+        # 根据电话号码获取时间
+        utel_list = susers.get_all_user_tel()
+        if Utel in utel_list:
+            return {
+                "status":405,
+                "status_code":405305,
+                "messages":"请直接登录"
+            }
+        time_up = susers.get_uptime_by_utel(Utel)
+        print time_up
+        if time_up:
+            time_up_time = datetime.datetime.strptime(time_up.ICtime, "%Y%m%d%H%M%S")
+            delta = time_time - time_up_time
+            if delta.seconds < 60:
+                return {
+                    "status":405,
+                    "status_code":405304,
+                    "messages":"发送验证码过于频繁"
+                }
+
+        new_inforcode = susers.add_inforcode(Utel, code, time_str)
+        if not new_inforcode:
+            return self.system_error
+        from config.Inforcode import SignName, TemplateCode
+        from common.Inforsend import send_sms
+        params = '{\"code\":\"' + code + '\",\"product\":\"etech\"}'
+
+        # params = u'{"name":"wqb","code":"12345678","address":"bz","phone":"13000000000"}'
+        __business_id = uuid.uuid1()
+        response_send_message = send_sms(__business_id, Utel, SignName, TemplateCode, params)
+
+        response_send_message = json.loads(response_send_message)
+
+        if response_send_message["Code"] == "OK":
+            status = 200
+        else:
+            status = 405
+        response_ok = {}
+        response_ok["status"] = status
+        response_ok["messages"] = response_send_message["Message"]
+
+        return response_ok

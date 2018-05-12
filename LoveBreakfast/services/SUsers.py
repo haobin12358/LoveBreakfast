@@ -120,3 +120,50 @@ class SUsers():
             self.session.rollback()
         finally:
             self.session.close()
+
+    def get_uptime_by_utel(self, utel):
+        uptime = None
+        try:
+            uptime = self.session.query(model.IdentifyingCode.ICtime).filter_by(ICtelphone=utel)\
+                .order_by(model.IdentifyingCode.ICtime.desc()).first()
+        except Exception as e:
+            print e.message
+            self.session.rollback()
+        finally:
+            self.session.close()
+        return uptime
+
+    def get_code_by_utel(self, utel):
+        uptime = None
+        try:
+            uptime = self.session.query(model.IdentifyingCode.ICcode).filter_by(ICtelphone=utel)\
+                .order_by(model.IdentifyingCode.ICtime.desc()).first()
+        except Exception as e:
+            print e.message
+            self.session.rollback()
+        finally:
+            self.session.close()
+        return uptime
+
+    def add_inforcode(self, utel, code, time):
+        """
+        :param utel: 联系方式
+        :param code: 验证码
+        :param time: 生成时间
+        :return: True写入成功，False 写入失败
+        """
+        try:
+            new_infocode = model.IdentifyingCode()
+            new_infocode.ICid = str(uuid.uuid4())
+            new_infocode.ICtelphone = utel
+            new_infocode.ICcode = code
+            new_infocode.ICtime = time
+            self.session.add(new_infocode)
+            self.session.commit()
+            self.session.close()
+            return True
+        except Exception as e:
+            print(e.message)
+            self.session.rollback()
+            self.session.close()
+            return False
