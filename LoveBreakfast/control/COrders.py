@@ -78,9 +78,13 @@ class COrders():
             data.append(data_item)
 
         response_make_main_order = {}
+        from config.urlconfig import product_url_list
+        response_make_main_order["sowing"] = product_url_list
+
         response_make_main_order["status"] = response_ok
         response_make_main_order["messages"] = ""
         response_make_main_order["data"] = data
+
         return response_make_main_order
 
     def get_order_abo(self):

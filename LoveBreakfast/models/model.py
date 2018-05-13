@@ -27,12 +27,12 @@ class Users(Base):
 
 class Locations(Base):
     __tablename__ = "Locations"
-    LOid = Column(String(64), primary_key=True)     # 站点id
-    LOnumber = Column(Integer, nullable=False)      # 线路编号
-    LOname = Column(String(64), nullable=False)     # 站点名称
-    LOexitNumber = Column(Integer, nullable=False)  # 站点出站口编号
-    LOstatus = Column(Integer, nullable=False)      # 站点开放状态 {301 : 开放}
-    LOboxCode = Column(Integer, nullable=False)     # 箱码，具体等待业务方提供
+    LOid = Column(String(64), primary_key=True)      # 区域id
+    LOparantId = Column(String(64), nullable=False)  # 父id
+    LOnumber = Column(Integer, nullable=False)       # 地铁线路编号
+    LOname = Column(String(64), nullable=False)      # 地铁站点名称
+    LOexitNumber = Column(Integer, nullable=False)   # 地铁站点出站口编号
+    LOboxnumber = Column(Integer, nullable=False)      # 箱码，具体等待业务方提供
 
 
 class Products(Base):
@@ -126,12 +126,14 @@ class Cardpackage(Base):
     CAend = Column(String(14))  # 卡包中的优惠券结束时间
     COid = Column(String(64), nullable=False)
 
+
 class IdentifyingCode(Base):
     __tablename__ = "IdentifyingCode"
     ICid = Column(String(64), primary_key=True)
     ICtelphone = Column(String(14), nullable=False)  # 获取验证码的手机号
     ICcode = Column(String(8), nullable=False)    # 获取到的验证码
     ICtime = Column(String(14), nullable=False)    # 获取的时间，格式为20180503100322
+
 
 class BlackUsers(Base):
     __tablename__ = "BlackUsers"
