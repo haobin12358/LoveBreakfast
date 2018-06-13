@@ -9,7 +9,7 @@
         </view>
         <view class="m-first-right {{list.label == '推荐'? 'm-recommend':''}} {{list.label == '配送中'? 'm-distribution':''}} {{list.label == '已完成'? 'm-completed':''}}" wx:if="{{list.label && list.label != ''}}">{{list.label}}</view>
       </view>
-      <view class="m-business-star score-grey" wx:if="{{list.PsalesVolume && list.Pscore}}">月销{{list.PsalesVolume}}份 好评率{{list.Pscore}}%</view>
+      <view class="m-business-star score-grey" wx:if="{{list.PsalesVolume && list.Pscore}}">月销{{list.PsalesVolume}}份 好评率{{list.Pscore}}分</view>
       <view class="m-business-star m-grey" wx:if="{{list.Pinfo}}">{{list.Pinfo}}</view>
       <view class="m-business-star m-grey" wx:if="{{page == 'myOrder'}}">数量：{{list.Pnum}}</view>
       <view class="m-business-loc" >

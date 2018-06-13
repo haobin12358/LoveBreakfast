@@ -56,7 +56,7 @@
       <view class="m-section">
         <image class="m-icon" src='/images/password.png'></image>
         <view class="m-section_title">密码 :</view>
-        <input class="m-code" name="code" type="number" placeholder="请输入密码" />
+        <input class="m-code" name="code" type="password" placeholder="请输入密码" />
       </view>
       <view class="m-btn_confirm">
         <button class="m-button" formType="submit">登录</button>

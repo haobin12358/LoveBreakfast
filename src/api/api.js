@@ -1,6 +1,6 @@
 import {request} from '../utils/request';
 //接口前缀
-const _title = 'http://120.79.182.43:7444';
+const _title = 'http://123.207.97.185:7444';
 //定义接口
 //首页
 const get_product_all =  _title + '/love/breakfast/product/get_all';
