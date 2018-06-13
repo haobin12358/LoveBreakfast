@@ -50,7 +50,6 @@
         this.twoWayInfo = e.detail.value
         this.$parent.twoWayInfo = this.twoWayInfo
         this.$parent.$apply();
-        console.log(this.$parent.twoWayInfo, 'hhh')
       }
     }
   }
