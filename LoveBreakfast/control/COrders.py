@@ -36,46 +36,56 @@ class COrders():
         if "token" not in args:
             return self.param_miss
 
+        print("==========args=============")
+        print(args)
+        print("==========args=============")
+
         Uid = args["token"]
         # 暂时不处理过滤
         from services.SOrders import SOrders
         sorders = SOrders()
         order_list = sorders.get_all_order_by_uid(Uid)
+
+        print("==========order_list=============")
+        print(order_list)
+        print("==========order_list=============")
+
         data = []
-        for row in order_list:
-            data_item = {}
-            data_item["Oid"] = row.OMid
-            print str(row.OMtime)
-            OMtime = row.OMtime
-            data_item["Otime"] = self.deal_string_to_time(str(OMtime))
-            data_item["Ostatus"] = self.get_status_name_by_status(row.OMstatus)
-            data_item["Oprice"] = row.OMtotal
-            data_item["Opic"] = row.OMimage
-            dt = datetime.datetime.now()
-            day = datetime.datetime.now().day + 1
-            month = datetime.datetime.now().month
-            year = datetime.datetime.now().year
-            month_day_list = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-            if True:
-                data_item["is_index"] = 702
-            else:
-                data_item["is_index"] = 701
-            data_item["Order_items"] = []
-            order_items = sorders.get_order_item_by_oid(row.Oid)
-            from services.SProduct import SProduct
-            sproduct = SProduct()
-            for raw in order_items:
-                order_item = {}
-                order_item["Pnum"] = raw.OPamount
-                Pid = raw.Pid
-                product = sproduct.get_product_all_by_pid(Pid)
-                order_item["Pname"] = product.PRname
-                order_item["Psalenum"] = product.PRsalesvolume
-                order_item["Plevel"] = product.PRscore
-                order_item["Pprice"] = product.PRprice
-                order_item["Pimage"] = product.PRimage
-                data_item["Order_items"].append(order_item)
-            data.append(data_item)
+        if order_list:
+            for row in order_list:
+                data_item = {}
+                data_item["Oid"] = row.OMid
+                print str(row.OMtime)
+                OMtime = row.OMtime
+                data_item["Otime"] = self.deal_string_to_time(str(OMtime))
+                data_item["Ostatus"] = self.get_status_name_by_status(row.OMstatus)
+                data_item["Oprice"] = row.OMtotal
+                data_item["Opic"] = row.OMimage
+                dt = datetime.datetime.now()
+                day = datetime.datetime.now().day + 1
+                month = datetime.datetime.now().month
+                year = datetime.datetime.now().year
+                month_day_list = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+                if True:
+                    data_item["is_index"] = 702
+                else:
+                    data_item["is_index"] = 701
+                data_item["Order_items"] = []
+                order_items = sorders.get_order_item_by_oid(row.OMid)
+                from services.SProduct import SProduct
+                sproduct = SProduct()
+                for raw in order_items:
+                    order_item = {}
+                    order_item["Pnum"] = raw.OPamount
+                    Pid = raw.Pid
+                    product = sproduct.get_product_all_by_pid(Pid)
+                    order_item["Pname"] = product.PRname
+                    order_item["Psalenum"] = product.PRsalesvolume
+                    order_item["Plevel"] = product.PRscore
+                    order_item["Pprice"] = product.PRprice
+                    order_item["Pimage"] = product.PRimage
+                    data_item["Order_items"].append(order_item)
+                data.append(data_item)
 
         response_make_main_order = {}
         from config.urlconfig import product_url_list
@@ -299,6 +309,11 @@ class COrders():
         args = request.args.to_dict()
         if "token" not in args:
             return self.param_miss
+
+        print("==========args=============")
+        print(args)
+        print("==========args=============")
+
         Uid = args["token"]
 
         from services.SUsers import SUsers
@@ -309,7 +324,7 @@ class COrders():
             return self.system_error
 
         response_user_info = {}
-        Utel = users_info.UStel
+        Utel = users_info.UStelphone
         response_user_info["Utel"] = Utel
         if users_info.USname not in ["", None]:
             Uname = users_info.USname

@@ -45,6 +45,7 @@ class Products(Base):
     PRinfo = Column(Text)  # 商品介绍
     PRsalesvolume = Column(Integer, nullable=False)  # 商品销量
     PRscore = Column(Float, nullable=True)  # 商品评分
+    AAid = Column(String(64))  # 站点详情id
 
 
 class Review(Base):
@@ -86,6 +87,7 @@ class Ordermain(Base):
     OMtotal = Column(Float)                             # 订单总额
     Uid = Column(String(64))                            # 用户id
     LOid = Column(String(64))                           # 站点id
+    AAid = Column(String(64))                           # 机器详情id
     OMimage = Column(String(64))                        # 订单二维码
     OMabo = Column(Text)  # 订单备注
 
@@ -140,3 +142,32 @@ class BlackUsers(Base):
     BUid = Column(String(64), primary_key=True)
     BUtelphone = Column(String(14), nullable=False)   # 黑名单电话
     BUreason = Column(Text)   # 加入黑名单的原因
+
+
+class AddCity(Base):
+    __tablename__ = "AddCity"
+    ACid = Column(String(64), primary_key=True)
+    ACname = Column(String(255))
+
+
+class AddressFirst(Base):
+    __tablename__ = "AddressFirst"
+    AFid = Column(String(64), primary_key=True)
+    AFtype = Column(Integer)  # 判断是地铁还是其他园区 {0: "地铁", 1: "生活/办公园区"}
+    AFname = Column(String(64))  # 区域名称/地铁线路
+    ACid = Column(String(64))  # 市id
+
+
+class AddressSecond(Base):
+    __tablename__ = "AddressSecond"
+    ASid = Column(String(64), primary_key=True)
+    ASname = Column(String(255))   # 园区名称/站点名称
+    AFid = Column(String(64))
+
+
+class AddressAbo(Base):
+    __tablename__ = "AddressAbo"
+    AAid = Column(String(64), primary_key=True)
+    AAmessage = Column(Text)
+    AAimage = Column(Text)
+    ASid = Column(String(64))

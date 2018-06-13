@@ -52,14 +52,14 @@ class CUsers():
         if "Uinvate" in data:
             Uinvate = data["Uinvate"]
             # 创建优惠券
-        code_in_db = susers.get_code_by_utel(data["Utel"])
-        print code_in_db.ICcode
-        if code_in_db.ICcode != data["code"]:
-            return {
-                "status":405,
-                "status_code":405303,
-                "messages":"请输入正确的验证码"
-            }
+        # code_in_db = susers.get_code_by_utel(data["Utel"])
+        # print code_in_db.ICcode
+        # if code_in_db.ICcode != data["code"]:
+        #     return {
+        #         "status":405,
+        #         "status_code":405303,
+        #         "messages":"请输入正确的验证码"
+        #     }
         is_register = susers.login_users(data["Utel"], data["Upwd"])
         if is_register:
             from config.messages import messages_regist_ok

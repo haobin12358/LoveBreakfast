@@ -10,6 +10,7 @@ class AProduct(Resource):
     def __init__(self):
         self.control_product = CProduct()
 
+
     def post(self, product):
         print(PRINT_API_NAME.format(product))
 

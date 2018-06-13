@@ -6,7 +6,7 @@ from flask import request
 import json
 import uuid
 from config.status import response_ok as ok
-from common.get_model_return_list import get_model_return_list
+from common.get_model_return_list import get_model_return_list, get_model_return_dict
 from common.lovebreakfast_error import dberror
 from common.TransformToList import add_model
 
@@ -43,20 +43,31 @@ class CCarts():
         try:
             cart_info_list = []
             cart_list = self.scart.get_carts_by_Uid(uid)
+
+            print("====cartlist====")
+            print(cart_list)
+            print("====cartlist====")
+
             for cart in cart_list:
                 if cart.CAstatus != 1:
                     continue
-                cart_service_info = self.spro.get_all_pro_fro_carts(cart.PRid)
-                cart_info = {}
-                cart_info["Pid"] = cart_service_info.PRid
-                cart_info["Pimage"] = cart_service_info.PRimage
-                cart_info["Pname"] = cart_service_info.PRname
-                cart_info["Pstatus"] = cart_service_info.PRstatus
-                cart_info["P_sales_volume"] = cart_service_info.PRsalesvolume
-                cart_info["Pprice"] = cart_service_info.PRprice
-                cart_info["Pscore"] = cart_service_info.PRscore
-                cart_info["Pnum"] = cart.CAnumber
-                cart_info_list.append(cart_info)
+                cart_service_info = (self.spro.get_all_pro_fro_carts(cart.PRid))
+
+                print("=======cart_service_info====")
+                print(cart_service_info)
+                print("=======cart_service_info====")
+                if cart_service_info:
+                    cart_service_info = cart_service_info[0]
+                    cart_info = {}
+                    cart_info["Pid"] = cart_service_info.PRid
+                    cart_info["Pimage"] = cart_service_info.PRimage
+                    cart_info["Pname"] = cart_service_info.PRname
+                    cart_info["Pstatus"] = cart_service_info.PRstatus
+                    cart_info["P_sales_volume"] = cart_service_info.PRsalesvolume
+                    cart_info["Pprice"] = cart_service_info.PRprice
+                    cart_info["Pscore"] = cart_service_info.PRscore
+                    cart_info["Pnum"] = cart.CAnumber
+                    cart_info_list.append(cart_info)
             res_get_all["data"] = cart_info_list
             res_get_all["status"] = ok
             from config.messages import messages_get_cart_success as msg
