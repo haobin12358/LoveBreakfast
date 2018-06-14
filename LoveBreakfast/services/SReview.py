@@ -22,7 +22,6 @@ class SReview():
     # 创建评论
     def create_review(self, review):
         try:
-            print(1)
             self.session.add(review)
             self.session.commit()
             return True

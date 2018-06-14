@@ -61,11 +61,7 @@ class COrders():
                 data_item["Ostatus"] = self.get_status_name_by_status(row.OMstatus)
                 data_item["Oprice"] = row.OMtotal
                 data_item["Opic"] = row.OMimage
-                dt = datetime.datetime.now()
-                day = datetime.datetime.now().day + 1
-                month = datetime.datetime.now().month
-                year = datetime.datetime.now().year
-                month_day_list = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
                 if True:
                     data_item["is_index"] = 702
                 else:

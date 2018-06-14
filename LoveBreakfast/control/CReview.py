@@ -1,14 +1,10 @@
 # *- coding:utf8 *-
-# *- coding:utf8 *-
-# 兼容linux系统
 import sys
 import os
-sys.path.append(os.path.dirname(os.getcwd())) # 增加系统路径
-#引用python类
+sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
 import uuid
 import json
-#引用项目类
 from services.SProduct import SProduct
 from common.get_str import get_str
 from common.import_status import import_status
@@ -17,6 +13,8 @@ from control.COrders import COrders
 from models import model
 from services.SUsers import SUsers
 from services.SOrders import SOrders
+from config.response import PARAMS_MISS, SYSTEM_ERROR
+from common.TransformToList import add_model
 
 class CReview():
     def __init__(self):
@@ -25,91 +23,81 @@ class CReview():
         self.control_order = COrders()
         self.service_user = SUsers()
         self.service_order = SOrders()
+        self.title = '============{0}============'
 
-    #  创建评论
     def create_review(self):
-        args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
+        args = request.args.to_dict()
         # 判断url参数是否异常
-        if len(args) != 2 or "token" not in args.keys() or "Oid" not in args.keys():
-            message, status, statuscode = import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
-            return {
-                "message": message,
-                "status": status,
-                "statuscode": statuscode,
+        print(self.title.format("args"))
+        print(args)
+        print(self.title.format("args"))
+        if "token" not in args.keys() or "Oid" not in args.keys():
+            return PARAMS_MISS
+
+        USid = get_str(args, "token")
+        OMid = get_str(args, "Oid")
+
+        data = request.data
+        data = json.loads(data)
+        print(self.title.format("data"))
+        print(data)
+        print(self.title.format("data"))
+
+        for row in data:
+            print(self.title.format("data_item"))
+            print(row)
+            print(self.title.format("data_item"))
+            if "Pid" not in row or "Rscore" not in row:
+                return PARAMS_MISS
+            if "Rcontent" in data:
+                REcontent = row["Rcontent"]
+            else:
+                REcontent = None
+            PRid = row["Pid"]
+            REscore = row["Rscore"]
+            try:
+                add_model("Review",
+                          **{
+                              "REid": str(uuid.uuid1()),
+                              "OMid": OMid,
+                              "PRid": PRid,
+                              "USid": USid,
+                              "REscore": REscore,
+                              "REcontent": REcontent,
+                              "REstatus": 1
+                          })
+            except Exception as e:
+                print(self.title.format("add_review"))
+                print(e.message)
+                print(self.title.format("add_review"))
+                return SYSTEM_ERROR
+
+            product_volue = self.service_product.get_product_volume_by_prid(PRid)
+            product_score = self.service_product.get_product_score_by_prid(PRid)
+
+            score = (product_score * product_volue + REscore)/product_volue
+            product = {
+                "PRscore":score
             }
-        token_to_str = get_str(args, "token")
-        print('token'+token_to_str)
-        oid_to_str = get_str(args, "Oid")
-        oid_list_service = self.service_order.get_all_order_by_uid(token_to_str)
-        oid_list_control = []
-        print(oid_list_service)
-        if oid_list_service == None:
-            message, status, statuscode = import_status("messages_error_wrong_status_code", "response_error",
-                                                        "error_wrong_status_code")
-            return {
-                "message": message,
-                "status": status,
-                "statuscode": statuscode,
+            update_product = self.service_product.update_product_by_prid(PRid, product)
+            print(self.title.format("update_product"))
+            print(update_product)
+            print(self.title.format("update_product"))
+            if not update_product:
+                return SYSTEM_ERROR
+
+            order = {
+                "OMstatus": 49
             }
-        for i in range(len(oid_list_service)):
-            oid = oid_list_service[i].OMid
-            oid_list_control.append(oid)
-        print(oid_to_str)
-        if oid_to_str not in oid_list_control:
-            message, status, statuscode = import_status("messages_error_wrong_status_code", "response_error",
-                                                        "error_wrong_status_code")
-            return {
-                "message": message,
-                "status": status,
-                "statuscode": statuscode,
-            }
-        else:
-            # 查看订单状态是否正常
-            order_abo = self.service_order.get_order_abo_by_oid(oid_to_str)
-            if order_abo.OMstatus != 42:
-                message, status, statuscode = import_status("messages_error_wrong_status_code", "response_error",
-                                                            "error_wrong_status_code")
-                return {
-                    "message": message,
-                    "status": status,
-                    "statuscode": statuscode,
-                }
-        form = request.data  # 获取前端发送的body体
-        form = json.loads(form)
-        pro_list = form["Product_list"]
-        print pro_list
-        for i in range(len(pro_list)):
-            review = model.Review()
-            Rid = uuid.uuid4()
-            review.REid = str(Rid)
-            review.OMid = oid_to_str
-            review.PRid = pro_list[i].get("Pid")
-            review.USid = token_to_str
-            review.REscore = pro_list[i].get("Rscore")
-            review.REcontent = pro_list[i].get("Rcontent")
-            review.REstatus = 1
-            result = self.service_review.create_review(review)
-            print(result)
-        # 更新订单状态
-        try:
-            order_status = {}
-            order_status["OMstatus"] = 49
-            self.service_order.update_status_by_oid(oid_to_str, order_status)
-        except Exception as e:
-            print(e)
-            from config.status import response_error
-            from config.status_code import SYSTEM_ERROR
-            from config.messages import error_system_error
-            return {
-                "message": error_system_error,
-                "status": response_error,
-                "statuscode": SYSTEM_ERROR,
-            }
-        from config.messages import create_review_success
-        return {
-            "message": create_review_success,
-            "status": 200,
-        }
+            update_order = self.service_order.update_ordermain_by_omid(OMid, order)
+            print(self.title.format("update_order"))
+            print(update_order)
+            print(self.title.format("update_order"))
+            if not update_order:
+                return SYSTEM_ERROR
+
+        back_response = import_status("SUCCESS_MESSAGE_ADD_REVIEW", "OK")
+        return back_response
 
     # 根据Oid获取商品评论
     def get_review(self):

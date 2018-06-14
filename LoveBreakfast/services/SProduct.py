@@ -125,3 +125,37 @@ class SProduct():
             raise e
         finally:
             self.session.close()
+
+    def get_product_volume_by_prid(self, prid):
+        volume = None
+        try:
+            volume = self.session.query(model.Products.PRsalesvolume).filter_by(PRid=prid).scalar()
+        except Exception as e:
+            self.session.rollback()
+            print(e.message)
+        finally:
+            self.session.close()
+        return volume
+
+    def get_product_score_by_prid(self, prid):
+        score = None
+        try:
+            score = self.session.query(model.Products.PRscore).filter_by(PRid=prid).scalar()
+        except Exception as e:
+            self.session.rollback()
+            print(e.message)
+        finally:
+            self.session.close()
+        return score
+
+    def update_product_by_prid(self, prid, product):
+        try:
+            self.session.query(model.Products).filter_by(PRid=prid).update(product)
+            self.session.commit()
+            self.session.close()
+            return True
+        except Exception as e:
+            print(e.message)
+            self.session.rollback()
+            self.session.close()
+            return False
