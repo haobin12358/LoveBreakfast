@@ -1,4 +1,10 @@
 # *- coding:utf8 *-
+SUCCESS_MESSAGE_ADD_REVIEW = "创建评论成功"
+
+
+
+
+
 error_messages_wrong_api = "The api is error !"
 error_messages_param_miss = "Some params maybe miss !"
 error_system_error = "System is error !"
@@ -32,6 +38,6 @@ messages_get_carpkg_success = "哝，所有的优惠券"
 error_messages_no_pid = "购物车更新商品信息失败，该商品已下架"
 get_product_list_success = "获取商品列表成功"
 get_product_info_success = "获取商品详情成功"
-create_review_success = "创建评论成功！"
+
 get_review_success = "获取商品评论成功！"
 messages_get_area_success = "获取区域信息成功"

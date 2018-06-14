@@ -54,8 +54,8 @@ class Review(Base):
     OMid = Column(String(64), nullable=False)  # 对应的订单编号
     PRid = Column(String(64), nullable=False)  # 对应的商品编号
     USid = Column(String(64), nullable=False)  # 用户id
-    REscore = Column(Integer, nullable=True)  # 对应的商品评分
-    REcontent = Column(Text, nullable=True)  # 评价内容
+    REscore = Column(Integer, nullable=False)  # 对应的商品评分
+    REcontent = Column(Text)  # 评价内容
     REstatus = Column(Integer, default=1)  # 对应的评价状态 {1:有效评价 2:无效状态}
 
 
@@ -96,9 +96,8 @@ class Orderpart(Base):
     __tablename__ = "OrderPart"
     OPid = Column(String(64), primary_key=True)  # 分订单id
     OMid = Column(String(64), nullable=False)    # 主订单id
-    Pid = Column(String(64), nullable=False)     # 商品id
-    OPamount = Column(Integer, nullable=False)   # 商品数量
-
+    PRid = Column(String(64), nullable=False)     # 商品id
+    PRnum = Column(Integer, nullable=False)       # 商品数量
 
 class Cart(Base):
     __tablename__ = "Cart"

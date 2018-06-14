@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.getcwd()))
 import uuid
 import DBSession
 from models import model
+from common.TransformToList import trans_params
 
 
 class SOrders():
@@ -123,13 +124,26 @@ class SOrders():
     def get_order_item_by_oid(self, oid):
         order_item = None
         try:
-            order_item = self.session.query(model.Orderpart.OPamount, model.Orderpart.Pid).filter_by(OMid=oid).all()
+
+            order_item = self.session.query(model.Orderpart.PRnum, model.Orderpart.PRid).filter_by(OMid=oid).all()
         except Exception as e:
             print(e.message)
             self.session.rollback()
         finally:
             self.session.close()
         return order_item
+
+    @trans_params
+    def get_prid_by_omid(self, omid):
+        prid = None
+        try:
+            prid = self.session.query(model.Orderpart.PRid).filter_by(OMid=omid).all()
+        except Exception as e:
+            print(e.message)
+            self.session.rollback()
+        finally:
+            self.session.close()
+        return prid
 
     def get_order_abo_by_oid(self, oid):
         order_abo = None
@@ -156,6 +170,17 @@ class SOrders():
         finally:
             self.session.close()
         return location
+
+    def update_ordermain_by_omid(self, omid, ordermain):
+        try:
+            self.session.query(model.Ordermain).filter_by(OMid=omid).update(ordermain)
+            self.session.commit()
+            self.session.close()
+            return True
+        except Exception as e:
+            print(e.message)
+            self.session.close()
+            return False
 
 if __name__ == "__main__":
     sorder = SOrders()
