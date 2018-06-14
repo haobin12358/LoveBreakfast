@@ -96,6 +96,7 @@ class CAddress():
             asid = get_str(args, "ASid")
             list_addabo = get_model_return_list(self.sadd.get_addabo_by_asid(asid))
             if not list_addabo:
+                return SYSTEM_ERROR
 
             return_data = import_status("messages_get_area_success", "response_ok")
             return_data["data"] = list_addabo
