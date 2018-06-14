@@ -49,8 +49,8 @@ class Review(Base):
     OMid = Column(String(64), nullable=False)  # 对应的订单编号
     PRid = Column(String(64), nullable=False)  # 对应的商品编号
     USid = Column(String(64), nullable=False)  # 用户id
-    REscore = Column(Integer, nullable=True)  # 对应的商品评分
-    REcontent = Column(Text, nullable=True)  # 评价内容
+    REscore = Column(Integer, nullable=False)  # 对应的商品评分
+    REcontent = Column(Text)  # 评价内容
     REstatus = Column(Integer, default=1)  # 对应的评价状态 {1:有效评价 2:无效状态}
 
 class Category(Base):
@@ -74,7 +74,7 @@ class Ordermain(Base):
     Otime = Column(String(14), nullable=False)         # 下单时间
     Otruetimemin = Column(String(14), nullable=False)  # 取餐时间段-起始时间
     Otruetimemax = Column(String(14), nullable=False)  # 取餐时间段-最晚时间
-    Ostatus = Column(Integer, nullable=False)          # 订单状态 具体状态如下：
+    OMstatus = Column(Integer, nullable=False)          # 订单状态 具体状态如下：
     # {0 : 已取消, 7 : 未支付, 14 : 已支付, 21 : 已接单, 28 : 已配送, 35 : 已装箱, 42 : 已完成,  49 : 已评价}
     Oprice = Column(Float)                             # 订单总额
     Uid = Column(String(64))                           # 用户id
@@ -86,8 +86,8 @@ class Orderpart(Base):
     __tablename__ = "OrderPart"
     OPid = Column(String(64), primary_key=True)  # 分订单id
     OMid = Column(String(64), nullable=False)    # 主订单id
-    Pid = Column(String(64), nullable=False)     # 商品id
-    Pnum = Column(Integer, nullable=False)       # 商品数量
+    PRid = Column(String(64), nullable=False)     # 商品id
+    PRnum = Column(Integer, nullable=False)       # 商品数量
 
 class Cart(Base):
     __tablename__ = "Cart"

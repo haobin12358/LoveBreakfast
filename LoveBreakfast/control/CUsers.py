@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
 import json
 import uuid
-from config.status import response_ok
+from config.status import OK
 
 
 class CUsers():
@@ -64,7 +64,7 @@ class CUsers():
         if is_register:
             from config.messages import messages_regist_ok
             register_ok = {}
-            register_ok["status"] = response_ok
+            register_ok["status"] = OK
             register_ok["messages"] = messages_regist_ok
             return register_ok
         else:
@@ -111,7 +111,7 @@ class CUsers():
 
         login_success = {}
         from config.messages import messages_login_ok
-        login_success["status"] = response_ok
+        login_success["status"] = OK
         login_success["messages"] = messages_login_ok
         login_success["token"] = Uid
 
@@ -150,7 +150,7 @@ class CUsers():
 
         response_of_update_users = {}
         from config.messages import messages_update_personal_ok
-        response_of_update_users["status"] = response_ok
+        response_of_update_users["status"] = OK
         response_of_update_users["messages"] = messages_update_personal_ok
 
         return response_of_update_users
@@ -180,7 +180,7 @@ class CUsers():
 
         response_of_update_users = {}
         from config.messages import messages_update_pwd_ok
-        response_of_update_users["status"] = response_ok
+        response_of_update_users["status"] = OK
         response_of_update_users["messages"] = messages_update_pwd_ok
 
         return response_of_update_users
@@ -220,7 +220,7 @@ class CUsers():
         response_user_info["Uinvate"] = users_info.USinvatecode
 
         response_of_get_all = {}
-        response_of_get_all["status"] = response_ok
+        response_of_get_all["status"] = OK
         from config.messages import messages_get_item_ok
         response_of_get_all["messages"] = messages_get_item_ok
         response_of_get_all["data"] = response_user_info
