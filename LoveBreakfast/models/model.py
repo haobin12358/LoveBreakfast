@@ -10,7 +10,7 @@ from config import dbconfig as cfg
 
 DB_PARAMS = "{0}://{1}:{2}@{3}/{4}?charset={5}".format(
     cfg.sqlenginename, cfg.username, cfg.password, cfg.host, cfg.database, cfg.charset)
-mysql_engine = create_engine(DB_PARAMS, echo=True)
+mysql_engine = create_engine(DB_PARAMS, echo=False)
 Base = declarative_base()
 
 

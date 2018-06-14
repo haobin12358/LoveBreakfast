@@ -395,20 +395,97 @@ class MakeData():
         except Exception as e:
             print e.message
 
+    def add_city(self, acid):
+        add_model("AddCity",
+                  **{
+                      "ACid": acid,
+                      "ACname": "杭州市"
+                  })
+
+    def add_addfirst(self, acid):
+        afidlist = []
+        addfirst = [
+            {"name": "萧山区", "aftype": 1},
+            {"name": "下沙区", "aftype": 1},
+            {"name": "上城区", "aftype": 1},
+            {"name": "下城区", "aftype": 1},
+            {"name": "滨江区", "aftype": 1},
+            {"name": "地铁1号线", "aftype": 0},
+            {"name": "地铁2号线", "aftype": 0},
+            {"name": "地铁4号线", "aftype": 0},
+        ]
+        for data in addfirst:
+            afid = str(uuid.uuid4())
+            add_model("AddressFirst",
+                      **{
+                          "AFid": afid,
+                          "ACid": acid,
+                          "AFtype": data["aftype"],
+                          "AFname": data["name"],
+                      })
+            afidlist.append(afid)
+        return afidlist
+
+    def add_addsecond(self, afid):
+        asidlist = []
+        asnamelist = []
+        addsecond = [
+            ["滨盛创业园", "潮锦创业园", "江拓创业园"],
+            ["创巢创业园", "下沙网", "浙江省海外留学人员创业园"],
+            ["科技创业中心"],
+            ["创意园区", "嘉得威创业园", "网络文学创业园"],
+            ["江虹国际创业园", "万恒创业园", "京安创业园"],
+            ["打铁关", "西兴", "龙翔桥", "江陵路"],
+            ["白洋", "三墩", "文新", "沈塘桥"],
+            ["新风", "市民中心", "南星桥", "复兴路"],
+        ]
+        for index, data in enumerate(afid):
+            for asname in addsecond[index]:
+
+                asid = str(uuid.uuid4())
+                add_model("AddressSecond",
+                          **{
+                              "ASid": asid,
+                              "AFid": data,
+                              "ASname": asname
+                          })
+                asidlist.append(asid)
+                asnamelist.append(asname)
+        return asidlist,asnamelist
+
+    def add_addabo(self, asidlist, asnamelist):
+        for index, i in enumerate(asidlist):
+            add_model("AddressAbo",
+                      **{
+                          "AAid": str(uuid.uuid4()),
+                          "ASid": i,
+                          "AAmessage": asnamelist[index] + "A区拐角机器",
+                          "AAimage": "图片地址",
+                      })
+
+
 if __name__ == "__main__":
     makedata = MakeData()
-    uid = makedata.setUid()
-    pid = makedata.set_pid()
-    oid = makedata.set_oid()
-    coid = makedata.setCOid()
-    LOid = makedata.set_LOid()
+    acid = makedata.setUid()
+    makedata.add_city(acid)
+    afid = makedata.add_addfirst(acid)
+    asid, asname = makedata.add_addsecond(afid)
+    makedata.add_addabo(asid, asname)
 
-    makedata.add_user(uid)
-    makedata.add_coupons(coid)
-    makedata.add_cardpackage(coid, uid)
-    makedata.add_product(pid)
-    makedata.add_cart(uid, pid)
-    makedata.add_location(LOid)
-    makedata.add_ordermain(oid, uid, LOid)
-    makedata.add_orderpart(oid, pid)
-    makedata.add_review(oid, pid, uid)
+
+
+    # uid = makedata.setUid()
+    # pid = makedata.set_pid()
+    # oid = makedata.set_oid()
+    # coid = makedata.setCOid()
+    # LOid = makedata.set_LOid()
+    #
+    # makedata.add_user(uid)
+    # makedata.add_coupons(coid)
+    # makedata.add_cardpackage(coid, uid)
+    # makedata.add_product(pid)
+    # makedata.add_cart(uid, pid)
+    # makedata.add_location(LOid)
+    # makedata.add_ordermain(oid, uid, LOid)
+    # makedata.add_orderpart(oid, pid)
+    # makedata.add_review(oid, pid, uid)

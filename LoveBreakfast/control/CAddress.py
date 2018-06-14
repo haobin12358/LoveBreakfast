@@ -100,7 +100,7 @@ class CAddress():
             return self.param_miss
         try:
             asid = get_str(args, "ASid")
-            list_addabo = get_model_return_list(self.sadd.get_addsecond_by_afid(asid))
+            list_addabo = get_model_return_list(self.sadd.get_addabo_by_asid(asid))
             return_data = import_status("messages_get_area_success", "response_ok")
             return_data["data"] = list_addabo
             return return_data
