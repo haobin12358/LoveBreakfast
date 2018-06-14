@@ -73,27 +73,31 @@ class CProduct():
             return import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
 
         pid_to_str = get_str(args, "Pid")
-        # 判断是否存在此pid
-        print type(pid_to_str)
-        all_product_id = self.sproduct.get_all_pid()
-        if all_product_id is not None:
-            print type(all_product_id[0])
-            if pid_to_str not in all_product_id:
-                return import_status("NO_THIS_PRODUCT", "response_error", "NO_THIS_PRODUCT")
 
-            # 返回商品详情
+        print(self.title.format("pid_to_str"))
+        print(pid_to_str)
+        print(self.title.format("pid_to_str"))
+        # 返回商品详情
+        try:
             proabo_of_controller = {}
             proabo_of_service = self.sproduct.get_pro_info_by_pid(pid_to_str)
+            if not proabo_of_service:
+                # 判断是否存在此pid
+                return import_status("NO_THIS_PRODUCT", "response_error", "NO_THIS_PRODUCT")
+
+            print("proabo_of_service")
+            print(proabo_of_service)
+            print("proabo_of_service")
             proabo_of_controller["Pname"] = proabo_of_service.PRname
             proabo_of_controller["Pprice"] = proabo_of_service.PRprice
             proabo_of_controller["Pimage"] = proabo_of_service.PRimage
             proabo_of_controller["Pinfo"] = proabo_of_service.PRinfo
             proabo_of_controller["Pnum"] = 0
-            from config.messages import get_product_info_success
-            return {
-                "status": 200,
-                "message": get_product_info_success,
-                "data": proabo_of_controller,
-            }
-        else:
-           return SYSTEM_ERROR
+            data = import_status("get_product_info_success", "OK")
+            data["data"] = proabo_of_controller
+            return data
+        except Exception as e:
+            print(self.title.format("error"))
+            print(e.message)
+            print(self.title.format("error"))
+            return SYSTEM_ERROR

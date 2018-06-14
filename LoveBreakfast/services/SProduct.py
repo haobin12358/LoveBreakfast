@@ -5,8 +5,7 @@ import os
 
 sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
 # 引用项目类
-from models.model import Products, Machinery
-from common.TransformToList import trans_params
+from models.model import Products
 from services.SBase import SBase, close_session
 
 
@@ -33,13 +32,6 @@ class SProduct(SBase):
         finally:
             self.session.close()
         return pro_abo
-    # 获取所有商品id
-
-    @close_session
-    @trans_params
-    def get_all_pid(self):
-        return self.session.query(Products.PRid).all()
-
 
     # 根据分类id获取全部商品信息
     # def get_pro_id_by_cid(self, cid):
@@ -53,17 +45,6 @@ class SProduct(SBase):
     #         self.session.close()
     #     return proid_list
 
-    #向数据库中插入数据，用于初始化数据
-    def add_product(self, product):
-        try:
-            self.session.add(product)
-            self.session.commit()
-        except Exception as e:
-            print(e.message)
-            self.session.rollback()
-        finally:
-            self.session.close()
-
     @close_session
     def get_pprice_by_pid(self, pid):
         return self.session.query(Products.PRprice).filter_by(PRid=pid).scalar()
@@ -71,7 +52,7 @@ class SProduct(SBase):
     @close_session
     def get_product_all_by_pid(self, pid):
         return self.session.query(Products.PRname, Products.PRsalesvolume, Products.PRscore,
-                                         Products.PRprice, Products.PRimage).filter_by(PRid=pid).first()
+                                  Products.PRprice, Products.PRimage).filter_by(PRid=pid).first()
 
     @close_session
     def get_all_pro_fro_carts(self, pid):
@@ -95,15 +76,7 @@ class SProduct(SBase):
     def get_product_score_by_prid(self, prid):
         return self.session.query(Products.PRscore).filter_by(PRid=prid).scalar()
 
+    @close_session
     def update_product_by_prid(self, prid, product):
-        try:
-            self.session.query(Products).filter_by(PRid=prid).update(product)
-            self.session.commit()
-            self.session.close()
-            return True
-        except Exception as e:
-            print(e.message)
-            self.session.rollback()
-            self.session.close()
-            return False
-
+        self.session.query(Products).filter_by(PRid=prid).update(product)
+        return True

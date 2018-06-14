@@ -37,3 +37,5 @@ get_product_info_success = "获取商品详情成功"
 
 get_review_success = "获取商品评论成功！"
 messages_get_area_success = "获取区域信息成功"
+
+error_no_city = "该城市尚未开通本业务"

@@ -25,3 +25,4 @@ error_pnum_illegal = 405602
 error_no_pid = 405603
 
 error_coupon_used = 405701
+error_no_city = 405801

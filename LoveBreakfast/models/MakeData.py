@@ -36,19 +36,6 @@ class MakeData():
             shop_model.Stel = "135880461%02d" % i
             self.shop.add_shop(shop_model)
 
-    def add_products(self, tshop_ids):
-        for i in range(info_count):
-            pro_model = model.Products()
-            pro_model.Pid = "100{0}".format(i)
-            pro_model.Pname = "test{0}".format(i)
-            pro_model.Pprice = 10
-            pro_model.Pstatus = "on_sale"
-            pro_model.Pimage = "http://www.baidu.com"
-            pro_model.Pinfo = "taste good"
-            pro_model.P_sales_volume = 100
-            pro_model.Pscore = 5
-            self.product.add_product(pro_model)
-
     def add_conpons(self, conid):
         for i in range(info_count):
             self.cou.add_coupons(**{
