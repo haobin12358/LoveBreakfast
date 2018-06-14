@@ -45,7 +45,6 @@ class Products(Base):
     PRinfo = Column(Text)  # 商品介绍
     PRsalesvolume = Column(Integer, nullable=False)  # 商品销量
     PRscore = Column(Float, nullable=True)  # 商品评分
-    AAid = Column(String(64))  # 站点详情id
 
 
 class Review(Base):
@@ -171,3 +170,14 @@ class AddressAbo(Base):
     AAmessage = Column(Text)
     AAimage = Column(Text)
     ASid = Column(String(64))
+
+
+# TODO 机器详情表 内部参数等接口文档下来还需要修改
+class Machinery(Base):
+    __tablename__ = "Machinery"
+    MAid = Column(String(64), primary_key=True)
+    AAid = Column(String(64))      # 机器地址
+    PRid = Column(String(64))      # 机器里有的商品
+    MAtime = Column(String(14))    # 机器里商品的有效时间
+    MAmax = Column(Integer)        # 机器的最大容量
+    MAallowance = Column(Integer)  # 机器目前余量

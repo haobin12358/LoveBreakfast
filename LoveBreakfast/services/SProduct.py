@@ -24,10 +24,11 @@ class SProduct():
     def get_all(self):
         pro_list_of_service = None
         try:
-            pro_list_of_service = self.session.query(model.Products.PRid, model.Products.PRname,
-                                                     model.Products.PRprice,model.Products.PRimage,
-                                                     model.Products.PRsalesvolume,model.Products.PRscore
-                                                     ).filter_by(PRstatus=1).all()
+            pro_list_of_service = self.session.query(
+                model.Products.PRid, model.Products.PRname,
+                model.Products.PRprice, model.Products.PRimage,
+                model.Products.PRsalesvolume, model.Products.PRscore
+            ).filter_by(PRstatus=1).all()
         except Exception as e:
             print e.message
         finally:

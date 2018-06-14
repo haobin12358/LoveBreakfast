@@ -4,7 +4,6 @@ import os
 
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
-from config.Logs import PRINT_API_NAME
 from config.status import response_system_error
 from config.status_code import error_wrong_apis
 from config.messages import error_messages_wrong_api
@@ -19,7 +18,9 @@ class AAddress(Resource):
         self.apis_wrong["messages"] = error_messages_wrong_api
 
     def get(self, address):
-        print(PRINT_API_NAME.format(address))
+        print("=======================api===================")
+        print("接口名称是{0}，接口方法是get".format(address))
+        print("=======================api===================")
 
         control_cadd = CAddress()
         apis = {
