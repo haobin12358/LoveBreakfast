@@ -20,7 +20,8 @@ class ALocations(Resource):
         apis = {
             "get_all_location":"control_location.get_all_location()",
             "get_lno": "control_location.get_lno()",
-            "get_lline": "control_location.get_lline()"
+            "get_lline": "control_location.get_lline()",
+            "get_city_location": "control_location.get_city_location()"
         }
 
         if locations in apis:
