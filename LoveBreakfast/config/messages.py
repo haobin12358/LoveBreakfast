@@ -1,6 +1,21 @@
 # *- coding:utf8 *-
 SUCCESS_MESSAGE_ADD_REVIEW = "创建评论成功"
 ERROR_MESSAGE_WRONG_OMSTATUS = "该状态不可评论"
+SUCCESS_MESSAGE_REGISTER_OK = "注册成功"
+SUCCESS_MESSAGE_LOGIN = "登录成功"
+SUCCESS_MESSAGE_UPDATE_INFO = "更新成功"
+SUCCESS_MESSAGE_UPDATE_PASSWORD = "更新密码成功"
+SUCCESS_GET_MESSAGE = "获取信息成功"
+
+ERROR_MESSAGE_REPEAT_TELPHONE = "已注册"
+ERROR_MESSAGE_WRONG_ICCODE = "验证码错误"
+ERROR_MESSAGE_NONE_ICCODE = "请获取验证码"
+ERROR_MESSAGE_WRONG_PASSWORD = "密码错误"
+ERROR_MESSAGE_NONE_TELPHONE = "该手机未注册"
+ERROR_MESSAGE_NONE_USER = "未找到该用户"
+ERROR_MESSAGE_GET_CODE_FAST = "获取验证码频繁"
+
+
 error_messages_wrong_api = "The api is error !"
 error_messages_param_miss = "Some params maybe miss !"
 error_system_error = "System is error !"

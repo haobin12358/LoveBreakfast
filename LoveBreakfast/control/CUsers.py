@@ -5,129 +5,134 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
 import json
 import uuid
-from config.status import OK
-
+from config.response import SYSTEM_ERROR, PARAMS_MISS
+from common.import_status import import_status
 
 class CUsers():
     def __init__(self):
-        from config.status import response_error
-        from config.status_code import error_param_miss
-        from config.messages import error_messages_param_miss
-        self.param_miss = {}
-        self.param_miss["status"] = response_error
-        self.param_miss["status_code"] = error_param_miss
-        self.param_miss["messages"] = error_messages_param_miss
-
-        from config.status import response_system_error
-        from config.messages import error_system_error
-        self.system_error = {}
-        self.system_error["status"] = response_system_error
-        self.system_error["messages"] = error_system_error
+        from services.SUsers import SUsers
+        self.susers = SUsers()
+        self.title = '============{0}============'
 
     def register(self):
         data = request.data
-        print(data)
         data = json.loads(data)
+        print(self.title.format("data"))
+        print(data)
+        print(self.title.format("data"))
 
-        if "Utel" not in data or "Upwd" not in data or "code" not in data:
-            return self.param_miss
+        if "Utel" not in data or "Upwd" not in data or "UScode" not in data:
+            return PARAMS_MISS
 
-        from services.SUsers import SUsers
-        susers = SUsers()
-        list_utel = susers.get_all_user_tel()
-
-        if list_utel == False:
-            return self.system_error
+        list_utel = self.susers.get_user_by_utel(data["Utel"])
+        print(self.title.format("list_utel"))
+        print(list_utel)
+        print(self.title.format("list_utel"))
+        if not list_utel:
+            return SYSTEM_ERROR
 
         if data["Utel"] in list_utel:
-            from config.status import response_system_error
-            from config.status_code import error_repeat_tel
-            from config.messages import messages_repeat_tel
-            repeated_tel = {}
-            repeated_tel["status"] = response_system_error
-            repeated_tel["status_code"] = error_repeat_tel
-            repeated_tel["messages"] = messages_repeat_tel
-            return repeated_tel
+            return import_status("ERROR_MESSAGE_REPEAT_TELPHONE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_REPEAT_TELPHONE")
+
+        UScode_dict = self.susers.get_code_by_utel(data["Utel"])
+        print(self.title.format("UScode"))
+        print(UScode_dict)
+        print(self.title.format("UScode"))
+        if not UScode_dict:
+            return import_status("ERROR_MESSAGE_NONE_ICCODE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_NONE_ICCODE")
+        UScode = UScode_dict.ICcode
+        if UScode != data["UScode"]:
+            return import_status("ERROR_MESSAGE_WRONG_ICCODE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_WRONG_ICCODE")
 
         if "Uinvate" in data:
             Uinvate = data["Uinvate"]
-            # 创建优惠券
-        # code_in_db = susers.get_code_by_utel(data["Utel"])
-        # print code_in_db.ICcode
-        # if code_in_db.ICcode != data["code"]:
-        #     return {
-        #         "status":405,
-        #         "status_code":405303,
-        #         "messages":"请输入正确的验证码"
-        #     }
-        is_register = susers.login_users(data["Utel"], data["Upwd"])
-        if is_register:
-            from config.messages import messages_regist_ok
-            register_ok = {}
-            register_ok["status"] = OK
-            register_ok["messages"] = messages_regist_ok
-            return register_ok
-        else:
-            return self.system_error
+            # TODO 创建优惠券
+
+        USinvatecode = self.make_invate_code()
+        is_register = self.susers.login_users(data["Utel"], data["Upwd"], USinvatecode)
+        print(self.title.format("is_register"))
+        print(is_register)
+        print(self.title.format("is_register"))
+        if not is_register:
+            return SYSTEM_ERROR
+
+        back_response = import_status("SUCCESS_MESSAGE_REGISTER_OK", "OK")
+        return back_response
+
+    def make_invate_code(self):
+        USinvate = self.susers.get_all_invate_code()
+        while True:
+            invate_code = self.make_random_code()
+            if invate_code not in USinvate:
+                break
+        return invate_code
+
+    def make_random_code(self):
+        import random
+        random_code = ""
+        while len(random_code) < 2:
+            a = random.randint(97, 122)
+            a = chr(a)
+            random_code = random_code + a
+        while len(random_code) < 6:
+            a = random.randint(0, 9)
+            random_code = random_code + str(a)
+        return random_code
 
     def login(self):
         data = request.data
-        print(data)
         data = json.loads(data)
+        print(self.title.format("data"))
+        print(data)
+        print(self.title.format("data"))
 
         if "Utel" not in data or "Upwd" not in data:
-            return self.param_miss
+            return PARAMS_MISS
 
         Utel = data["Utel"]
-        from services.SUsers import SUsers
-        susers = SUsers()
-        list_utel = susers.get_all_user_tel()
-
-        if list_utel == False:
-            return self.system_error
+        list_utel = self.susers.get_user_by_utel(Utel)
+        print(self.title.format("list_utel"))
+        print(list_utel)
+        print(self.title.format("list_utel"))
+        if not list_utel:
+            return SYSTEM_ERROR
 
         if Utel not in list_utel:
-            from config.status import response_error
-            from config.status_code import error_no_utel
-            from config.messages import messages_no_user
-            no_utel = {}
-            no_utel["status"] = response_error
-            no_utel["status_code"] = error_no_utel
-            no_utel["messages"] = messages_no_user
-            return no_utel
+            return import_status("ERROR_MESSAGE_NONE_TELPHONE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_NONE_TELPHONE")
 
-        upwd = susers.get_upwd_by_utel(Utel)
+        upwd = self.susers.get_upwd_by_utel(Utel)
         if upwd != data["Upwd"]:
-            from config.status import response_error
-            from config.status_code import error_wrong_pwd
-            from config.messages import messages_wrong_pwd
-            wrong_pwd = {}
-            wrong_pwd["status"] = response_error
-            wrong_pwd["status_code"] = error_wrong_pwd
-            wrong_pwd["messages"] = messages_wrong_pwd
-            return wrong_pwd
+            return import_status("ERROR_MESSAGE_WRONG_PASSWORD", "LOVEBREAKFAST_ERROR", "ERROR_CODE_WRONG_PASSWORD")
 
-        Uid = susers.get_uid_by_utel(Utel)
+        Uid = self.susers.get_uid_by_utel(Utel)
 
-        login_success = {}
-        from config.messages import messages_login_ok
-        login_success["status"] = OK
-        login_success["messages"] = messages_login_ok
-        login_success["token"] = Uid
-
-        return login_success
+        back_response = import_status("SUCCESS_MESSAGE_LOGIN", "OK")
+        back_response["data"]["token"] = Uid
+        return back_response
 
     def update_info(self):
         args = request.args.to_dict()
+        print(self.title.format("args"))
+        print(args)
+        print(self.title.format("args"))
         if "token" not in args:
-            return self.param_miss
+            return PARAMS_MISS
         Uid = args["token"]
+        is_user = self.susers.get_user_by_usid(Uid)
+        print(self.title.format("is_user"))
+        print(is_user)
+        print(self.title.format("is_user"))
+        if not is_user:
+            return import_status("ERROR_MESSAGE_NONE_USER", "LOVEBREAKFAST_ERROR", "ERROR_CODE_NONE_USER")
 
         data = request.data
         data = json.loads(data)
+        print(self.title.format("data"))
+        print(data)
+        print(self.title.format("data"))
 
         if "Uname" not in data and "Usex" not in data:
-            return self.param_miss
+            return PARAMS_MISS
 
         users = {}
         if "Uname" in data:
@@ -141,100 +146,104 @@ class CUsers():
                 Usex = 102
             users["USsex"] = Usex
 
-        from services.SUsers import SUsers
-        susers = SUsers()
-        update_info = susers.update_users_by_uid(Uid, users)
-
+        update_info = self.susers.update_users_by_uid(Uid, users)
+        print(self.title.format("update_info"))
+        print(update_info)
+        print(self.title.format("update_info"))
         if not update_info:
-            return self.system_error
+            return SYSTEM_ERROR
 
-        response_of_update_users = {}
-        from config.messages import messages_update_personal_ok
-        response_of_update_users["status"] = OK
-        response_of_update_users["messages"] = messages_update_personal_ok
-
-        return response_of_update_users
+        back_response = import_status("SUCCESS_MESSAGE_UPDATE_INFO", "OK")
+        return back_response
 
     def update_pwd(self):
         args = request.args.to_dict()
+        print(self.title.format("args"))
+        print(args)
+        print(self.title.format("args"))
         if "token" not in args:
-            return self.param_miss
+            return PARAMS_MISS
         Uid = args["token"]
+        is_user = self.susers.get_user_by_usid(Uid)
+        print(self.title.format("is_user"))
+        print(is_user)
+        print(self.title.format("is_user"))
+        if not is_user:
+            return import_status("ERROR_MESSAGE_NONE_USER", "LOVEBREAKFAST_ERROR", "ERROR_CODE_NONE_USER")
 
         data = request.data
         data = json.loads(data)
+        print(self.title.format("data"))
+        print(data)
+        print(self.title.format("data"))
 
         if "Upwd" not in data:
-            return self.param_miss
+            return PARAMS_MISS
 
         users = {}
         Upwd = data["Upwd"]
         users["USpassword"] = Upwd
 
-        from services.SUsers import SUsers
-        susers = SUsers()
-        update_info = susers.update_users_by_uid(Uid, users)
-
+        update_info = self.susers.update_users_by_uid(Uid, users)
+        print(self.title.format("update_info"))
+        print(update_info)
+        print(self.title.format("update_info"))
         if not update_info:
-            return self.system_error
+            return SYSTEM_ERROR
 
-        response_of_update_users = {}
-        from config.messages import messages_update_pwd_ok
-        response_of_update_users["status"] = OK
-        response_of_update_users["messages"] = messages_update_pwd_ok
-
-        return response_of_update_users
+        back_response = import_status("SUCCESS_MESSAGE_UPDATE_PASSWORD", "OK")
+        return back_response
 
     def all_info(self):
         args = request.args.to_dict()
+        print(self.title.format("args"))
+        print(args)
+        print(self.title.format("args"))
         if "token" not in args:
-            return self.param_miss
+            return PARAMS_MISS
         Uid = args["token"]
 
-        from services.SUsers import SUsers
-        susers = SUsers()
-        users_info = susers.get_all_users_info(Uid)
-
+        users_info = self.susers.get_all_users_info(Uid)
+        print(self.title.format("users_info"))
+        print(users_info)
+        print(self.title.format("users_info"))
         if not users_info:
-            return self.system_error
+            return SYSTEM_ERROR
 
-        response_user_info = {}
+        response_data = {}
         Utel = users_info.UStelphone
-        response_user_info["Utel"] = Utel
+        response_data["Utel"] = Utel
         if users_info.USname not in ["", None]:
             Uname = users_info.USname
-            response_user_info["Uname"] = Uname
+            response_data["Uname"] = Uname
         else:
-            response_user_info["Uname"] = None
+            response_data["Uname"] = None
         if users_info.USsex not in["", None]:
             Usex = users_info.USsex
             if Usex == 101:
-                response_user_info["Usex"] = "男"
+                response_data["Usex"] = "男"
             elif Usex == 102:
-                response_user_info["Usex"] = "女"
+                response_data["Usex"] = "女"
             else:
-                response_user_info["Usex"] = "未知性别"
+                response_data["Usex"] = "未知性别"
         else:
-            response_user_info["Usex"] = None
-        response_user_info["Ucoin"] = users_info.UScoin
-        response_user_info["Uinvate"] = users_info.USinvatecode
+            response_data["Usex"] = None
+        response_data["Ucoin"] = users_info.UScoin
+        response_data["Uinvate"] = users_info.USinvatecode
 
-        response_of_get_all = {}
-        response_of_get_all["status"] = OK
-        from config.messages import messages_get_item_ok
-        response_of_get_all["messages"] = messages_get_item_ok
-        response_of_get_all["data"] = response_user_info
-        return response_of_get_all
+        back_response = import_status("SUCCESS_GET_MESSAGE", "OK")
+        back_response["data"] = response_data
+        return back_response
 
 
     def get_inforcode(self):
         data = request.data
         data = json.loads(data)
-        print("=====================data=================")
+        print(self.title.format("data"))
         print(data)
-        print("=====================data=================")
+        print(self.title.format("data"))
         if "Utel" not in data:
-            return self.param_miss
+            return PARAMS_MISS
         Utel = data["Utel"]
         # 拼接验证码字符串（6位）
         code = ""
@@ -247,31 +256,31 @@ class CUsers():
         import datetime
         time_time = datetime.datetime.now()
         time_str = datetime.datetime.strftime(time_time, "%Y%m%d%H%M%S")
-        from services.SUsers import SUsers
-        susers = SUsers()
+
+        utel_list = self.susers.get_user_by_utel(Utel)
+        print(self.title.format("utel_list"))
+        print(utel_list)
+        print(self.title.format("utel_list"))
+        if not utel_list:
+            return import_status("ERROR_MESSAGE_REPEAT_TELPHONE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_REPEAT_TELPHONE")
         # 根据电话号码获取时间
-        utel_list = susers.get_all_user_tel()
-        if Utel in utel_list:
-            return {
-                "status":405,
-                "status_code":405305,
-                "messages":"请直接登录"
-            }
-        time_up = susers.get_uptime_by_utel(Utel)
+        time_up = self.susers.get_uptime_by_utel(Utel)
+        print(self.title.format("time_up"))
         print time_up
+        print(self.title.format("time_up"))
         if time_up:
             time_up_time = datetime.datetime.strptime(time_up.ICtime, "%Y%m%d%H%M%S")
             delta = time_time - time_up_time
             if delta.seconds < 60:
-                return {
-                    "status":405,
-                    "status_code":405304,
-                    "messages":"发送验证码过于频繁"
-                }
+                return import_status("ERROR_MESSAGE_GET_CODE_FAST", "LOVEBREAKFAST_ERROR", "ERROR_CODE_GET_CODE_FAST")
 
-        new_inforcode = susers.add_inforcode(Utel, code, time_str)
+        new_inforcode = self.susers.add_inforcode(Utel, code, time_str)
+        print(self.title.format("new_inforcode"))
+        print(new_inforcode)
+        print(self.title.format("new_inforcode"))
+
         if not new_inforcode:
-            return self.system_error
+            return SYSTEM_ERROR
         from config.Inforcode import SignName, TemplateCode
         from common.Inforsend import send_sms
         params = '{\"code\":\"' + code + '\",\"product\":\"etech\"}'
@@ -281,6 +290,9 @@ class CUsers():
         response_send_message = send_sms(__business_id, Utel, SignName, TemplateCode, params)
 
         response_send_message = json.loads(response_send_message)
+        print(self.title.format("response_send_message"))
+        print(response_send_message)
+        print(self.title.format("response_send_message"))
 
         if response_send_message["Code"] == "OK":
             status = 200
