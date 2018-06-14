@@ -1,5 +1,6 @@
 # *- coding:utf8 *-
 SUCCESS_MESSAGE_ADD_REVIEW = "创建评论成功"
+ERROR_MESSAGE_WRONG_OMSTATUS = "该状态不可评论"
 error_messages_wrong_api = "The api is error !"
 error_messages_param_miss = "Some params maybe miss !"
 error_system_error = "System is error !"

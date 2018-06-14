@@ -106,3 +106,4 @@ class SProduct(SBase):
             self.session.rollback()
             self.session.close()
             return False
+
