@@ -158,3 +158,4 @@ class SProduct():
             self.session.rollback()
             self.session.close()
             return False
+

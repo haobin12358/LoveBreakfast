@@ -1,4 +1,6 @@
 # *- coding:utf8 *-
+ERROR_CODE_WRONG_OMSTATUS = 405900
+
 error_wrong_apis = 405100
 error_param_miss = 405101
 URL_PARAM_WRONG = 405101

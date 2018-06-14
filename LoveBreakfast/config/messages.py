@@ -1,6 +1,7 @@
 # *- coding:utf8 *-
 SUCCESS_MESSAGE_ADD_REVIEW = "创建评论成功"
 
+ERROR_MESSAGE_WRONG_OMSTATUS = "该状态不可评论"
 
 
 
