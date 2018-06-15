@@ -92,5 +92,16 @@ class SOrders(SBase):
     def get_omstatus_by_omid(self, omid):
         return self.session.query(model.Ordermain.OMstatus).filter_by(OMid=omid).scalar()
 
+    @close_session
+    def get_omprice_by_omid(self, omid):
+        return self.session.query(model.Ordermain.OMprice).filter_by(OMid=omid).scalar()
+
+    @close_session
+    def update_omstatus_by_omid(self, omid, order_main):
+        self.session.query(model.Ordermain).filter_by(OMid=omid).update(order_main)
+        self.session.commit()
+        self.session.close()
+        return True
+
 if __name__ == "__main__":
     sorder = SOrders()
