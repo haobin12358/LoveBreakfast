@@ -11,6 +11,7 @@ from apis.AOrders import AOrders
 from apis.ALocations import ALocations
 from apis.ACoupons import ACoupons
 from apis.AAddress import AAddress
+from apis.AOther import AOther
 
 bk = Flask(__name__)
 api = flask_restful.Api(bk)
@@ -25,6 +26,7 @@ api.add_resource(AOrders, "/love/breakfast/orders/<string:orders>")
 api.add_resource(ALocations, "/love/breakfast/locations/<string:locations>")
 api.add_resource(ACoupons, "/love/breakfast/cardpkg/<string:card>")
 api.add_resource(AAddress, "/love/breakfast/address/<string:address>")
+api.add_resource(AOther, "/love/breakfast/other/<string:other>")
 
 '''
 if __name__ == '__main__':
