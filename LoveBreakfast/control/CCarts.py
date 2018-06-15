@@ -6,73 +6,68 @@ from flask import request
 import json
 import uuid
 from config.status import response_ok as ok
-from common.get_model_return_list import get_model_return_list, get_model_return_dict
 from common.lovebreakfast_error import dberror
 from common.TransformToList import add_model
+from config.response import SYSTEM_ERROR, PARAMS_MISS
+from common.import_status import import_status
 
 class CCarts():
     def __init__(self):
-        from config.status import response_error
-        from config.status_code import error_param_miss
-        from config.messages import error_messages_param_miss
-        self.param_miss = {}
-        self.param_miss["status"] = response_error
-        self.param_miss["status_code"] = error_param_miss
-        self.param_miss["messages"] = error_messages_param_miss
-
-        from config.status import response_system_error
-        from config.messages import error_system_error
-        self.system_error = {}
-        self.system_error["status"] = response_system_error
-        self.system_error["messages"] = error_system_error
-
         from services.SCarts import SCarts
         self.scart = SCarts()
         from services.SProduct import SProduct
         self.spro = SProduct()
+        from services.SUsers import SUsers
+        self.susers = SUsers()
+        self.title = '============{0}============'
 
     def get_carts_by_uid(self):
         args = request.args.to_dict()
+        print(self.title.format("args"))
+        print(args)
+        print(self.title.format("args"))
         if "token" not in args:
-            return self.param_miss
+            return PARAMS_MISS
 
-        #todo uid 验证未实现
         uid = args.get("token")
-        res_get_all = {}
+        is_user = self.susers.get_user_by_usid(uid)
+        print(self.title.format("is_user"))
+        print(is_user)
+        print(self.title.format("is_user"))
+        if not is_user:
+            return import_status("ERROR_MESSAGE_NONE_USER", "LOVEBREAKFAST_ERROR", "ERROR_CODE_NONE_USER")
 
         try:
             cart_info_list = []
             cart_list = self.scart.get_carts_by_Uid(uid)
-
-            print("====cartlist====")
+            print(self.title.format("cartlist"))
             print(cart_list)
-            print("====cartlist====")
+            print(self.title.format("cartlist"))
 
             for cart in cart_list:
                 if cart.CAstatus != 1:
                     continue
                 cart_service_info = (self.spro.get_all_pro_fro_carts(cart.PRid))
 
-                print("=======cart_service_info====")
+                print(self.title.format("cart_service_info"))
                 print(cart_service_info)
-                print("=======cart_service_info====")
+                print(self.title.format("cart_service_info"))
                 if cart_service_info:
                     cart_service_info = cart_service_info[0]
                     cart_info = {}
-                    cart_info["Pid"] = cart_service_info.PRid
-                    cart_info["Pimage"] = cart_service_info.PRimage
-                    cart_info["Pname"] = cart_service_info.PRname
-                    cart_info["Pstatus"] = cart_service_info.PRstatus
+                    cart_info["PRid"] = cart_service_info.PRid
+                    cart_info["PRimage"] = cart_service_info.PRimage
+                    cart_info["PRname"] = cart_service_info.PRname
+                    cart_info["PRstatus"] = cart_service_info.PRstatus
                     cart_info["P_sales_volume"] = cart_service_info.PRsalesvolume
                     cart_info["Pprice"] = cart_service_info.PRprice
                     cart_info["Pscore"] = cart_service_info.PRscore
                     cart_info["Pnum"] = cart.CAnumber
                     cart_info_list.append(cart_info)
-            res_get_all["data"] = cart_info_list
-            res_get_all["status"] = ok
-            from config.messages import messages_get_cart_success as msg
-            res_get_all["message"] = msg
-            return res_get_all
+
+            back_response = import_status("SUCCESS_GET_MESSAGE", "OK")
+            back_response["data"] = cart_info_list
+            return back_response
 
         except Exception as e:
             print(e.message)
