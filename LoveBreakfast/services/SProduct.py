@@ -22,16 +22,10 @@ class SProduct(SBase):
             ).filter_by(PRstatus=1).all()
 
     # 根据商品id获取商品详情
+    @close_session
     def get_pro_info_by_pid(self, pid):
-        pro_abo = None
-        try:
-            pro_abo = self.session.query(Products.PRname, Products.PRprice,
-                                         Products.PRimage, Products.PRinfo).filter_by(PRid=pid).first()
-        except Exception as e:
-            print e.message
-        finally:
-            self.session.close()
-        return pro_abo
+        return self.session.query(Products.PRname, Products.PRprice,
+                                  Products.PRimage, Products.PRinfo).filter_by(PRid=pid).first()
 
     # 根据分类id获取全部商品信息
     # def get_pro_id_by_cid(self, cid):

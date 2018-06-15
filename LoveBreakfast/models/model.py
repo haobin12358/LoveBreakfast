@@ -79,16 +79,19 @@ class Ordermain(Base):
     __tablename__ = "OrderMain"
     OMid = Column(String(64), primary_key=True)         # 主订单id
     OMtime = Column(String(14), nullable=False)         # 下单时间
-    OMmealTimeMin = Column(String(14), nullable=False)  # 取餐时间段-起始时间
-    OMmealTimeMax = Column(String(14), nullable=False)  # 取餐时间段-最晚时间
+    # OMmealTimeMin = Column(String(14), nullable=False)  # 取餐时间段-起始时间
+    # OMmealTimeMax = Column(String(14), nullable=False)  # 取餐时间段-最晚时间
+    OMdate = Column(String(14))                         # 取餐日期
     OMstatus = Column(Integer, nullable=False)          # 订单状态 具体状态如下：
     # {0 : 已取消, 7 : 未支付, 14 : 已支付, 21 : 已接单, 28 : 已配送, 35 : 已装箱, 42 : 已完成,  49 : 已评价}
     OMtotal = Column(Float)                             # 订单总额
     Uid = Column(String(64))                            # 用户id
-    LOid = Column(String(64))                           # 站点id
+    # LOid = Column(String(64))                           # 站点id
     AAid = Column(String(64))                           # 机器详情id
-    OMimage = Column(String(64))                        # 订单二维码
-    OMabo = Column(Text)  # 订单备注
+    # OMimage = Column(String(64))                        # 订单二维码
+
+    OMcode = Column(Integer)
+    OMabo = Column(Text)                                # 订单备注
 
 
 class Orderpart(Base):
