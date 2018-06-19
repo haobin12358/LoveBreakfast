@@ -60,7 +60,7 @@ class SProduct(SBase):
             Products.PRname, Products.PRstatus,
             Products.PRsalesvolume, Products.PRprice,
             Products.PRscore
-        ).filter_by(PRid=pid).all()
+        ).filter_by(PRid=pid).first()
 
     @close_session
     def get_product_volume_by_prid(self, prid):
