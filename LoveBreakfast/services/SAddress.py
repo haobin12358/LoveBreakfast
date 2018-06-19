@@ -30,3 +30,7 @@ class SAddress(SBase):
     @close_session
     def get_citys(self):
         return self.session.query(AddCity.ACname, AddCity.ACid).all()
+
+    @close_session
+    def get_addabo_by_addid(self, aaid):
+        return self.session.query(AddressAbo.AAid, AddressAbo.AAmessage).filter(AddressAbo.AAid == aaid).first()

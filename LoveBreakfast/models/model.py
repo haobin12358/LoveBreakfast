@@ -85,7 +85,7 @@ class Ordermain(Base):
     OMstatus = Column(Integer, nullable=False)          # 订单状态 具体状态如下：
     # {0 : 已取消, 7 : 未支付, 14 : 已支付, 21 : 已接单, 28 : 已配送, 35 : 已装箱, 42 : 已完成,  49 : 已评价}
     OMtotal = Column(Float)                             # 订单总额
-    Uid = Column(String(64))                            # 用户id
+    USid = Column(String(64))                            # 用户id
     # LOid = Column(String(64))                           # 站点id
     AAid = Column(String(64))                           # 机器详情id
     # OMimage = Column(String(64))                        # 订单二维码
@@ -100,6 +100,7 @@ class Orderpart(Base):
     OMid = Column(String(64), nullable=False)    # 主订单id
     PRid = Column(String(64), nullable=False)     # 商品id
     PRnum = Column(Integer, nullable=False)       # 商品数量
+
 
 class Cart(Base):
     __tablename__ = "Cart"

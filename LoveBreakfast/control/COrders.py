@@ -9,6 +9,7 @@ import datetime
 from common import timeformate
 from common.import_status import import_status
 from common.get_model_return_list import get_model_return_list, get_model_return_dict
+from common.get_str import get_str
 
 class COrders():
 
@@ -20,6 +21,8 @@ class COrders():
         self.sproduct = SProduct()
         from services.SOrders import SOrders
         self.sorders = SOrders()
+        from services.SAddress import SAddress
+        self.sadd = SAddress()
         global OMstatus_list
         OMstatus_list = ("已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价")
 
@@ -42,31 +45,25 @@ class COrders():
         data = []
         if order_list:
             for row in order_list:
+                status = row.get("OMstatus")
                 row["OMtime"] = timeformate.get_web_time_str(str(row.get("OMtime")))
-                if row.get("OMstatus") > 21 or row.get("OMstatus") == 0 or self.checktime():
+                if status > 21 or status == 0 or self.checktime():
                     row["is_index"] = 702
                 else:
                     row["is_index"] = 701
-                row["OMstatus"] = self.get_status_name_by_status(row.get("OMstatus"))
+                row["OMstatus"] = self.get_status_name_by_status(status)
                 row["Order_items"] = []
                 order_items = get_model_return_list(self.sorders.get_order_item_by_oid(row.OMid))
                 print(self.title.format("order_items"))
                 print(order_items)
                 print(self.title.format("order_items"))
                 for raw in order_items:
-                    order_item = {}
-                    order_item["Pnum"] = raw.OPamount
-                    Pid = raw.Pid
-                    product = self.sproduct.get_product_all_by_pid(Pid)
+                    Pid = raw.get("PRid")
+                    product = get_model_return_dict(self.sproduct.get_product_all_by_pid(Pid))
                     print(self.title.format("product"))
                     print(product)
                     print(self.title.format("product"))
-                    order_item["Pname"] = product.PRname
-                    order_item["Psalenum"] = product.PRsalesvolume
-                    order_item["Plevel"] = product.PRscore
-                    order_item["Pprice"] = product.PRprice
-                    order_item["Pimage"] = product.PRimage
-                    row["Order_items"].append(order_item)
+                    row["Order_items"].append(product)
                 data.append(row)
 
         response_make_main_order = import_status("messages_get_item_ok", "OK")
@@ -141,12 +138,10 @@ class COrders():
 
         if "token" not in args:
             return PARAMS_MISS
-
-        if "Otime" not in data or "Omintime" not in data or "Omaxtime" not in data:
-            return PARAMS_MISS
-
-        if "Order_items" not in data:
-            return PARAMS_MISS
+        params_list = ["Order_items", "OMtime", "OMdate", "OMtotal", "AAid"]
+        for params in params_list:
+            if params not in data:
+                return PARAMS_MISS
 
         print(self.title.format("args"))
         print(args)
@@ -155,68 +150,39 @@ class COrders():
         print(data)
         print(self.title.format("data"))
         Uid = args["token"]
-        OMtime = timeformate.get_db_time_str(data["Otime"])
-        OMmealTimeMin = timeformate.get_db_time_str(data["Omintime"])
-        OMmealTimeMax = timeformate.get_db_time_str(data["Omaxtime"])
-        OMstatus = 7
-
-        if "Lname" not in data or "Lno" not in data:
-            from config.status import response_error
-            from config.status_code import error_no_location
-            from config.messages import messages_no_location
-            no_location = {}
-            no_location["status"] = response_error
-            no_location["status_code"] = error_no_location
-            no_location["messages"] = messages_no_location
-            return no_location
-
-        LOname = data["Lname"]
-        LOexitNumber = data["Lno"]
-        LOboxCode = 1  # 后面从其他地方获取 && 智能推荐
-
-        LOid = self.sorders.get_loid_by_loname_loexitNumber_loboxCode(LOname, LOexitNumber, LOboxCode)
-        if not LOid:
+        OMtime = timeformate.get_db_time_str(data["OMtime"])
+        OMdate = timeformate.get_db_time_str(data["OMdate"])
+        addabo = self.sadd.get_addabo_by_addid(get_str(data, "AAid"))
+        OMcode = self.make_code()
+        import uuid
+        OMid = str(uuid.uuid1())
+        if not addabo:
             return SYSTEM_ERROR
-        OMabo = None
-        if "Oabo" in data:
-            OMabo = data["Oabo"]
+        self.sorders.add_model("Ordermain", **{
+            "OMid": OMid,
+            "OMtime": OMtime,
+            "OMdate": OMdate,
+            "OMstatus": 7,
+            "USid": Uid,
+            "AAid": get_str(data, "AAid"),
+            "OMcode": OMcode,
+            "OMabo": get_str(data, "OMabo"),
+            "OMtotal": data.get("OMtotal")
 
-        add_main_order = self.sorders.add_main_order(OMtime, OMmealTimeMin, OMmealTimeMax, OMstatus, None, Uid, LOid, OMabo)
-        if not add_main_order:
-            return SYSTEM_ERROR
+        })
 
         order_item = data["Order_items"]
-        add_order_items_by_uid = self.add_order_items(order_item, add_main_order)
+        for op in order_item:
+            self.sorders.add_model("Orderpart", **{
+                "OPid": str(uuid.uuid1()),
+                "OMid": OMid,
+                "PRid": op.get("PRid"),
+                "PRnum": op.get("PRnum")
+            })
         response_make_main_order = import_status("messages_add_main_order_success", "OK")
         response_make_main_order["data"] = {}
-        response_make_main_order["data"]["Oid"] = add_main_order
+        response_make_main_order["data"]["Oid"] = OMid
         return response_make_main_order
-
-    def add_order_items(self, order_item_list, oid):
-        order_price = 0
-        for row in order_item_list:
-            Pid = row["Pid"]
-            OPamount = row["Pnum"]
-            add_order_item = self.sorders.add_order_item(oid, Pid, OPamount)
-            if not add_order_item:
-                return SYSTEM_ERROR
-            from services.SProduct import SProduct
-            sproduct = SProduct()
-            order_item_price = sproduct.get_pprice_by_pid(Pid)
-            if not order_item_price:
-                return SYSTEM_ERROR
-            order_price = order_price + order_item_price
-
-        from services.SOrders import SOrders
-        self.sorders = SOrders()
-        update_main_order = {}
-        update_main_order["OMtotal"] = order_price
-        response_update_main_order = self.sorders.update_price_by_oid(oid, update_main_order)
-
-        if not response_update_main_order:
-            return SYSTEM_ERROR
-
-        return True
 
     def update_order_info(self):
         pass
@@ -337,6 +303,16 @@ class COrders():
         if 6 < timenow.hour < 22:
             return False
         return True
+
+    def make_code(self):
+        import random
+        while True:
+            randomcode = random.randint(100000, 999999)
+            order = self.sorders.get_order_main_by_code(randomcode)
+            if not order:
+                return randomcode
+
+
 if __name__ == "__main__":
     sorder = COrders()
     print sorder.get_status_by_status_name("未支付")
