@@ -43,9 +43,9 @@ class SOrders(SBase):
 
     @close_session
     def get_order_abo_by_oid(self, oid):
-        return self.session.query(Ordermain.OMtime, Ordermain.OMstatus, Ordermain.OMtotal,
-                                  Ordermain.LOid, Ordermain.OMabo, Ordermain.OMimage,
-                                  Ordermain.OMmealTimeMax, Ordermain.OMmealTimeMin) \
+        return self.session.query(Ordermain.OMid, Ordermain.OMtime, Ordermain.OMtotal,
+                                  Ordermain.OMdate, Ordermain.USid, Ordermain.AAid,
+                                  Ordermain.OMcode, Ordermain.OMabo, Ordermain.OMstatus) \
             .filter_by(OMid=oid).first()
 
     @close_session

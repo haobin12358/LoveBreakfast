@@ -37,14 +37,14 @@ class Locations(Base):
 
 class Products(Base):
     __tablename__ = "Products"
-    PRid = Column(String(64), primary_key=True)  # 商品id
-    PRname = Column(String(64), nullable=False)  # 商品名称
-    PRprice = Column(Float, nullable=False)  # 商品价格
-    PRstatus = Column(Integer, default=1)  # 商品状态 {1:在售状态 2:下架状态}
-    PRimage = Column(String(64), nullable=False)  # 商品图片存放地址
-    PRinfo = Column(Text)  # 商品介绍
+    PRid = Column(String(64), primary_key=True)      # 商品id
+    PRname = Column(String(64), nullable=False)      # 商品名称
+    PRprice = Column(Float, nullable=False)          # 商品价格
+    PRstatus = Column(Integer, default=1)            # 商品状态 {1:在售状态 2:下架状态}
+    PRimage = Column(String(64), nullable=False)     # 商品图片存放地址
+    PRinfo = Column(Text)                            # 商品介绍
     PRsalesvolume = Column(Integer, nullable=False)  # 商品销量
-    PRscore = Column(Float, nullable=True)  # 商品评分
+    PRscore = Column(Float, nullable=True)           # 商品评分
 
 
 class Review(Base):
@@ -79,19 +79,18 @@ class Ordermain(Base):
     __tablename__ = "OrderMain"
     OMid = Column(String(64), primary_key=True)         # 主订单id
     OMtime = Column(String(14), nullable=False)         # 下单时间
-    # OMmealTimeMin = Column(String(14), nullable=False)  # 取餐时间段-起始时间
-    # OMmealTimeMax = Column(String(14), nullable=False)  # 取餐时间段-最晚时间
+    OMtotal = Column(Float)                             # 订单总额
     OMdate = Column(String(14))                         # 取餐日期
+    USid = Column(String(64))                           # 用户id
+    AAid = Column(String(64))                           # 机器详情id
+    OMcode = Column(Integer)                            # 订单取货码
+    OMabo = Column(Text)                                # 订单备注
     OMstatus = Column(Integer, nullable=False)          # 订单状态 具体状态如下：
     # {0 : 已取消, 7 : 未支付, 14 : 已支付, 21 : 已接单, 28 : 已配送, 35 : 已装箱, 42 : 已完成,  49 : 已评价}
-    OMtotal = Column(Float)                             # 订单总额
-    USid = Column(String(64))                            # 用户id
+    # OMmealTimeMin = Column(String(14), nullable=False)  # 取餐时间段-起始时间
+    # OMmealTimeMax = Column(String(14), nullable=False)  # 取餐时间段-最晚时间
     # LOid = Column(String(64))                           # 站点id
-    AAid = Column(String(64))                           # 机器详情id
     # OMimage = Column(String(64))                        # 订单二维码
-
-    OMcode = Column(Integer)
-    OMabo = Column(Text)                                # 订单备注
 
 
 class Orderpart(Base):

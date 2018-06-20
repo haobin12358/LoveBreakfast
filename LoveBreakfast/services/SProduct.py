@@ -74,3 +74,7 @@ class SProduct(SBase):
     def update_product_by_prid(self, prid, product):
         self.session.query(Products).filter_by(PRid=prid).update(product)
         return True
+
+    @close_session
+    def get_product_status_by_prid(self, prid):
+        return self.session.query(Products.PRstatus).filter(Products.PRid == prid).first()

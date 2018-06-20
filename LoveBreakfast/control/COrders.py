@@ -81,74 +81,60 @@ class COrders():
         print(self.title.format("args"))
         print(args)
         print(self.title.format("args"))
-        Oid = args["Oid"]
+        Oid = args["OMid"]
         Uid = args["token"]
-        order_abo = self.sorders.get_order_abo_by_oid(Oid)
+        order_abo = get_model_return_dict(self.sorders.get_order_abo_by_oid(Oid))
         print(self.title.format("order_abo"))
         print(order_abo)
         print(self.title.format("order_abo"))
-        data = {}
-        data["Oid"] = Oid
-        data["Otime"] = timeformate.get_web_time_str(order_abo.OMtime)
-        data["Ostatus"] = self.get_status_name_by_status(order_abo.OMstatus)
-        data["Otruetimemin"] = timeformate.get_web_time_str(order_abo.OMmealTimeMin)
-        data["Otruetimemax"] = timeformate.get_web_time_str(order_abo.OMmealTimeMax)
-        data["Oprice"] = order_abo.OMtotal
-        data["Opic"] = order_abo.OMimage
-        LOid = order_abo.LOid
-        labo = self.sorders.get_loname_loexitnumber_loboxcode_by_loid(LOid)
-        data["Lname"] = labo.LOname
-        data["Lno"] = labo.LOexitNumber
-        data["Lboxno"] = labo.LOboxCode
-
+        order_abo["OMtime"] = timeformate.get_web_time_str(order_abo.get("OMtime"))
+        order_abo["Ostatus"] = self.get_status_name_by_status(order_abo.get("OMstatus"))
+        order_abo["OMdate"] = timeformate.get_web_time_str(order_abo.get("OMdate"))
+        order_abo["is_index"] = 701
         if self.checktime() or order_abo.OMstatus > 21 or order_abo.OMstatus == 0:
-            data["is_index"] = 702
-        else:
-            data["is_index"] = 701
-        from services.SUsers import SUsers
-        susers = SUsers()
-        users = susers.get_uname_utel_by_uid(Uid)
-        data["Utel"] = users.UStelphone
-        data["Uname"] = users.USname
-        data["Oabo"] = order_abo.OMabo
-        data["Order_items"] = []
-        order_items = self.sorders.get_order_item_by_oid(Oid)
+            order_abo["is_index"] = 702
+        users = get_model_return_dict(self.susers.get_uname_utel_by_uid(Uid))
+        print(self.title.format("users"))
+        print(users)
+        print(self.title.format("users"))
+        order_abo.update(users)
+        order_items = get_model_return_list(self.sorders.get_order_item_by_oid(Oid))
+        print(self.title.format("order_items"))
+        print(order_items)
+        print(self.title.format("order_items"))
+
+        order_abo["Orderitems"] = order_items
+
         for row in order_items:
-            order_item = {}
-            order_item["Pnum"] = row.OPamount
-            order_item["Pid"] = row.Pid
-            from services.SProduct import SProduct
-            sproduct = SProduct()
-            product = sproduct.get_product_all_by_pid(row.Pid)
-            order_item["Pname"] = product.PRname
-            order_item["Psalenum"] = product.PRsalesvolume
-            order_item["Plevel"] = product.PRscore
-            order_item["Pprice"] = product.PRprice
-            order_item["Pimage"] = product.PRimage
-            data["Order_items"].append(order_item)
+            product = get_model_return_dict(self.sproduct.get_product_all_by_pid(row.Pid))
+            print(self.title.format("product"))
+            print(product)
+            print(self.title.format("product"))
+            row.update(product)
 
         response_make_main_order = import_status("messages_get_item_ok", "OK")
-        response_make_main_order["data"] = data
+        response_make_main_order["data"] = order_abo
         return response_make_main_order
 
     def make_main_order(self):
         args = request.args.to_dict()
         data = request.data
         data = json.loads(data)
-
-        if "token" not in args:
-            return PARAMS_MISS
-        params_list = ["Order_items", "OMtime", "OMdate", "OMtotal", "AAid"]
-        for params in params_list:
-            if params not in data:
-                return PARAMS_MISS
-
         print(self.title.format("args"))
         print(args)
         print(self.title.format("args"))
         print(self.title.format("data"))
         print(data)
         print(self.title.format("data"))
+
+        if "token" not in args:
+            return PARAMS_MISS
+
+        params_list = ["Order_items", "OMtime", "OMdate", "OMtotal", "AAid"]
+        for params in params_list:
+            if params not in data:
+                return PARAMS_MISS
+
         Uid = args["token"]
         OMtime = timeformate.get_db_time_str(data["OMtime"])
         OMdate = timeformate.get_db_time_str(data["OMdate"])
@@ -173,12 +159,17 @@ class COrders():
 
         order_item = data["Order_items"]
         for op in order_item:
+            prostatus = self.sproduct.get_product_status_by_prid(op.get("PRid"))
+            if prostatus != 1:
+                return import_status("error_no_pro", "error_no_pro", "LOVEBREAKFAST_ERROR")
+
             self.sorders.add_model("Orderpart", **{
                 "OPid": str(uuid.uuid1()),
                 "OMid": OMid,
                 "PRid": op.get("PRid"),
                 "PRnum": op.get("PRnum")
             })
+            
         response_make_main_order = import_status("messages_add_main_order_success", "OK")
         response_make_main_order["data"] = {}
         response_make_main_order["data"]["Oid"] = OMid
