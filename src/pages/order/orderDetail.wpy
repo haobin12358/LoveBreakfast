@@ -1,0 +1,31 @@
+<template>
+
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import api from '../../api/api';
+    import tip from '../../utils/tip';
+
+    export default class OrderDetail extends wepy.page {
+        config = {
+          navigationBarTitleText: '评价详情'
+
+        }
+
+        data = {}
+        computed = {}
+
+        methods = {}
+
+        events = {}
+
+        onLoad() {
+
+        }
+    }
+</script>
+
+<style lang="less">
+
+</style>
