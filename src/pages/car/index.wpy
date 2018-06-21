@@ -3,8 +3,12 @@
 
 </style>
 <template>
-  <view>
-    购物车
+  <view class="my-car-index">
+    <view class="my-car-box">
+      <view class="my-one-product">
+        <image src="../../images/icon-car-un.png" style="width: 80rpx;height:80rpx;"></image>
+      </view>
+    </view>
   </view>
 </template>
 
