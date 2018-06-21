@@ -6,7 +6,7 @@
   <view class="my-car-index">
     <view class="my-car-box">
       <view class="my-one-product">
-        <image src="../../images/icon-car-un.png" style="width: 80rpx;height:80rpx;"></image>
+        <image src="../../images/icon-radio.jpg" style="width: 80rpx;height:80rpx;"></image>
       </view>
     </view>
   </view>
@@ -16,8 +16,6 @@
     import wepy from 'wepy';
     import api from '../../api/api';
     import tip from '../../utils/tip';
-
-
     export default class carIndex extends wepy.page {
         config = {
             navigationBarTitleText: '购物车'
