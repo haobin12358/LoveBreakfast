@@ -66,7 +66,10 @@ export default class extends wepy.app {
   }
 
   async onLaunch(option) {
-
+    wx.setStorage({
+      key:'token',
+      data:'121222'
+    });
   }
 }
 
