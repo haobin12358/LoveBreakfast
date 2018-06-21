@@ -1,11 +1,170 @@
 <style scoped lang="less" rel="stylesheet/less">
     @import "../../styles/common";
 
+    @borderColor: #efefef;
+    @normalColor: #6666666;
+    @moneyColor: #f6992c;
+    @stateColor: #b3b3b3;
+    //@buttonBgColor: #f7931e;
+    @buttonFtColor: #ffffff;
+    @itemBorder: 1px solid @borderColor;
+
+    page {
+      background: #f5f5f5;
+      height: 100%;
+    }
+    .order-group{
+      .order-item{
+        border-top: @itemBorder;
+        width: 100%;
+        height: 150rpx*2;
+        padding: 30rpx 40rpx 23rpx 61rpx;
+        box-sizing: border-box;
+
+        &:nth-last-child(1){
+          border-bottom: @itemBorder;
+          margin-bottom: 10rpx;
+        }
+
+        .item-hd{
+          display: flex;
+          justify-content: flex-end;
+          height: 16rpx*2;
+          .orderstate{
+            color: @stateColor;
+            font-size: 16rpx*2;
+            /*line-height: 16rpx;*/
+          }
+        }
+
+        .item-bd{
+          height: 160rpx;
+          /*background-color: #f7931e;*/
+          display: flex;
+          /*justify-content: space-between;*/
+
+            .good-img{
+              width: 100rpx;
+              height: 100rpx;
+              border-radius: 100rpx;
+            }
+
+            .bd-detail{
+              margin-left: 10rpx;
+              width: 100%;
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+
+
+
+            }
+
+          .bd-end{
+            /*position: relative;*/
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: column;
+            .end{
+              color: @stateColor;
+              font-size: 16rpx*2;
+              button{
+                margin: 0;
+                background-color: @main_color;
+                color: #ffffff;
+              }
+            }
+
+            /*align-items: flex-end;*/
+          }
+            /*.bd-evaluate{*/
+              /*!*align-items: flex-end;*!*/
+              /*display: inline-block;*/
+              /*float: right;*/
+            /*}*/
+        }
+      }
+
+    }
+
+    .doc{
+      font-size: 28rpx;
+      color: @normalColor;
+    }
+
+    .doc-small{
+      font-size: 24rpx;
+    }
+
+    .doc-money{
+      color: @moneyColor;
+    }
+
 </style>
 <template>
-  <view>
-    订单
+  <view class="order-group">
+    <view class="order-item">
+      <view class="item-hd">
+        <view class="orderstate">
+          已评价
+        </view>
+      </view>
+      <view class="item-bd">
+          <image class="good-img" src="../../images/icon-shop-select.jpg"></image>
+          <view class="bd-detail">
+            <view class="doc">套餐3</view>
+            <view class="doc doc-small">2018-04-15 22:00:00</view>
+            <view class="doc doc-small">数量: 1</view>
+            <view class="doc doc-money">￥12</view>
+
+          </view>
+          <view class="bd-end">
+            <view class="end">
+              <button size="mini">立即支付</button>
+            </view>
+          </view>
+      </view>
+
+      <view >
+
+      </view>
+    </view>
+    <view class="order-item">
+      <view class="item-hd">
+        <view class="orderstate">
+          已评价
+        </view>
+      </view>
+      <view class="item-bd">
+          <image class="good-img" src="../../images/icon-shop-select.jpg"></image>
+          <view class="bd-detail">
+            <view class="doc">套餐3</view>
+            <view class="doc doc-small">2018-04-15 22:00:00</view>
+            <view class="doc doc-small">数量: 1</view>
+            <view class="doc doc-money">￥12</view>
+
+          </view>
+          <view class="bd-end">
+            <view class="end">
+              立即支付
+            </view>
+          </view>
+      </view>
+
+      <view >
+
+      </view>
+    </view>
+
+    <view class="order-item">
+
+    </view>
+    <view class="order-item">
+
+    </view>
   </view>
+
 </template>
 
 <script>
@@ -16,11 +175,19 @@
 
     export default class orderIndex extends wepy.page {
         config = {
-            navigationBarTitleText: ''
+            navigationBarTitleText: '订单'
         }
-        data = {}
+        data = {
+          orderList: {
+
+          }
+        }
 
         computed = {}
+
+        async getOrderList(){
+          let orderList = api.
+        }
 
         onLoad() {
 
