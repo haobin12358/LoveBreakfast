@@ -99,6 +99,7 @@
 
     .doc-money{
       color: @moneyColor;
+      font-family: @num_family;
     }
 
 </style>
@@ -110,7 +111,7 @@
           已评价
         </view>
       </view>
-      <view class="item-bd">
+      <view class="item-bd" @tap="showDetail">
           <image class="good-img" src="../../images/icon-shop-select.jpg"></image>
           <view class="bd-detail">
             <view class="doc">套餐3</view>
@@ -186,13 +187,17 @@
         computed = {}
 
         async getOrderList(){
-          let orderList = api.
+          // let orderList = api.
         }
 
         onLoad() {
 
         }
 
-        methods = {}
+        methods = {
+          showDetail(){
+            this.$navigate('./orderDetail');
+          }
+        }
     }
 </script>

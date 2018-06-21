@@ -1,4 +1,66 @@
+<style lang="less">
+  @import "../../styles/common";
+  page  {
+    background-color: #e5e5e5;
+  }
+  .container{
+
+    margin: 30rpx 74rpx auto;
+
+    .order-card{
+      width: 600rpx;
+      height: 928rpx;
+      border-radius: 20rpx;
+      background-color: #ffffff;
+      margin-bottom: 38rpx;
+      padding-top:56rpx ;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+      box-shadow: 10rpx 10rpx 5rpx #888888;
+      .card-icon{
+        margin-bottom: 54rpx;
+        image{
+          width: 150rpx;
+          height: 150rpx;
+        }
+
+
+      }
+      .card-money{
+        margin-bottom: 130rpx;
+
+        font-size: 53rpx;
+        color: #c1272d;
+        font-family: @num_family;
+      }
+      .card-detail{
+        width: 100rpx;
+        height: 100rpx;
+      }
+    }
+
+    .cancel-button  {
+      background-color: @main_color;
+      margin: auto 80rpx;
+
+    }
+  }
+</style>
+
 <template>
+  <view class="container">
+
+    <view class="order-card">
+      <view class="card-icon">
+        <image src="../../images/icon-logo.jpg"></image>
+      </view>
+      <view class="card-money"></view>
+      <view class="card-detail"></view>
+    </view>
+    <button class="cancel-button">取消订单</button>
+  </view>
 
 </template>
 
@@ -26,6 +88,3 @@
     }
 </script>
 
-<style lang="less">
-
-</style>
