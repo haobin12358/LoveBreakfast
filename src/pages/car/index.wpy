@@ -1,12 +1,135 @@
 <style scoped lang="less" rel="stylesheet/less">
     @import "../../styles/common";
-
+  .my-car-index{
+    width: 100%;
+    font-size: 28rpx;
+    .my-car-box{
+      width: 100%;
+      .my-one-product{
+        width: 690rpx;
+        padding:30rpx;
+        .flex-row(space-between);
+        border-top: 0.8px solid @border_color;
+        &:last-child{
+          border-bottom: 0.8px solid @border_color;
+        }
+        .my-left{
+          width: 520rpx;
+          .flex-row(flex-start);
+          .my-icon-img{
+            width: 30rpx;
+            height:30rpx;
+            margin: 0 20rpx;
+          }
+          .my-product-img{
+            width: 85rpx;
+            height: 85rpx;
+            margin: 0 20rpx;
+          }
+          .my-name{
+            font-size: 32rpx;
+          }
+          .my-price{
+            color: @main_color;
+            line-height: 46rpx;
+          }
+        }
+        .my-right{
+          width: 170rpx;
+          border: 1px solid @border_color;
+          border-radius: 10px;
+          .flex-row(flex-start);
+          p{
+            width: 50rpx;
+            text-align: center;
+          }
+          input{
+            width: 77rpx;
+            border: 1px solid @border_color;
+            border-top: none;
+            border-bottom: none;
+            text-align: center;
+          }
+        }
+      }
+    }
+    .my-foot{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 130rpx;
+      width: 690rpx;
+      padding:30rpx;
+      border-top: 1px solid @border_color;
+      .flex-row(space-between);
+      .my-left{
+        .my-icon-img{
+          width: 30rpx;
+          height:30rpx;
+          margin: 0 20rpx;
+        }
+      }
+      .my-right{
+        width: 420rpx;
+        .flex-row(space-between);
+        .my-price{
+          color: @main_color;
+        }
+        .my-btn{
+          width: 180rpx;
+          color: #fff;
+          background-color: @main_color;
+          border-radius: 10px;
+          text-align: center;
+          height: 60rpx;
+          line-height: 60rpx;
+        }
+      }
+    }
+  }
 </style>
 <template>
   <view class="my-car-index">
     <view class="my-car-box">
       <view class="my-one-product">
-        <image src="../../images/icon-radio.jpg" style="width: 80rpx;height:80rpx;"></image>
+        <view class="my-left">
+          <image class="my-icon-img" src="../../images/icon-radio.jpg" ></image>
+          <image class='my-product-img' src="../../images/icon-logo.jpg" ></image>
+          <view class="my-product-info">
+            <view class="my-name">名称</view>
+            <view class="my-price">12.3</view>
+          </view>
+        </view>
+        <view class="my-right">
+          <p>-</p>
+          <input type="text" value="1">
+          <p>+</p>
+        </view>
+      </view>
+      <view class="my-one-product">
+        <view class="my-left">
+          <image class="my-icon-img" src="../../images/icon-radio-select.jpg" ></image>
+          <image class='my-product-img' src="../../images/icon-logo.jpg" ></image>
+          <view class="my-product-info">
+            <view class="my-name">名称</view>
+            <view class="my-price">12.3</view>
+          </view>
+        </view>
+        <view class="my-right">
+          <p>-</p>
+          <input type="text" value="1">
+          <p>+</p>
+        </view>
+      </view>
+    </view>
+    <view class="my-foot">
+      <view class="my-left">
+        <image class="my-icon-img" src="../../images/icon-radio.jpg"></image>
+        <p>全选</p>
+      </view>
+      <view class="my-right">
+          <view>合计：￥ <span class="my-price">12.3</span></view>
+        <view class="my-btn">下单</view>
       </view>
     </view>
   </view>
