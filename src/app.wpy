@@ -1,4 +1,5 @@
 <style lang="less">
+  @import "/styles/common";
 page{
   font-family: 'SimHei';
 }
@@ -50,7 +51,7 @@ export default class extends wepy.app {
       }, {
         "pagePath": "pages/personal/index",
         "text": "我",
-        "iconPath": "images/icon-personal.jpg",
+        "iconPath": "images/icon-personal-on.jpg",
         "selectedIconPath": "images/icon-personal-select.jpg"
       }]
     }
