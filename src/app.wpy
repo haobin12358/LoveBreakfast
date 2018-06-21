@@ -1,0 +1,73 @@
+<style lang="less">
+page{
+  font-family: 'SimHei';
+}
+
+</style>
+<script>
+import wepy from 'wepy';
+import 'wepy-async-function'
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',
+      'pages/index/index',
+      'pages/index/productDetail',
+      'pages/car/index',
+      'pages/car/playOneOrder',
+      'pages/order/index',
+      'pages/personal/index'
+    ],
+    window: {
+      backgroundTextStyle: 'dark',
+      navigationBarBackgroundColor: '#FFFFFF',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: false,
+      backgroundColor: '#EFEFEF'
+
+    },
+    "tabBar": {
+      "color": "#999999",
+      "selectedColor": "#f7931e",
+      "backgroundColor": "#ffffff",
+      "borderStyle": "black",
+      "list": [{
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/icon-shop.jpg",
+        "selectedIconPath": "images/icon-shop-select.png"
+      }, {
+        "pagePath": "pages/order/index",
+        "text": "订单",
+        "iconPath": "images/icon-order.png",
+        "selectedIconPath": "images/icon-order-select.jpg"
+      }, {
+        "pagePath": "pages/car/index",
+        "text": "购物车",
+        "iconPath": "images/icon-car.png",
+        "selectedIconPath": "images/icon-car-select.jpg"
+      }, {
+        "pagePath": "pages/personal/index",
+        "text": "我",
+        "iconPath": "images/icon-personal.png",
+        "selectedIconPath": "images/icon-personal-select.jpg"
+      }]
+    }
+  }
+
+  globalData = {}
+
+  constructor() {
+    super()
+    this.use('requestfix')
+    this.use('promisify');
+
+  }
+
+  async onLaunch(option) {
+
+  }
+}
+
+</script>

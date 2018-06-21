@@ -1,0 +1,31 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../../styles/common";
+
+</style>
+<template>
+  <view>
+    订单
+  </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../../api/api';
+    import tip from '../../utils/tip';
+
+
+    export default class orderIndex extends wepy.page {
+        config = {
+            navigationBarTitleText: ''
+        }
+        data = {}
+
+        computed = {}
+
+        onLoad() {
+
+        }
+
+        methods = {}
+    }
+</script>
