@@ -70,19 +70,17 @@
               color: @stateColor;
               font-size: 16rpx*2;
               button{
-                margin: 0;
                 background-color: @main_color;
                 color: #ffffff;
+                display:inline-block;
+                line-height:2.3;
+                font-size:26rpx;
+                padding:0;
+                width: 160rpx;
               }
             }
-
-            /*align-items: flex-end;*/
           }
-            /*.bd-evaluate{*/
-              /*!*align-items: flex-end;*!*/
-              /*display: inline-block;*/
-              /*float: right;*/
-            /*}*/
+
         }
       }
 
@@ -105,65 +103,36 @@
 </style>
 <template>
   <view class="order-group">
-    <view class="order-item">
-      <view class="item-hd">
-        <view class="orderstate">
-          已评价
+    <repeat for="{{orderList}}" key='index' index='index' item='item'>
+      <view class="order-item">
+        <view class="item-hd">
+          <view class="orderstate">
+            {{item.OMstatus}}
+          </view>
         </view>
-      </view>
-      <view class="item-bd" @tap="showDetail">
+        <view class="item-bd" >
           <image class="good-img" src="../../images/icon-shop-select.jpg"></image>
-          <view class="bd-detail">
-            <view class="doc">套餐3</view>
-            <view class="doc doc-small">2018-04-15 22:00:00</view>
-            <view class="doc doc-small">数量: 1</view>
-            <view class="doc doc-money">￥12</view>
+          <view class="bd-detail" @tap="showDetail">
+            <view class="doc">{{item.Orderitems[0].PRname}}</view>
+            <view class="doc doc-small">{{item.OMtime}}</view>
+            <view class="doc doc-small">数量: {{item.Orderitems[0].PRsalesvolume}}</view>
+            <view class="doc doc-money">￥{{item.OMtotal}}</view>
 
           </view>
           <view class="bd-end">
             <view class="end">
-              <button size="mini">立即支付</button>
+
+              <button wx:if="{{item.OMstatus}} == '已评价'" size="mini">评价详情</button>
             </view>
           </view>
-      </view>
+        </view>
 
-      <view >
+        <view >
 
-      </view>
-    </view>
-    <view class="order-item">
-      <view class="item-hd">
-        <view class="orderstate">
-          已评价
         </view>
       </view>
-      <view class="item-bd">
-          <image class="good-img" src="../../images/icon-shop-select.jpg"></image>
-          <view class="bd-detail">
-            <view class="doc">套餐3</view>
-            <view class="doc doc-small">2018-04-15 22:00:00</view>
-            <view class="doc doc-small">数量: 1</view>
-            <view class="doc doc-money">￥12</view>
+    </repeat>
 
-          </view>
-          <view class="bd-end">
-            <view class="end">
-              立即支付
-            </view>
-          </view>
-      </view>
-
-      <view >
-
-      </view>
-    </view>
-
-    <view class="order-item">
-
-    </view>
-    <view class="order-item">
-
-    </view>
   </view>
 
 </template>
@@ -179,19 +148,38 @@
             navigationBarTitleText: '订单'
         }
         data = {
-          orderList: {
+          orderList: [
 
-          }
+          ]
         }
 
         computed = {}
 
+        watch = {
+          orderList(newVal){
+              console.log(newVal);
+          }
+        }
+
         async getOrderList(){
-          // let orderList = api.
+          let json =await api.get_order_list({
+            query: {
+                token: '11aa9315-38b4-47c1-a31b-c29ca20aa02c'
+            }
+          });
+
+          if(json.data.status == 200){
+            this.orderList = json.data.data;
+            this.$apply;
+          }else{
+            // tip.error(json.data.message)
+          }
+
+
         }
 
         onLoad() {
-
+          this.getOrderList()
         }
 
         methods = {
