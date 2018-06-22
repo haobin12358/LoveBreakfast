@@ -34,13 +34,13 @@
 </style>
 <template>
 <view class="my-productDetail" >
-  <image src="../../images/icon-logo.jpg" style="width: 670rpx;height: 400rpx;"></image>
-  <view class="my-title">套餐1</view>
+  <image src="{{all_data.PRimage}}" style="width: 670rpx;height: 400rpx;"></image>
+  <view class="my-title">{{all_data.PRname}}</view>
   <view class="my-product-info">
     <view class="my-name">
-      名字
+      {{all_data.PRinfo}}
     </view>
-    <view class="my-price">￥12.3</view>
+    <view class="my-price">￥{{all_data.PRprice}}</view>
   </view>
   <view class="my-btn">添加购物车</view>
 </view>
@@ -56,14 +56,26 @@
         config = {
             navigationBarTitleText: ''
         }
-        data = {}
-
-        computed = {}
-
-        onLoad() {
-
+        data = {
+          all_data:null
         }
-
+        async get_info_by_id(PRid) {
+          let that = this;
+          tip.loading();
+          let res = await api.get_info_by_id({method:'GET',query:{
+              PRid:PRid
+            }});
+          if(res.data.status == 200){
+            that.all_data = res.data.data;
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
+        onLoad(options) {
+          this.get_info_by_id(options.PRid);
+        }
         methods = {}
     }
 </script>

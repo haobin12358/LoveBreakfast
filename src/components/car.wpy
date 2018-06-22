@@ -48,18 +48,18 @@
     }
 </style>
 <template>
-  <view class="my-one-product" @tap="productTap">
+  <view class="my-one-product" @tap="productTap({{list}})">
     <view class="my-left">
       <image class="my-icon-img" src="../../images/icon-radio.jpg" ></image>
-      <image class='my-product-img' src="../../images/icon-logo.jpg" ></image>
+      <image class='my-product-img' src="{{list.PRimage}}" ></image>
       <view class="my-product-info">
-        <view class="my-name">名称</view>
-        <view class="my-price">12.3</view>
+        <view class="my-name">{{list.PRname}}</view>
+        <view class="my-price">￥{{list.PRprice}}</view>
       </view>
     </view>
     <view class="my-right">
       <p>-</p>
-      <input type="text" value="1">
+      <input type="text" value="{{list.PRsalesvolume}}">
       <p>+</p>
     </view>
   </view>
@@ -72,19 +72,21 @@
 
 
     export default class Car extends wepy.page {
-
+        props={
+          list:{
+            type:Object,
+            default:null
+          },
+        }
         data = {}
-
-        computed = {}
-
         onLoad() {
 
         }
 
         methods = {
-          productTap(){
+          productTap(v){
             wx.navigateTo({
-              url:'/pages/index/productDetail'
+              url:'/pages/index/productDetail?PRid=' + v.PRid
             })
           }
         }

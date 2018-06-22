@@ -51,10 +51,11 @@
       </view>
     </view>
     <view class="my-content">
-      <product @productTap.user="productTap"></product>
-      <product @productTap.user="productTap"></product>
-      <product @productTap.user="productTap"></product>
-      <product @productTap.user="productTap"></product>
+      <repeat for="{{all_data}}" key="index" index="index" item="item">
+        <product :list.sync="item" @productTap.user="productTap"></product>
+      </repeat>
+
+
     </view>
     <view class="my-modal-state" wx:if="{{showModal}}">
       <city></city>
@@ -77,8 +78,8 @@
           city:city
         }
         data = {
-          showModal:true,
-
+          showModal:false,
+          all_data:[]
         }
         async get_city_location(latitude,longitude) {
           let that = this;
@@ -95,6 +96,21 @@
             tip.error(res.error_msg);
           }
         }
+        async get_all_product(aaid) {
+          let that = this;
+          tip.loading();
+          let res = await api.get_all_product({method:'GET',query:{
+              AAid:aaid
+            }});
+          if(res.data.status == 200){
+            console.log(res)
+            that.all_data = res.data.data;
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
         onLoad() {
           let _this = this;
           wx.getLocation({
@@ -103,14 +119,15 @@
               _this.get_city_location(data.latitude,data.longitude)
             }
           });
+          _this.get_all_product('2f798cfb-84b3-4569-9513-aa1ad9c8fb54');
         }
         methods = {
           modalChange(){
             this.showModal = !this.showModal;
           },
-          productTap(){
+          productTap(v){
             wx.navigateTo({
-              url:'/pages/index/productDetail'
+              url:'/pages/index/productDetail?PRid=' + v.PRid
             })
           }
         }

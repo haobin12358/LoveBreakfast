@@ -45,8 +45,9 @@
 <template>
   <view class="my-car-index">
     <view class="my-car-box">
-      <car @productTap.user="productTap"></car>
-      <car @productTap.user="productTap"></car>
+      <repeat for="{{all_data}}" key="index" index="index" item="item">
+        <car :list.sync="item" ></car>
+      </repeat>
     </view>
     <view class="my-foot">
       <view class="my-left">
@@ -73,12 +74,38 @@
         components={
           car:car
         }
-        data = {}
-
-        computed = {}
-
+        data = {
+          all_data:[]
+        }
+        async get_all_car(token,AAid) {
+          let that = this;
+          tip.loading();
+          let res = await api.get_all_car({method:'GET',query:{
+              AAid:AAid,
+              token:token
+            }});
+          if(res.data.status == 200){
+            that.all_data = res.data.data;
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
         onLoad() {
+          let that = this;
+          wx.getStorage({
+            key: 'token',
+            success: function(res) {
+              wx.getStorage({
+                key: 'AAid',
+                success: function(resId) {
+                  that.get_all_car(res.data,resId.data)
+                }
+              })
 
+            }
+          })
         }
 
         methods = {

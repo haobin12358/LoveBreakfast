@@ -22,18 +22,18 @@
     }
 </style>
 <template>
-  <view class="my-one-product" @tap="productTap">
-    <image src="../../images/icon-logo.jpg" style="width: 150rpx;height: 150rpx;" />
+  <view class="my-one-product" @tap="productTap({{list}})">
+    <image src="{{list.PRimage}}" style="width: 150rpx;height: 150rpx;" />
     <view class="my-right">
       <view class="my-row">
-        <view class="my-title">套餐1</view>
-        <view>4.3分</view>
+        <view class="my-title">{{list.PRname}}</view>
+        <view>{{list.PRscore}}分</view>
       </view>
       <view class="my-row">
-        月销100份
+        月销{{list.PRsalesvolume}}份
       </view>
       <view class="my-row">
-        <view class="my-price">￥12.3</view>
+        <view class="my-price">￥{{list.PRprice}}</view>
         <view class="my-add-box">
           <image  src="../../images/icon-add.jpg" style="width: 50rpx;height: 50rpx;"/>
         </view>
@@ -47,17 +47,21 @@
     import api from '../api/api';
     import tip from '../utils/tip';
     export default class Product extends wepy.page {
+        props={
+          list:{
+            type:Object,
+            default:null
+          },
+        }
         data = {}
-
-        computed = {}
 
         onLoad() {
 
         }
 
         methods = {
-          productTap(){
-            this.$emit('productTap',this)
+          productTap(v){
+            this.$emit('productTap',v)
           }
         }
     }

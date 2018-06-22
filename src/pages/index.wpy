@@ -21,7 +21,7 @@
       </block>
     </swiper>
     <view class="my-img" @tap="beginTap">
-      <image src="http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg" style="height:800rpx;width:670rpx; border-radius: 15rpx;"/>
+      <image src="{{indexImg}}" style="height:800rpx;width:670rpx; border-radius: 15rpx;"/>
     </view>
   </view>
 </template>
@@ -47,22 +47,28 @@
         interval: 5000,
         duration: 1000
       },
+      indexImg:''
     }
 
-    async getSwiper() {
+    async getSwiper(position) {
       let that = this;
       tip.loading();
       let res = await api.picture({method:'GET',query:{
-          position:'top'
+          position:position ||　''
         }});
       if(res.statusCode == 200){
-        that.swiper.imgUrls = res.data;
+        if(position){
+          that.swiper.imgUrls = res.data;
+        }else{
+          that.indexImg = res.data;
+        }
         that.$apply();
         tip.loaded();
       }
     }
     onLoad() {
       this.getSwiper();
+      this.getSwiper('top');
     }
 
     methods = {
