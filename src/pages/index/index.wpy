@@ -4,7 +4,51 @@
       width: 100%;
       font-size: 28rpx;
       .my-head{
-
+        width: 670rpx;
+        padding: 0 40rpx;
+        .flex-row(space-between);
+        .my-location{
+          .flex-row(space-around);
+          width: 200rpx;
+          text{
+            font-size: 32rpx;
+          }
+        }
+        .my-input-box{
+          width: 440rpx;
+          background-color: #eaeaea;
+          .flex-row(flex-start);
+          border-radius: 20px;
+          input{
+            font-size: 28rpx;
+          }
+        }
+      }
+      .my-content{
+        width: 100%;
+        .my-one-product{
+          width: 670rpx;
+          padding: 20rpx 40rpx;
+          .flex-row(flex-start);
+          border-bottom: 1px solid @border_color;
+          .my-right{
+            margin-left: 40rpx;
+            font-size: 24rpx;
+            .my-row{
+              .flex-row(space-between);
+              &:last-child{
+                margin-top: 20rpx;
+              }
+              .my-title{
+                font-size: 28rpx;
+                width: 416rpx;
+              }
+              .my-price{
+                color: @main_color;
+              }
+            }
+          }
+        }
       }
     }
 
@@ -13,15 +57,52 @@
   <view class="my-product-index">
     <view class="my-head">
       <view class="my-location">
-        <image src="../../images/icon-order-loc.jpg" style="width: 30rpx;height: 30rpx;"></image>
+        <image src="../../images/icon-order-loc.jpg" style="width: 30rpx;height: 40rpx;" />
         <text>江陵路A口</text>
       </view>
       <view class="my-input-box">
-        <image src="../../images/icon-search.jpg" style="width: 30rpx;height: 30rpx;"></image>
-        <input type="text" placeholder="搜索">
+        <image src="../../images/icon-search.jpg" style="width: 30rpx;height: 30rpx;margin: 0 20rpx;" />
+        <input type="text" placeholder="搜索商品" placeholder-style="text-align:center;">
       </view>
     </view>
-    <view class="my-content"></view>
+    <view class="my-content">
+      <view class="my-one-product">
+        <image src="../../images/icon-logo.jpg" style="width: 150rpx;height: 150rpx;" />
+        <view class="my-right">
+          <view class="my-row">
+            <view class="my-title">套餐1</view>
+            <view>4.3分</view>
+          </view>
+          <view class="my-row">
+            月销100份
+          </view>
+          <view class="my-row">
+            <view class="my-price">￥12.3</view>
+            <view class="my-add-box">
+              <image  src="../../images/icon-add.jpg" style="width: 50rpx;height: 50rpx;"/>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="my-one-product">
+        <image src="../../images/icon-logo.jpg" style="width: 150rpx;height: 150rpx;" />
+        <view class="my-right">
+          <view class="my-row">
+            <view class="my-title">套餐1</view>
+            <view>4.3分</view>
+          </view>
+          <view class="my-row">
+            月销100份
+          </view>
+          <view class="my-row">
+            <view class="my-price">￥12.3</view>
+            <view class="my-add-box">
+              <image  src="../../images/icon-add.jpg" style="width: 50rpx;height: 50rpx;"/>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
     <view class="my-modal"></view>
   </view>
 </template>
