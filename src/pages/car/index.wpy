@@ -46,7 +46,7 @@
   <view class="my-car-index">
     <view class="my-car-box">
       <repeat for="{{all_data}}" key="index" index="index" item="item">
-        <car :list.sync="item" ></car>
+        <car :list.sync="item" @refresh.user="refresh"></car>
       </repeat>
     </view>
     <view class="my-foot">
@@ -107,7 +107,6 @@
             }
           })
         }
-
         methods = {
           productTap(){
             wx.navigateTo({
@@ -117,6 +116,20 @@
           playOrder(){
             wx.navigateTo({
               url:'/pages/car/playOneOrder'
+            })
+          },
+          refresh(){
+            let that = this;
+            wx.getStorage({
+              key: 'token',
+              success: function(res) {
+                wx.getStorage({
+                  key: 'AAid',
+                  success: function(resId) {
+                    that.get_all_car(res.data,resId.data)
+                  }
+                })
+              }
             })
           }
         }

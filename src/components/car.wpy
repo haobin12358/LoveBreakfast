@@ -33,11 +33,15 @@
         border: 1px solid @border_color;
         border-radius: 10px;
         .flex-row(flex-start);
+        .my-cut{
+          height: 40rpx;
+          line-height: 40rpx;
+        }
         p{
           width: 50rpx;
           text-align: center;
         }
-        input{
+        .my-input{
           width: 77rpx;
           border: 1px solid @border_color;
           border-top: none;
@@ -58,9 +62,9 @@
       </view>
     </view>
     <view class="my-right">
-      <p>-</p>
-      <input type="text" value="{{list.PRsalesvolume}}">
-      <p>+</p>
+      <p class="my-cut" catchtap="cutTap({{list}})">-</p>
+      <view class="my-input my-cut" >{{list.PRsalesvolume}}</view>
+      <p class="my-cut" catchtap="addTap({{list}})">+</p>
     </view>
   </view>
 </template>
@@ -69,8 +73,6 @@
     import wepy from 'wepy';
     import api from '../api/api';
     import tip from '../utils/tip';
-
-
     export default class Car extends wepy.page {
         props={
           list:{
@@ -79,6 +81,19 @@
           },
         }
         data = {}
+      async operateCart(params,token) {
+        tip.loading();
+        let res = await api.sale_update({query: params, token:token,  method: 'POST'})
+        if(res.data.status == '200'){
+          this.$apply();
+          wx.showToast({
+            title: '修改成功',
+            icon: 'success',
+            duration: 800
+          })
+          this.$emit('refresh')
+        }
+      }
         onLoad() {
 
         }
@@ -87,6 +102,50 @@
           productTap(v){
             wx.navigateTo({
               url:'/pages/index/productDetail?PRid=' + v.PRid
+            })
+          },
+          cutTap(v) {
+            let _that = this;
+            if (v.PRsalesvolume == 1) {
+              wx.showModal({
+                title: '提示',
+                content: '确定要删除该商品吗？',
+                success: function (res) {
+                  if (res.confirm) {
+                    let param = {
+                      PRid:v.PRid,
+                      CAnumber: -1
+                    }
+                    wx.getStorage({
+                      key: 'token',
+                      success: function(resToken) {
+                        _that.operateCart(param,resToken.data);
+                      }
+                    });
+                  } else if (res.cancel) {
+                  }
+                }
+              })
+            } else {
+              wx.getStorage({
+                key: 'token',
+                success: function(res) {
+                  _that.operateCart({PRid: v.PRid, CAnumber: -1},res.data);
+                }
+              })
+            }
+          },
+          addTap(v){
+            let that = this;
+            let param = {
+              PRid: v.PRid,
+              CAnumber: +1
+            }
+            wx.getStorage({
+              key: 'token',
+              success: function(res) {
+                that.operateCart(param,res.data);
+              }
             })
           }
         }
