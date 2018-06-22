@@ -47,7 +47,6 @@ class SCoupons(SBase):
             Cardpackage.CAend, Cardpackage.CAstart, Cardpackage.USid
         ).filter(Cardpackage.USid == uid, Cardpackage.COid == couid).first()
 
-
     @close_session
     def get_coupons_by_couid(self, couid):
         return self.session.query(
