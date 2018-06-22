@@ -49,10 +49,20 @@
       },
     }
 
-    computed = {}
-
+    async getSwiper() {
+      let that = this;
+      tip.loading();
+      let res = await api.picture({method:'GET',query:{
+          position:'top'
+        }});
+      if(res.statusCode == 200){
+        that.swiper.imgUrls = res.data;
+        that.$apply();
+        tip.loaded();
+      }
+    }
     onLoad() {
-
+      this.getSwiper();
     }
 
     methods = {

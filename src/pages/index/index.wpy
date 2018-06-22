@@ -34,26 +34,7 @@
         top:62rpx;
         left:0;
         background-color: rgba(255,255,255,0.9);
-        .my-modal{
-          padding:20rpx 90rpx;
-          background-color: #fff;
-          .my-pick-box{
-            .flex-row(flex-start);
-            padding: 20rpx 0;
-            .picker{
-              width: 200rpx;
-              margin-left: 20rpx;
-            }
-            .my-picker{
-              width: 250rpx;
-              border: 1px solid @border_color;
-              border-radius: 20px;
-              height: 46rpx;
-              line-height: 46rpx;
-              text-align: center;
-            }
-          }
-        }
+
       }
     }
 </style>
@@ -76,56 +57,7 @@
       <product @productTap.user="productTap"></product>
     </view>
     <view class="my-modal-state" wx:if="{{showModal}}">
-      <view class="my-modal">
-        <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
-          <view class="my-pick-box" >
-            <image src="../../images/icon-city.jpg" style="width: 25rpx;height: 30rpx;"/>
-            <view class="picker">
-              城市：
-            </view>
-            <view class="my-picker">
-              {{array[index]}}
-            </view>
-          </view>
-
-        </picker>
-        <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
-          <view class="my-pick-box" >
-            <image src="../../images/icon-target.jpg" style="width: 25rpx;height: 30rpx;"/>
-            <view class="picker">
-              目标：
-            </view>
-            <view class="my-picker">
-              {{array[index]}}
-            </view>
-          </view>
-
-        </picker>
-        <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
-          <view class="my-pick-box" >
-            <image src="../../images/icon-loc-s.jpg" style="width: 25rpx;height: 30rpx;"/>
-            <view class="picker">
-              区域：
-            </view>
-            <view class="my-picker">
-              {{array[index]}}
-            </view>
-          </view>
-
-        </picker>
-        <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
-          <view class="my-pick-box" >
-            <image src="../../images/icon-dot.jpg" style="width: 25rpx;height: 30rpx;"/>
-            <view class="picker">
-              点位：
-            </view>
-            <view class="my-picker">
-              {{array[index]}}
-            </view>
-          </view>
-
-        </picker>
-      </view>
+      <city></city>
     </view>
   </view>
 </template>
@@ -134,18 +66,18 @@
     import wepy from 'wepy';
     import api from '../../api/api';
     import tip from '../../utils/tip';
+    import city from '../../components/select';
     import product from '../../components/product';
     export default class Index extends wepy.page {
         config = {
-            navigationBarTitleText: ''
+            navigationBarTitleText: '商品'
         }
         components={
-          product:product
+          product:product,
+          city:city
         }
         data = {
-          array: ['美国', '中国', '巴西', '日本'],
-          index: 0,
-          showModal:false
+          showModal:true,
         }
 
         computed = {}
