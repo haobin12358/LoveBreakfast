@@ -91,7 +91,7 @@
 <template>
   <view class="my-car-index">
     <view class="my-car-box">
-      <view class="my-one-product">
+      <view class="my-one-product" @tap="productTap">
         <view class="my-left">
           <image class="my-icon-img" src="../../images/icon-radio.jpg" ></image>
           <image class='my-product-img' src="../../images/icon-logo.jpg" ></image>
@@ -151,6 +151,12 @@
 
         }
 
-        methods = {}
+        methods = {
+          productTap(){
+            wx.navigateTo({
+              url:'/pages/index/productDetail'
+            })
+          }
+        }
     }
 </script>
