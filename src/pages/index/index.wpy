@@ -78,12 +78,31 @@
         }
         data = {
           showModal:true,
+
         }
+        async get_city_location(latitude,longitude) {
+          let that = this;
+          tip.loading();
+          let res = await api.get_city_location({method:'GET',query:{
+              lat:latitude,
+              lon:longitude
+            }});
+          if(res.statusCode == 200){
 
-        computed = {}
-
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.error_msg);
+          }
+        }
         onLoad() {
-
+          let _this = this;
+          wx.getLocation({
+            type: 'wgs84',
+            success: function(data) {
+              _this.get_city_location(data.latitude,data.longitude)
+            }
+          });
         }
         methods = {
           modalChange(){

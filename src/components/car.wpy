@@ -25,7 +25,6 @@
           font-size: 32rpx;
         }
         .my-price{
-          color: @main_color;
           line-height: 46rpx;
         }
       }

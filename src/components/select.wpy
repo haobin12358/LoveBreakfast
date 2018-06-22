@@ -23,19 +23,19 @@
 </style>
 <template>
   <view class="my-modal">
-    <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+    <picker bindchange="bindPickerChange1" value="{{index1}}" range="{{array1}}">
       <view class="my-pick-box" >
         <image src="../../images/icon-city.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
           城市：
         </view>
         <view class="my-picker">
-          {{array[index]}}
+          {{array1[index1]}}
         </view>
       </view>
 
     </picker>
-    <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+    <picker bindchange="bindPickerChange" value="{{index2}}" range="{{array2}}">
       <view class="my-pick-box" >
         <image src="../../images/icon-target.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
@@ -47,7 +47,7 @@
       </view>
 
     </picker>
-    <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+    <picker bindchange="bindPickerChange" value="{{index2}}" range="{{array2}}">
       <view class="my-pick-box" >
         <image src="../../images/icon-loc-s.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
@@ -59,7 +59,7 @@
       </view>
 
     </picker>
-    <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+    <picker bindchange="bindPickerChange" value="{{index2}}" range="{{array2}}">
       <view class="my-pick-box" >
         <image src="../../images/icon-dot.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
@@ -82,8 +82,10 @@
 
     export default class Select extends wepy.page {
         data = {
-          array: ['美国', '中国', '巴西', '日本'],
-          index: 0,
+          array1: ['美国', '中国', '巴西', '日本'],
+          index1: -1,
+          array2: ['美国', '中国', '巴西', '日本'],
+          index2: -1,
         }
 
         computed = {}
@@ -92,6 +94,18 @@
 
         }
 
-        methods = {}
+        methods = {
+          bindPickerChange: function(e) {
+            console.log('picker发送选择改变，携带值为', e.detail.value)
+            this.setData({
+              index2: e.detail.value
+            })
+          },
+          bindPickerChange1: function(e) {
+            console.log('picker发送选择改变，携带值为', e.detail.value)
+              this.index1 = e.detail.value;
+            this.$apply();
+          },
+        }
     }
 </script>

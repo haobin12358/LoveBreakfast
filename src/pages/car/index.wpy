@@ -55,7 +55,7 @@
       </view>
       <view class="my-right">
           <view>合计：￥ <span class="my-price">12.3</span></view>
-        <view class="my-btn">下单</view>
+        <view class="my-btn" @tap="playOrder">下单</view>
       </view>
     </view>
   </view>
@@ -85,6 +85,11 @@
           productTap(){
             wx.navigateTo({
               url:'/pages/index/productDetail'
+            })
+          },
+          playOrder(){
+            wx.navigateTo({
+              url:'/pages/car/playOneOrder'
             })
           }
         }

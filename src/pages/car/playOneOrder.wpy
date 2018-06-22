@@ -1,9 +1,142 @@
 <style scoped lang="less" rel="stylesheet/less">
     @import "../../styles/common";
-
+    .my-playOneOrder{
+      width: 100%;
+      font-size: 28rpx;
+      .my-top{
+        .my-row{
+          width: 630rpx;
+          padding: 40rpx 60rpx;
+          border-bottom: 0.7px solid @border_color;
+          .flex-row(flex-start);
+          .my-label{
+            width: 114rpx;
+            margin-left: 38rpx;
+          }
+          .my-pick{
+            width: 440rpx;
+            text-align: right;
+            height: 40rpx;
+          }
+        }
+      }
+      .my-product-info{
+        .my-text{
+          height: 46rpx;
+          line-height: 46rpx;
+          width: 630rpx;
+          padding: 40rpx 60rpx;
+        }
+        .my-row{
+          width: 630rpx;
+          padding: 20rpx 60rpx;
+          .flex-row(space-between);
+          .my-left{
+            .flex-row(flex-start);
+          }
+          .my-price{
+            color: @main_color;
+            text-align: right;
+            width: 140rpx;
+          }
+        }
+        .my-total{
+          text-align: right;
+          width: 630rpx;
+          padding: 40rpx 60rpx;
+        }
+      }
+      .my-other{
+        margin-bottom: 140rpx;
+      }
+      .my-foot{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-color: #fff;
+        border-top: 0.7px solid @border_color;
+        width: 630rpx;
+        padding: 40rpx 60rpx;
+        .flex-row(space-between);
+        .my-btn{
+          width: 184rpx;
+          height: 60rpx;
+          line-height: 60rpx;
+          font-size: 32rpx;
+          background-color: @main_color;
+          color: #fff;
+          text-align: center;
+          border-radius: 10px;
+        }
+      }
+    }
 </style>
 <template>
-<view></view>
+  <view class="my-playOneOrder">
+    <view class="my-top">
+       <view class="my-row">
+         <image src="../../images/icon-loc.jpg" style="width:40rpx;height:40rpx;"/>
+         <view class="my-label">取餐点</view>
+         <view class="my-pick">杭州市地铁1号线江陵路A口</view>
+       </view>
+      <view class="my-row">
+        <image src="../../images/icon-date.jpg" style="width:40rpx;height:40rpx;"/>
+        <view class="my-label">取餐时间</view>
+        <picker mode="date" value="{{date}}" start="2018-06-01" end="2019-09-01" bindchange="bindDateChange">
+          <view class="my-pick"v>
+            {{date}}
+          </view>
+        </picker>
+      </view>
+      <view class="my-row">
+        <image src="../../images/icon-personal.jpg" style="width:40rpx;height:40rpx;"/>
+        <view class="my-label">联系人</view>
+        <view class="my-pick">小白</view>
+      </view>
+      <view class="my-row">
+        <image src="../../images/icon-tel.jpg" style="width:40rpx;height:40rpx;"/>
+        <view class="my-label">联系方式</view>
+        <view class="my-pick">1777777777</view>
+      </view>
+      <view class="my-row">
+        <image src="../../images/icon-gift.jpg" style="width:40rpx;height:40rpx;"/>
+        <view class="my-label">优惠券</view>
+        <view class="my-pick">选择优惠方式</view>
+      </view>
+    </view>
+    <view class="my-product-info">
+      <view class="my-text">订单详情：</view>
+      <view class="my-row">
+        <view class="my-left">
+          <view>1</view>
+          <image src="../../images/icon-logo.jpg" style="width: 90rpx;height: 90rpx;margin: 0 30rpx;"/>
+          <view>套餐1</view>
+        </view>
+        <view class="my-price">￥12.3</view>
+      </view>
+      <view class="my-total">合计：<span class="my-price">￥12.3</span></view>
+    </view>
+    <view class="my-top my-other">
+      <view class="my-row">
+        <image src="../../images/icon-money.jpg" style="width:40rpx;height:40rpx;"/>
+        <view class="my-label">支付方式</view>
+        <picker bindchange="bindPickerChange1" value="{{index1}}" range="{{array1}}">
+            <view class="my-pick">
+              {{array1[index1]}}
+            </view>
+        </picker>
+      </view>
+      <view class="my-row">
+        <image src="../../images/icon-remark.jpg" style="width:40rpx;height:40rpx;"/>
+        <view class="my-label">备注</view>
+        <view class="my-pick"><input type="text"></view>
+      </view>
+    </view>
+    <view class="my-foot">
+      <view>合计:<span class="my-price">￥12.3</span></view>
+      <view class="my-btn">支  付</view>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -14,7 +147,10 @@
         config = {
             navigationBarTitleText: ''
         }
-        data = {}
+        data = {
+          array1: ['美国', '中国', '巴西', '日本'],
+          index1: 0,
+        }
 
         computed = {}
 
@@ -22,6 +158,13 @@
 
         }
 
-        methods = {}
+        methods = {
+          bindDateChange(e){
+              console.log('picker发送选择改变，携带值为', e.detail.value);
+              this.setData({
+                date: e.detail.value
+              })
+          }
+        }
     }
 </script>
