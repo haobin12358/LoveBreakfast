@@ -117,7 +117,7 @@ class Coupons(Base):
     COdiscount = Column(Float)  # 折扣，值为0-1，其中0为免单
     COamount = Column(Float)  # 优惠金额，减免金额，限制最大数目
     COstart = Column(String(14))  # 优惠券的开始时间
-    Couend = Column(String(14))  # 优惠券的结束时间
+    COend = Column(String(14))  # 优惠券的结束时间
 
 
 class Cardpackage(Base):
@@ -172,6 +172,7 @@ class AddressAbo(Base):
     AAmessage = Column(Text)
     AAimage = Column(Text)
     ASid = Column(String(64))
+
 
 class Machinery(Base):
     __tablename__ = "Machinery"

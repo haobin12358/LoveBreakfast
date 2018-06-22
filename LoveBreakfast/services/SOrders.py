@@ -35,7 +35,7 @@ class SOrders(SBase):
     @close_session
     def get_all_order_by_uid(self, uid):
         return self.session.query(Ordermain.OMid, Ordermain.OMtime, Ordermain.OMstatus,
-                                  Ordermain.OMtotal, Ordermain.OMimage).filter_by(Uid=uid).all()
+                                  Ordermain.OMtotal, Ordermain.OMcode).filter_by(USid=uid).all()
 
     @close_session
     def get_order_item_by_oid(self, oid):
@@ -59,7 +59,7 @@ class SOrders(SBase):
 
     @close_session
     def get_omprice_by_omid(self, omid):
-        return self.session.query(Ordermain.OMprice).filter_by(OMid=omid).scalar()
+        return self.session.query(Ordermain.OMtotal).filter_by(OMid=omid).scalar()
 
     @close_session
     def update_omstatus_by_omid(self, omid, order_main):
@@ -70,6 +70,10 @@ class SOrders(SBase):
     def get_order_main_by_code(self, omcode):
         return self.session.query(Ordermain.OMid, Ordermain.OMcode)\
             .filter(Ordermain.OMcode == omcode, Ordermain.OMstatus < 42).first()
+    
+    @close_session
+    def del_order(self, omid):
+        self.session.query(Ordermain).filter(Ordermain.OMid == omid).delete()
 
 
 if __name__ == "__main__":

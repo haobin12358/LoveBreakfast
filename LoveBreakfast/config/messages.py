@@ -18,7 +18,7 @@ ERROR_MESSAGE_NONE_USER = "未找到该用户"
 ERROR_MESSAGE_GET_CODE_FAST = "获取验证码频繁"
 ERROR_MESSAGE_NONE_PRODUCT = "该商品不存在"
 
-
+SUCCESS_MESSAGE_GET_INFO = "获取信息成功"
 error_messages_wrong_api = "The api is error !"
 error_messages_param_miss = "Some params maybe miss !"
 error_system_error = "System is error !"

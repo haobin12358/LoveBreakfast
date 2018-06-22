@@ -35,7 +35,8 @@ class CCoupons():
         if "token" not in args:
             return self.param_miss
         uid = args.get("token")
-        couid = data.get("Couid")
+
+        couid = data.get("COid")
 
         try:
             cart_pkg = self.scoupons.get_card_by_uid_couid(uid, couid)

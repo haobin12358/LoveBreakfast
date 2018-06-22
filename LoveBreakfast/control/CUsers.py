@@ -7,6 +7,7 @@ import json
 import uuid
 from config.response import SYSTEM_ERROR, PARAMS_MISS
 from common.import_status import import_status
+from common.get_model_return_list import get_model_return_dict
 
 class CUsers():
     def __init__(self):
@@ -21,20 +22,17 @@ class CUsers():
         print(data)
         print(self.title.format("data"))
 
-        if "Utel" not in data or "Upwd" not in data or "UScode" not in data:
+        if "UStelphone" not in data or "USpassword" not in data or "UScode" not in data:
             return PARAMS_MISS
 
-        list_utel = self.susers.get_user_by_utel(data["Utel"])
-        print(self.title.format("list_utel"))
-        print(list_utel)
-        print(self.title.format("list_utel"))
-        if not list_utel:
-            return SYSTEM_ERROR
+        user = self.susers.get_user_by_utel(data["UStelphone"])
+        print(self.title.format("user"))
+        print(user)
+        print(self.title.format("user"))
+        if user:
+            return import_status("messages_repeat_tel", "LOVEBREAKFAST_ERROR", "ERROR_CODE_NONE_TELPHONE")
 
-        if data["Utel"] in list_utel:
-            return import_status("ERROR_MESSAGE_REPEAT_TELPHONE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_REPEAT_TELPHONE")
-
-        UScode_dict = self.susers.get_code_by_utel(data["Utel"])
+        UScode_dict = self.susers.get_code_by_utel(data["UStelphone"])
         print(self.title.format("UScode"))
         print(UScode_dict)
         print(self.title.format("UScode"))
@@ -44,12 +42,12 @@ class CUsers():
         if UScode != data["UScode"]:
             return import_status("ERROR_MESSAGE_WRONG_ICCODE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_WRONG_ICCODE")
 
-        if "Uinvate" in data:
-            Uinvate = data["Uinvate"]
+        if "USinvatecode" in data:
+            Uinvate = data["USinvatecode"]
             # TODO 创建优惠券
 
         USinvatecode = self.make_invate_code()
-        is_register = self.susers.login_users(data["Utel"], data["Upwd"], USinvatecode)
+        is_register = self.susers.login_users(data["UStelphone"], data["USpassword"], USinvatecode)
         print(self.title.format("is_register"))
         print(is_register)
         print(self.title.format("is_register"))
@@ -86,28 +84,24 @@ class CUsers():
         print(data)
         print(self.title.format("data"))
 
-        if "Utel" not in data or "Upwd" not in data:
+        if "UStelphone" not in data or "USpassword" not in data:
             return PARAMS_MISS
 
-        Utel = data["Utel"]
-        list_utel = self.susers.get_user_by_utel(Utel)
-        print(self.title.format("list_utel"))
-        print(list_utel)
-        print(self.title.format("list_utel"))
-        if not list_utel:
-            return SYSTEM_ERROR
-
-        if Utel not in list_utel:
+        Utel = data["UStelphone"]
+        usid = get_model_return_dict(self.susers.get_user_by_utel(Utel))
+        print(self.title.format("usid"))
+        print(usid)
+        print(self.title.format("usid"))
+        if not usid:
             return import_status("ERROR_MESSAGE_NONE_TELPHONE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_NONE_TELPHONE")
 
         upwd = self.susers.get_upwd_by_utel(Utel)
-        if upwd != data["Upwd"]:
+        if upwd != data["USpassword"]:
             return import_status("ERROR_MESSAGE_WRONG_PASSWORD", "LOVEBREAKFAST_ERROR", "ERROR_CODE_WRONG_PASSWORD")
 
-        Uid = self.susers.get_uid_by_utel(Utel)
-
         back_response = import_status("SUCCESS_MESSAGE_LOGIN", "OK")
-        back_response["data"]["token"] = Uid
+        back_response["data"] = {}
+        back_response["data"]["token"] = usid.get("USid")
         return back_response
 
     def update_info(self):
@@ -131,19 +125,20 @@ class CUsers():
         print(data)
         print(self.title.format("data"))
 
-        if "Uname" not in data and "Usex" not in data:
+        if "USname" not in data and "USsex" not in data:
             return PARAMS_MISS
 
         users = {}
-        if "Uname" in data:
-            Uname = data["Uname"]
-            users["USname"] = Uname
-        if "Usex" in data:
-            Usex = data["Usex"]
+        if "USname" in data:
+            users["USname"] = data["USname"]
+        if "USsex" in data:
+            Usex = data["USsex"]
+
             if Usex == "男":
                 Usex = 101
-            elif Usex == "女":
+            else:
                 Usex = 102
+
             users["USsex"] = Usex
 
         update_info = self.susers.update_users_by_uid(Uid, users)
@@ -177,12 +172,11 @@ class CUsers():
         print(data)
         print(self.title.format("data"))
 
-        if "Upwd" not in data:
+        if "USpassword" not in data:
             return PARAMS_MISS
 
         users = {}
-        Upwd = data["Upwd"]
-        users["USpassword"] = Upwd
+        users["USpassword"] = data["USpassword"]
 
         update_info = self.susers.update_users_by_uid(Uid, users)
         print(self.title.format("update_info"))
@@ -203,38 +197,27 @@ class CUsers():
             return PARAMS_MISS
         Uid = args["token"]
 
-        users_info = self.susers.get_all_users_info(Uid)
+        users_info = get_model_return_dict(self.susers.get_all_users_info(Uid))
         print(self.title.format("users_info"))
         print(users_info)
         print(self.title.format("users_info"))
         if not users_info:
             return SYSTEM_ERROR
 
-        response_data = {}
-        Utel = users_info.UStelphone
-        response_data["Utel"] = Utel
-        if users_info.USname not in ["", None]:
-            Uname = users_info.USname
-            response_data["Uname"] = Uname
-        else:
-            response_data["Uname"] = None
-        if users_info.USsex not in["", None]:
-            Usex = users_info.USsex
+        if users_info.get("USsex") not in["", None]:
+            Usex = users_info.get("USsex")
             if Usex == 101:
-                response_data["Usex"] = "男"
+                users_info["USsex"] = "男"
             elif Usex == 102:
-                response_data["Usex"] = "女"
+                users_info["USsex"] = "女"
             else:
-                response_data["Usex"] = "未知性别"
+                users_info["USsex"] = "未知性别"
         else:
-            response_data["Usex"] = None
-        response_data["Ucoin"] = users_info.UScoin
-        response_data["Uinvate"] = users_info.USinvatecode
+            users_info["USsex"] = None
 
         back_response = import_status("SUCCESS_GET_MESSAGE", "OK")
-        back_response["data"] = response_data
+        back_response["data"] = users_info
         return back_response
-
 
     def get_inforcode(self):
         data = request.data
@@ -275,6 +258,7 @@ class CUsers():
                 return import_status("ERROR_MESSAGE_GET_CODE_FAST", "LOVEBREAKFAST_ERROR", "ERROR_CODE_GET_CODE_FAST")
 
         new_inforcode = self.susers.add_inforcode(Utel, code, time_str)
+
         print(self.title.format("new_inforcode"))
         print(new_inforcode)
         print(self.title.format("new_inforcode"))

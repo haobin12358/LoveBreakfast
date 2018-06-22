@@ -14,6 +14,8 @@ from services.SUsers import SUsers
 from services.SOrders import SOrders
 from config.response import PARAMS_MISS, SYSTEM_ERROR
 from common.TransformToList import add_model
+from common.get_model_return_list import get_model_return_dict, get_model_return_list
+
 
 class CReview():
     def __init__(self):
@@ -29,11 +31,14 @@ class CReview():
         print(self.title.format("args"))
         print(args)
         print(self.title.format("args"))
-        if "token" not in args.keys() or "Oid" not in args.keys():
+        if "token" not in args.keys() or "OMid" not in args.keys():
             return PARAMS_MISS
 
         USid = get_str(args, "token")
-        OMid = get_str(args, "Oid")
+        OMid = get_str(args, "OMid")
+        OMstatus = self.service_order.get_omstatus_by_omid(OMid)
+        if OMstatus >= 49:
+            return import_status("ERROR_MESSAGE_WRONG_OMSTATUS", "LOVEBREAKFAST_ERROR", "ERROR_CODE_WRONG_OMSTATUS")
 
         data = request.data
         data = json.loads(data)
@@ -45,14 +50,14 @@ class CReview():
             print(self.title.format("data_item"))
             print(row)
             print(self.title.format("data_item"))
-            if "Pid" not in row or "Rscore" not in row:
+            if "PRid" not in row or "REscore" not in row:
                 return PARAMS_MISS
-            if "Rcontent" in data:
-                REcontent = row["Rcontent"]
+            if "REcontent" in data:
+                REcontent = row["REcontent"]
             else:
                 REcontent = None
-            PRid = row["Pid"]
-            REscore = row["Rscore"]
+            PRid = row["PRid"]
+            REscore = row["REscore"]
             try:
                 add_model("Review",
                           **{
@@ -75,7 +80,7 @@ class CReview():
 
             score = (product_score * product_volue + REscore)/product_volue
             product = {
-                "PRscore":score
+                "PRscore": score
             }
             update_product = self.service_product.update_product_by_prid(PRid, product)
             print(self.title.format("update_product"))
@@ -103,54 +108,32 @@ class CReview():
         print(args)
         print(self.title.format("args"))
 
-        if "Oid" not in args.keys() or "token" not in args.keys():
+        if "OMid" not in args.keys() or "token" not in args.keys():
             return PARAMS_MISS
 
         USid = get_str(args, "token")
         # TODO USid的作用？
 
-        OMid = get_str(args, "Oid")
+        OMid = get_str(args, "OMid")
 
-        OMstatus = self.service_order.get_omstatus_by_omid(OMid)
-        print(self.title.format("OMstatus"))
-        print(OMstatus)
-        print(self.title.format("OMstatus"))
-        if OMid != 42:
-            return import_status("ERROR_MESSAGE_WRONG_OMSTATUS", "LOVEBREAKFAST_ERROR", "ERROR_CODE_WRONG_OMSTATUS")
-
-        all_review = self.service_review.get_review(OMid)
+        all_review = get_model_return_list(self.service_review.get_review(OMid))
         print(self.title.format("all_review"))
         print(all_review)
         print(self.title.format("all_review"))
         if not all_review:
             return SYSTEM_ERROR
 
-        review_list = []
         for row in all_review:
-            review_item = {}
-            print(self.title.format("review_item"))
-            print(row)
-            print(self.title.format("review_item"))
-            Pid = row.PRid
-            Rscore = row.REscore
-            Rcontent = row.REcontent
-            product = self.service_product.get_product_all_by_pid(Pid)
+            product = get_model_return_dict(self.service_product.get_product_all_by_pid(row.get("PRid")))
             print(self.title.format("product"))
             print(product)
             print(self.title.format("product"))
             if not product:
                 return SYSTEM_ERROR
-            PRimage = product.PRimage
-            PRname = product.PRname
-            review_item["Pid"] = Pid
-            review_item["Rscore"] = Rscore
-            review_item["Rcontent"] = Rcontent
-            review_item["PRimage"] = PRimage
-            review_item["PRname"] = PRname
-            review_list.append(review_item)
+            row.update(product)
 
         back_response = import_status("SUCCESS_MESSAGE_ADD_REVIEW", "OK")
-        back_response["data"] = review_list
+        back_response["data"] = all_review
         return back_response
 
     def delete_user_review(self):

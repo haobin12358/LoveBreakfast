@@ -4,3 +4,18 @@ product_url_list = [
     "http://120.79.182.43:7444/imgs/hello.jpg",
     "http://120.79.182.43:7444/imgs/hello.jpg"
 ]
+
+home = [
+    "http://120.79.182.43:7444/imgs/hello.jpg",
+    "http://120.79.182.43:7444/imgs/hello.jpg"
+]
+
+weekday_pic = (
+    "http://120.79.182.43:7444/imgs/hello.jpg",
+    "http://120.79.182.43:7444/imgs/hello.jpg"
+    "http://120.79.182.43:7444/imgs/hello.jpg",
+    "http://120.79.182.43:7444/imgs/hello.jpg",
+    "http://120.79.182.43:7444/imgs/hello.jpg"
+    "http://120.79.182.43:7444/imgs/hello.jpg",
+    "http://120.79.182.43:7444/imgs/hello.jpg"
+)

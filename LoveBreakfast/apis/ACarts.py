@@ -22,7 +22,7 @@ class ACarts(Resource):
 
         control_cart = CCarts()
         apis = {
-            "delete_product": "control_cart.del_cart()",
+            "delete_product": "control_cart.del_product()",
             "update": "control_cart.add_or_update_cart()"
         }
 

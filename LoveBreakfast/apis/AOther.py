@@ -1,12 +1,12 @@
 # *- coding:utf8 *-
-# *- coding:utf8 *-
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-from flask_restful import Resource,request
+from flask_restful import Resource, request
 from config.response import PARAMS_MISS
 from common.import_status import import_status
 from config.response import SYSTEM_ERROR
+import datetime
 
 class AOther(Resource):
     def __init__(self):
@@ -116,7 +116,6 @@ class AOther(Resource):
             body["total_fee"] = int(OMprice * 100)
             from config.Inforcode import NETWORK_IP
             body["spbill_create_ip"] = NETWORK_IP
-            import datetime
             body["time_start"] = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
             body["time_expire"] = (datetime.datetime.now() + datetime.timedelta(hours=2)).strftime("%Y%m%d%H%M%S")
             # TODO 修改响应地址
@@ -248,7 +247,7 @@ class AOther(Resource):
             body["total_fee"] = 1
             from config.Inforcode import NETWORK_IP
             body["spbill_create_ip"] = NETWORK_IP
-            import datetime
+
             body["time_start"] = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
             body["time_expire"] = (datetime.datetime.now() + datetime.timedelta(hours=2)).strftime("%Y%m%d%H%M%S")
             body["notify_url"] = "https://h878.cn/sharp/goods/other/getdata"
@@ -337,6 +336,22 @@ class AOther(Resource):
             s.update(key_sign)
             response["paySign"] = s.hexdigest().upper()
             return response
+
+        if other == "picture":
+            print("=======================api===================")
+            print("接口名称是{0}，接口方法是get".format("picture"))
+            print("=======================api===================")
+            args = request.args.to_dict()
+            position = args.get("position")
+            print("=======================position===================")
+            print("position = ".format(position))
+            print("=======================position===================")
+            from config import urlconfig
+            if position == "top":
+                return urlconfig.home
+            else:
+                now = datetime.datetime.now()
+                return urlconfig.weekday_pic[now.weekday()]
 
     def post(self, other):
         if other == "getdata":

@@ -76,9 +76,9 @@ class CCarts():
             cart_info["CAnumber"] = cart.CAnumber
             cart_info_list.append(cart_info)
 
-            back_response = import_status("SUCCESS_GET_MESSAGE", "OK")
-            back_response["data"] = cart_info_list
-            return back_response
+        back_response = import_status("SUCCESS_GET_MESSAGE", "OK")
+        back_response["data"] = cart_info_list
+        return back_response
 
 
     def add_or_update_cart(self):
@@ -142,3 +142,20 @@ class CCarts():
         except Exception as e:
             print(e.message)
             return SYSTEM_ERROR
+
+    def del_product(self):
+        args = request.args.to_dict()
+        print(self.title.format("args"))
+        print(args)
+        print(self.title.format("args"))
+        if "token" not in args:
+            return PARAMS_MISS
+        data = json.loads(request.data)
+        print(self.title.format("data"))
+        print(data)
+        print(self.title.format("data"))
+
+        if "PRid" not in data:
+            return PARAMS_MISS
+
+        return self.del_cart(args.get("token"), data.get("PRid"))

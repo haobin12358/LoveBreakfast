@@ -1,14 +1,15 @@
 # *- coding:utf8 *-
 import sys
 import os
+
 sys.path.append(os.path.dirname(os.getcwd()))
 import uuid
 from models import model
 from common.TransformToList import trans_params
 from services.SBase import SBase, close_session
 
-class SUsers(SBase):
 
+class SUsers(SBase):
     @trans_params
     @close_session
     def get_all_user_tel(self):
@@ -34,10 +35,6 @@ class SUsers(SBase):
         return self.session.query(model.Users.USpassword).filter_by(UStelphone=utel).scalar()
 
     @close_session
-    def get_uid_by_utel(self, utel):
-        return self.session.query(model.Users.USid).filter_by(UStelphone=utel).scalar()
-
-    @close_session
     def update_users_by_uid(self, uid, users):
         self.session.query(model.Users).filter_by(USid=uid).update(users)
         self.session.commit()
@@ -47,8 +44,8 @@ class SUsers(SBase):
     @close_session
     def get_all_users_info(self, usid):
         return self.session.query(model.Users.USname, model.Users.UStelphone, model.Users.USsex, model.Users.UScoin,
-                                            model.Users.USinvatecode)\
-                .filter_by(USid=usid).first()
+                                  model.Users.USinvatecode) \
+            .filter_by(USid=usid).first()
 
     @close_session
     def get_uname_utel_by_uid(self, uid):
@@ -56,13 +53,13 @@ class SUsers(SBase):
 
     @close_session
     def get_uptime_by_utel(self, utel):
-        return self.session.query(model.IdentifyingCode.ICtime).filter_by(ICtelphone=utel)\
-                .order_by(model.IdentifyingCode.ICtime.desc()).first()
+        return self.session.query(model.IdentifyingCode.ICtime).filter_by(ICtelphone=utel) \
+            .order_by(model.IdentifyingCode.ICtime.desc()).first()
 
     @close_session
     def get_code_by_utel(self, utel):
-        return self.session.query(model.IdentifyingCode.ICcode).filter_by(ICtelphone=utel)\
-                .order_by(model.IdentifyingCode.ICtime.desc()).first()
+        return self.session.query(model.IdentifyingCode.ICcode).filter_by(ICtelphone=utel) \
+            .order_by(model.IdentifyingCode.ICtime.desc()).first()
 
     @close_session
     def add_inforcode(self, utel, code, time):
@@ -78,14 +75,14 @@ class SUsers(SBase):
 
     @close_session
     def get_user_by_utel(self, utel):
-        return self.session.query(model.Users.USid).filter_by(UStelphone=utel).all()
+        return self.session.query(model.Users.USid).filter_by(UStelphone=utel).first()
 
     @trans_params
     @close_session
     def get_all_invate_code(self):
-        return self.session.query(model.Users.USinvate).all()
+        return self.session.query(model.Users.USinvatecode).all()
 
     @close_session
     def get_user_by_usid(self, usid):
-        return self.session.query(model.Users.USid, model.Users.UStelphone, model.Users.USinvatecode)\
+        return self.session.query(model.Users.USid, model.Users.UStelphone, model.Users.USinvatecode) \
             .filter_by(USid=usid).all()
