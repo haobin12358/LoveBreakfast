@@ -1,9 +1,49 @@
 <style scoped lang="less" rel="stylesheet/less">
     @import "../../styles/common";
-
+    .my-productDetail{
+      padding: 40rpx;
+      font-size: 28rpx;
+      .my-title{
+        font-size: 32rpx;
+        line-height: 66rpx;
+      }
+      .my-product-info{
+        .my-name{
+          font-size: 28rpx;
+          line-height: 50rpx;
+        }
+       .my-price{
+         color: @main_color;
+       }
+        padding-bottom: 40rpx;
+      }
+      .my-btn{
+        background-color: @main_color;
+        font-size: 32rpx;
+        color: #fff;
+        height: 90rpx;
+        line-height: 90rpx;
+        width: 440rpx;
+        text-align: center;
+        border-radius: 10px;
+        position: absolute;
+        bottom: 120rpx;
+        left: 155rpx;
+      }
+    }
 </style>
 <template>
-<view></view>
+<view class="my-productDetail" >
+  <image src="../../images/icon-logo.jpg" style="width: 670rpx;height: 400rpx;"></image>
+  <view class="my-title">套餐1</view>
+  <view class="my-product-info">
+    <view class="my-name">
+      名字
+    </view>
+    <view class="my-price">￥12.3</view>
+  </view>
+  <view class="my-btn">添加购物车</view>
+</view>
 </template>
 
 <script>
