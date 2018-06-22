@@ -95,9 +95,7 @@
         }
       }
         onLoad() {
-
         }
-
         methods = {
           productTap(v){
             wx.navigateTo({
