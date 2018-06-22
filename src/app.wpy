@@ -17,6 +17,7 @@ export default class extends wepy.app {
       'pages/car/index',
       'pages/car/playOneOrder',
       'pages/order/index',
+      'pages/order/orderDetail',
       'pages/personal/index'
     ],
     window: {
