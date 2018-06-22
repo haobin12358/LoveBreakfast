@@ -1,19 +1,32 @@
 <style lang="less">
   @import "../../styles/common";
+  @moneyColor: #f6992c;
+
   page  {
-    background-color: #e5e5e5;
+    background-color: #f6f5f6;
+    width: 100%;
+    height: 100%;
+    border: 1px;
+    padding-top: 30rpx ;
+    box-sizing: border-box;
   }
   .container{
+    padding: 0rpx 70rpx;
+    box-sizing: border-box;
 
-    margin: 30rpx 74rpx auto;
-
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     .order-card{
       width: 600rpx;
       height: 928rpx;
       border-radius: 20rpx;
-      background-color: #ffffff;
+      /*background-color: rgb(255,255,255);*/
+      background: rgba(255,255,255,1);
       margin-bottom: 38rpx;
       padding-top:56rpx ;
+      flex: .8;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -24,40 +37,86 @@
         image{
           width: 150rpx;
           height: 150rpx;
+          /*opacity: .7;*/
         }
 
 
       }
       .card-money{
-        margin-bottom: 130rpx;
+        margin-bottom: 100rpx;
 
         font-size: 53rpx;
         color: #c1272d;
         font-family: @num_family;
       }
       .card-detail{
-        width: 100rpx;
-        height: 100rpx;
+
+        .detail-hd{
+          margin-bottom: 30rpx;
+        }
+
       }
     }
 
-    .cancel-button  {
+    button.cancel-button  {
       background-color: @main_color;
       margin: auto 80rpx;
-
+      color: #ffffff;
     }
+  }
+
+  .doc{
+    font-size: 32rpx;
+    color: #000000;
+  }
+
+  .doc-small{
+    font-size: 28rpx;
+  }
+
+  .doc-money{
+    color: @moneyColor;
+    font-family: @num_family;
   }
 </style>
 
 <template>
   <view class="container">
-
     <view class="order-card">
       <view class="card-icon">
         <image src="../../images/icon-logo.jpg"></image>
       </view>
-      <view class="card-money"></view>
-      <view class="card-detail"></view>
+      <view class="card-money">
+        123456
+      </view>
+      <view class="card-detail">
+        <view class="detail-hd">
+          <view class="doc">
+            实际支付：
+            <text class="doc-money">￥12.3</text>
+          </view>
+          <view class="doc">
+            订单详情: 套餐1+豆浆
+          </view>
+        </view>
+        <view class="detail-bd">
+          <view class="doc doc-small">
+            取货地点: xxxx
+          </view>
+          <view class="doc doc-small">
+            取货时间: 2018-04
+          </view>
+          <view class="doc doc-small">
+            联系人: xxx
+          </view>
+          <view class="doc doc-small">
+            联系电话: 123
+          </view>
+          <view class="doc doc-small">
+            下单时间: 1222
+          </view>
+        </view>
+      </view>
     </view>
     <button class="cancel-button">取消订单</button>
   </view>
@@ -72,7 +131,6 @@
     export default class OrderDetail extends wepy.page {
         config = {
           navigationBarTitleText: '评价详情'
-
         }
 
         data = {}
