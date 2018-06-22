@@ -1,0 +1,93 @@
+<style scoped lang="less" rel="stylesheet/less">
+    @import "../styles/common";
+    .my-one-product{
+      width: 690rpx;
+      padding:30rpx;
+      .flex-row(space-between);
+      border-top: 0.8px solid @border_color;
+      &:last-child{
+        border-bottom: 0.8px solid @border_color;
+      }
+      .my-left{
+        width: 520rpx;
+        .flex-row(flex-start);
+        .my-icon-img{
+          width: 30rpx;
+          height:30rpx;
+          margin: 0 20rpx;
+        }
+        .my-product-img{
+          width: 85rpx;
+          height: 85rpx;
+          margin: 0 20rpx;
+        }
+        .my-name{
+          font-size: 32rpx;
+        }
+        .my-price{
+          color: @main_color;
+          line-height: 46rpx;
+        }
+      }
+      .my-right{
+        width: 170rpx;
+        border: 1px solid @border_color;
+        border-radius: 10px;
+        .flex-row(flex-start);
+        p{
+          width: 50rpx;
+          text-align: center;
+        }
+        input{
+          width: 77rpx;
+          border: 1px solid @border_color;
+          border-top: none;
+          border-bottom: none;
+          text-align: center;
+        }
+      }
+    }
+</style>
+<template>
+  <view class="my-one-product" @tap="productTap">
+    <view class="my-left">
+      <image class="my-icon-img" src="../../images/icon-radio.jpg" ></image>
+      <image class='my-product-img' src="../../images/icon-logo.jpg" ></image>
+      <view class="my-product-info">
+        <view class="my-name">名称</view>
+        <view class="my-price">12.3</view>
+      </view>
+    </view>
+    <view class="my-right">
+      <p>-</p>
+      <input type="text" value="1">
+      <p>+</p>
+    </view>
+  </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../api/api';
+    import tip from '../utils/tip';
+
+
+    export default class Car extends wepy.page {
+
+        data = {}
+
+        computed = {}
+
+        onLoad() {
+
+        }
+
+        methods = {
+          productTap(){
+            wx.navigateTo({
+              url:'/pages/index/productDetail'
+            })
+          }
+        }
+    }
+</script>

@@ -26,37 +26,41 @@
       }
       .my-content{
         width: 100%;
-        .my-one-product{
-          width: 670rpx;
-          padding: 20rpx 40rpx;
-          .flex-row(flex-start);
-          border-bottom: 1px solid @border_color;
-          .my-right{
-            margin-left: 40rpx;
-            font-size: 24rpx;
-            .my-row{
-              .flex-row(space-between);
-              &:last-child{
-                margin-top: 20rpx;
-              }
-              .my-title{
-                font-size: 28rpx;
-                width: 416rpx;
-              }
-              .my-price{
-                color: @main_color;
-              }
+      }
+      .my-modal-state{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top:62rpx;
+        left:0;
+        background-color: rgba(255,255,255,0.9);
+        .my-modal{
+          padding:20rpx 90rpx;
+          background-color: #fff;
+          .my-pick-box{
+            .flex-row(flex-start);
+            padding: 20rpx 0;
+            .picker{
+              width: 200rpx;
+              margin-left: 20rpx;
+            }
+            .my-picker{
+              width: 250rpx;
+              border: 1px solid @border_color;
+              border-radius: 20px;
+              height: 46rpx;
+              line-height: 46rpx;
+              text-align: center;
             }
           }
         }
       }
     }
-
 </style>
 <template>
   <view class="my-product-index">
     <view class="my-head">
-      <view class="my-location">
+      <view class="my-location" @tap="modalChange">
         <image src="../../images/icon-order-loc.jpg" style="width: 30rpx;height: 40rpx;" />
         <text>江陵路A口</text>
       </view>
@@ -66,44 +70,63 @@
       </view>
     </view>
     <view class="my-content">
-      <view class="my-one-product">
-        <image src="../../images/icon-logo.jpg" style="width: 150rpx;height: 150rpx;" />
-        <view class="my-right">
-          <view class="my-row">
-            <view class="my-title">套餐1</view>
-            <view>4.3分</view>
-          </view>
-          <view class="my-row">
-            月销100份
-          </view>
-          <view class="my-row">
-            <view class="my-price">￥12.3</view>
-            <view class="my-add-box">
-              <image  src="../../images/icon-add.jpg" style="width: 50rpx;height: 50rpx;"/>
+      <product @productTap.user="productTap"></product>
+      <product @productTap.user="productTap"></product>
+      <product @productTap.user="productTap"></product>
+      <product @productTap.user="productTap"></product>
+    </view>
+    <view class="my-modal-state" wx:if="{{showModal}}">
+      <view class="my-modal">
+        <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+          <view class="my-pick-box" >
+            <image src="../../images/icon-city.jpg" style="width: 25rpx;height: 30rpx;"/>
+            <view class="picker">
+              城市：
+            </view>
+            <view class="my-picker">
+              {{array[index]}}
             </view>
           </view>
-        </view>
-      </view>
-      <view class="my-one-product">
-        <image src="../../images/icon-logo.jpg" style="width: 150rpx;height: 150rpx;" />
-        <view class="my-right">
-          <view class="my-row">
-            <view class="my-title">套餐1</view>
-            <view>4.3分</view>
-          </view>
-          <view class="my-row">
-            月销100份
-          </view>
-          <view class="my-row">
-            <view class="my-price">￥12.3</view>
-            <view class="my-add-box">
-              <image  src="../../images/icon-add.jpg" style="width: 50rpx;height: 50rpx;"/>
+
+        </picker>
+        <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+          <view class="my-pick-box" >
+            <image src="../../images/icon-target.jpg" style="width: 25rpx;height: 30rpx;"/>
+            <view class="picker">
+              目标：
+            </view>
+            <view class="my-picker">
+              {{array[index]}}
             </view>
           </view>
-        </view>
+
+        </picker>
+        <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+          <view class="my-pick-box" >
+            <image src="../../images/icon-loc-s.jpg" style="width: 25rpx;height: 30rpx;"/>
+            <view class="picker">
+              区域：
+            </view>
+            <view class="my-picker">
+              {{array[index]}}
+            </view>
+          </view>
+
+        </picker>
+        <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+          <view class="my-pick-box" >
+            <image src="../../images/icon-dot.jpg" style="width: 25rpx;height: 30rpx;"/>
+            <view class="picker">
+              点位：
+            </view>
+            <view class="my-picker">
+              {{array[index]}}
+            </view>
+          </view>
+
+        </picker>
       </view>
     </view>
-    <view class="my-modal"></view>
   </view>
 </template>
 
@@ -111,13 +134,18 @@
     import wepy from 'wepy';
     import api from '../../api/api';
     import tip from '../../utils/tip';
-
+    import product from '../../components/product';
     export default class Index extends wepy.page {
         config = {
             navigationBarTitleText: ''
         }
+        components={
+          product:product
+        }
         data = {
-
+          array: ['美国', '中国', '巴西', '日本'],
+          index: 0,
+          showModal:false
         }
 
         computed = {}
@@ -125,7 +153,15 @@
         onLoad() {
 
         }
-
-        methods = {}
+        methods = {
+          modalChange(){
+            this.showModal = !this.showModal;
+          },
+          productTap(){
+            wx.navigateTo({
+              url:'/pages/index/productDetail'
+            })
+          }
+        }
     }
 </script>
