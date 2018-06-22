@@ -1,11 +1,28 @@
 <style scoped lang="less" rel="stylesheet/less">
     @import "../../styles/common";
+    .my-product-index{
+      width: 100%;
+      font-size: 28rpx;
+      .my-head{
 
+      }
+    }
 
 </style>
 <template>
-  <view >
-首页
+  <view class="my-product-index">
+    <view class="my-head">
+      <view class="my-location">
+        <image src="../../images/icon-order-loc.jpg" style="width: 30rpx;height: 30rpx;"></image>
+        <text>江陵路A口</text>
+      </view>
+      <view class="my-input-box">
+        <image src="../../images/icon-search.jpg" style="width: 30rpx;height: 30rpx;"></image>
+        <input type="text" placeholder="搜索">
+      </view>
+    </view>
+    <view class="my-content"></view>
+    <view class="my-modal"></view>
   </view>
 </template>
 
