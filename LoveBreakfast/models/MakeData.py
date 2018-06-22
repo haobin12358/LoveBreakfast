@@ -3,49 +3,10 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
-#from services.SCoupons import SCoupons
 import model
 import pymysql
 change_index = 10  # 循环中改变type的点
 info_count = 22  # 需要插入的数据库条数
-
-
-class MakeData():
-    def __init__(self):
-        #self.shop = SShop()
-        # self.product = SProduct()
-        self.cou = SCoupons()
-
-    def make_id(self):
-        import uuid
-        user_ids = []
-        i = 0
-        while i < info_count:
-            user_ids.append(str(uuid.uuid4()))
-            i = i + 1
-        return user_ids
-
-    def add_shops(self, tshop_ids):
-        for i in range(info_count):
-            shop_model = model.Shops()
-            shop_model.Sid = tshop_ids[i]
-            shop_model.Sname = "test{0}".format(i)
-            shop_model.Sreview = "5"
-            shop_model.Sdetail = "包子，粥，面条"
-            shop_model.Simage = "http://www.baidu.com"
-            shop_model.Stel = "135880461%02d" % i
-            self.shop.add_shop(shop_model)
-
-    def add_conpons(self, conid):
-        for i in range(info_count):
-            self.cou.add_coupons(**{
-                "COid": i,
-                "COfilter": float("1%02d.00" % i),
-                "COdiscount": 0.2,
-                "COamount": 10.1,
-                "COstart": "2018011421%02d00" % i,
-                "COend": "2018041421%02d00" % i
-            })
 
 
 class databse_deal():
