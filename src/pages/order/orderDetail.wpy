@@ -11,13 +11,14 @@
     box-sizing: border-box;
   }
   .container{
-    padding: 0rpx 70rpx;
+    /*padding: 0rpx 70rpx;*/
     box-sizing: border-box;
 
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     .order-card{
       width: 600rpx;
       height: 928rpx;
@@ -60,8 +61,9 @@
 
     button.cancel-button  {
       background-color: @main_color;
-      margin: auto 80rpx;
+      margin: auto;
       color: #ffffff;
+      width: 300rpx;
     }
   }
 
@@ -130,7 +132,7 @@
 
     export default class OrderDetail extends wepy.page {
         config = {
-          navigationBarTitleText: '评价详情'
+          navigationBarTitleText: '订单详情'
         }
 
         data = {}
