@@ -2,10 +2,9 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-import uuid
 import DBSession
 from models import model
-from common.TransformToList import trans_params
+
 
 class Slocations():
     def __init__(self):
@@ -14,6 +13,10 @@ class Slocations():
         except Exception as e:
             print(e.message)
 
+    # def __new__(cls, *args, **kwargs):
+    #     if not hasattr(cls, '_instance'):
+    #         cls._instance = super(Slocations, cls).__new__(cls, *args, **kwargs)
+    #     return cls._instance
 
     def get_all(self, lline):
         all_location = None

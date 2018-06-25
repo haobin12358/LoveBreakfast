@@ -20,8 +20,8 @@ api.add_resource(AUsers, "/love/breakfast/users/<string:users>")
 api.add_resource(AProduct, "/love/breakfast/product/<string:product>")
 api.add_resource(ACarts, "/love/breakfast/salelist/<string:cart>")
 api.add_resource(AReview, "/love/breakfast/review/<string:review>")
-api.add_resource(ACategory, "/love/breakfast/category/<string:category>")
-api.add_resource(AShop, "/love/breakfast/shop/<string:shop>")
+# api.add_resource(ACategory, "/love/breakfast/category/<string:category>")
+# api.add_resource(AShop, "/love/breakfast/shop/<string:shop>")
 api.add_resource(AOrders, "/love/breakfast/orders/<string:orders>")
 api.add_resource(ALocations, "/love/breakfast/locations/<string:locations>")
 api.add_resource(ACoupons, "/love/breakfast/cardpkg/<string:card>")
@@ -34,5 +34,7 @@ if __name__ == '__main__':
         "/etc/nginx/cert/1525609592348.pem"
     ))
 '''
+
 if __name__ == '__main__':
-    bk.run('0.0.0.0', 7444, debug=True)
+
+    bk.run('0.0.0.0', 7444, debug=False)

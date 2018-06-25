@@ -7,14 +7,14 @@ import uuid
 import json
 from services.SProduct import SProduct
 from common.get_str import get_str
-from common.import_status import import_status
+from common.ImportManager import import_status
 from services.SReview import SReview
 from control.COrders import COrders
 from services.SUsers import SUsers
 from services.SOrders import SOrders
 from config.response import PARAMS_MISS, SYSTEM_ERROR
 from common.TransformToList import add_model
-from common.get_model_return_list import get_model_return_dict, get_model_return_list
+from common.ServiceManager import get_model_return_dict, get_model_return_list
 
 
 class CReview():

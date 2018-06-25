@@ -32,7 +32,7 @@ class Locations(Base):
     LOnumber = Column(Integer, nullable=False)       # 地铁线路编号
     LOname = Column(String(64), nullable=False)      # 地铁站点名称
     LOexitNumber = Column(Integer, nullable=False)   # 地铁站点出站口编号
-    LOboxnumber = Column(Integer, nullable=False)      # 箱码，具体等待业务方提供
+    LOboxnumber = Column(Integer, nullable=False)    # 箱码，具体等待业务方提供
 
 
 class Products(Base):
@@ -169,8 +169,8 @@ class AddressSecond(Base):
 class AddressAbo(Base):
     __tablename__ = "AddressAbo"
     AAid = Column(String(64), primary_key=True)
-    AAmessage = Column(Text)
-    AAimage = Column(Text)
+    AAmessage = Column(Text)  # 机器地址详情
+    AAimage = Column(Text)    # 机器位置示意图
     ASid = Column(String(64))
 
 

@@ -6,9 +6,9 @@ from flask import request
 import json
 from config.response import SYSTEM_ERROR, PARAMS_MISS
 import datetime
-from common import timeformate
-from common.import_status import import_status
-from common.get_model_return_list import get_model_return_list, get_model_return_dict
+from common import Tools
+from common.ImportManager import import_status
+from common.ServiceManager import get_model_return_list, get_model_return_dict
 from common.get_str import get_str
 
 
@@ -26,6 +26,12 @@ class COrders():
         self.sadd = SAddress()
         from services.SCoupons import SCoupons
         self.scoupons = SCoupons()
+
+        print("coupons service", id(self.scoupons))
+        print("sproduct service", id(self.sproduct))
+        print("sorders service", id(self.sorders))
+        print("susers service", id(self.susers))
+
         global OMstatus_list
         OMstatus_list = ("已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价")
 
@@ -49,7 +55,7 @@ class COrders():
         if order_list:
             for row in order_list:
                 status = row.get("OMstatus")
-                row["OMtime"] = timeformate.get_web_time_str(str(row.get("OMtime")))
+                row["OMtime"] = Tools.get_web_time_str(str(row.get("OMtime")))
                 if status > 21 or status == 0 or self.checktime():
                     row["is_index"] = 702
                 else:
@@ -90,12 +96,12 @@ class COrders():
         print(self.title.format("order_abo"))
         print(order_abo)
         print(self.title.format("order_abo"))
-        order_abo["OMtime"] = timeformate.get_web_time_str(order_abo.get("OMtime"))
+        order_abo["OMtime"] = Tools.get_web_time_str(order_abo.get("OMtime"))
         order_abo["is_index"] = 701
         if self.checktime() or order_abo.get("OMstatus") > 21 or order_abo.get("OMstatus") == 0:
             order_abo["is_index"] = 702
         order_abo["OMstatus"] = self.get_status_name_by_status(order_abo.get("OMstatus"))
-        order_abo["OMdate"] = timeformate.get_web_time_str(order_abo.get("OMdate"))
+        order_abo["OMdate"] = Tools.get_web_time_str(order_abo.get("OMdate"))
 
         users = get_model_return_dict(self.susers.get_uname_utel_by_uid(Uid))
         print(self.title.format("users"))
@@ -144,8 +150,8 @@ class COrders():
                 return PARAMS_MISS
 
         Uid = args["token"]
-        OMtime = timeformate.get_db_time_str(data["OMtime"])
-        OMdate = timeformate.get_db_time_str(data["OMdate"])
+        OMtime = Tools.get_db_time_str(data["OMtime"])
+        OMdate = Tools.get_db_time_str(data["OMdate"])
         addabo = self.sadd.get_addabo_by_addid(get_str(data, "AAid"))
         OMcode = self.make_code()
         import uuid
@@ -334,7 +340,7 @@ class COrders():
 
     def compute_om_price_by_coupons(self, coupon, omprice):
         from decimal import Decimal
-        time_now = timeformate.get_db_time_str()
+        time_now = Tools.get_db_time_str()
         omprice = Decimal(str(omprice))
         print(self.title.format("timenow"))
         print(time_now)

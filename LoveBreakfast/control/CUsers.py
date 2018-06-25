@@ -6,8 +6,8 @@ from flask import request
 import json
 import uuid
 from config.response import SYSTEM_ERROR, PARAMS_MISS
-from common.import_status import import_status
-from common.get_model_return_list import get_model_return_dict
+from common.ImportManager import import_status
+from common.ServiceManager import get_model_return_dict
 
 class CUsers():
     def __init__(self):

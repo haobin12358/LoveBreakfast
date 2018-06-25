@@ -4,9 +4,9 @@ import os
 
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import request
-from common.get_model_return_list import get_model_return_dict, get_model_return_list
+
 from common.get_str import get_str
-from common.import_status import import_status
+from common.ImportManager import import_status
 from config.response import PARAMS_MISS, SYSTEM_ERROR
 
 
@@ -15,6 +15,7 @@ class CAddress():
         self.title = "========={0}========="
         from services.SAddress import SAddress
         self.sadd = SAddress()
+        print("address service", id(self.sadd))
 
     def get_addfirst(self):
         """

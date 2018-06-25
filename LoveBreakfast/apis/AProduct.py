@@ -5,14 +5,19 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
 from config.Logs import PRINT_API_NAME
 from control.CProduct import CProduct
+from services.SBase import SBase
+from config.response import APIS_WRONG
+
 
 class AProduct(Resource):
     def __init__(self):
         self.control_product = CProduct()
-
+        self.sbase = SBase()
 
     def post(self, product):
         print(PRINT_API_NAME.format(product))
+        print('SBASE', id(self.sbase))
+        self.sbase.check_connection()
 
         apis = {
             "create_pro": "control_product.create_pro()",
@@ -24,11 +29,12 @@ class AProduct(Resource):
         if product in apis:
             return eval(apis[product])
 
-        return
+        return APIS_WRONG
 
     def get(self, product):
         print(PRINT_API_NAME.format(product))
-
+        print('SBASE', id(self.sbase))
+        self.sbase.check_connection()
         apis = {
             "get_info_by_id": "self.control_product.get_info_by_id()",
             "get_all": "self.control_product.get_all()"
@@ -36,4 +42,4 @@ class AProduct(Resource):
         if product in apis:
             return eval(apis[product])
 
-        return
+        return APIS_WRONG

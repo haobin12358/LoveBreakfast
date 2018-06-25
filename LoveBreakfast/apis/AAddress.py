@@ -4,24 +4,21 @@ import os
 
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
-from config.status import response_system_error
-from config.status_code import error_wrong_apis
-from config.messages import error_messages_wrong_api
 from control.CAddress import CAddress
+from services.SBase import SBase
+from config.response import APIS_WRONG
 
 
 class AAddress(Resource):
-    def __int__(self):
-        self.apis_wrong = {}
-        self.apis_wrong["status"] = response_system_error
-        self.apis_wrong["status_code"] = error_wrong_apis
-        self.apis_wrong["messages"] = error_messages_wrong_api
+    def __init__(self):
+        self.sbase = SBase()
 
     def get(self, address):
         print("=======================api===================")
         print("接口名称是{0}，接口方法是get".format(address))
         print("=======================api===================")
-
+        print("SBASE", id(self.sbase))
+        self.sbase.check_connection()
         control_cadd = CAddress()
         apis = {
             "get_citys": "control_cadd.get_citys()",
@@ -33,4 +30,4 @@ class AAddress(Resource):
         if address in apis:
             return eval(apis[address])
 
-        return self.apis_wrong
+        return APIS_WRONG

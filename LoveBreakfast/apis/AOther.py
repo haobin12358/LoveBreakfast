@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource, request
 from config.response import PARAMS_MISS
-from common.import_status import import_status
+from common.ImportManager import import_status
 from config.response import SYSTEM_ERROR
 import datetime
 

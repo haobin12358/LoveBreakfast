@@ -2,6 +2,7 @@
 # 兼容linux系统
 import sys
 import os
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -20,9 +21,13 @@ class SShop():
         self.status 判断数据库是否连接无异常
         """
         self.session, self.status = DBSession.get_session()
-        pass
 
-    #向数据库中插入数据，用于初始化数据
+    # def __new__(cls, *args, **kwargs):
+    #     if not hasattr(cls, '_instance'):
+    #         cls._instance = super(SShop, cls).__new__(cls, *args, **kwargs)
+    #     return cls._instance
+
+    # 向数据库中插入数据，用于初始化数据
     def add_shop(self, shop):
         try:
             self.session.add(shop)
@@ -38,7 +43,7 @@ class SShop():
         shop_list = []
         try:
             shop_list = self.session.query(models.Shops.Sname, models.Shops.Simage, models.Shops.Sreview,
-                                             models.Shops.Sdetail).all()
+                                           models.Shops.Sdetail).all()
         except Exception as e:
             print e.message
         finally:
@@ -50,24 +55,12 @@ class SShop():
         pro_abo = None
         try:
             pro_abo = self.session.query(models.Shops.Sname, models.Shops.Simage, models.Shops.Stel,
-                                             models.Shops.Sdetail).filter_by(Sid=sid).first()
+                                         models.Shops.Sdetail).filter_by(Sid=sid).first()
         except Exception as e:
             print e.message
         finally:
             self.session.close()
         return pro_abo
-
-    # 获取全部shopid
-    @trans_params
-    def get_all_sid(self):
-        shop_id_list = []
-        try:
-            shop_id_list = self.session.query(models.Shops.Sid).all()
-        except Exception as e:
-            print(e.message)
-        finally:
-            self.session.close()
-        return shop_id_list
 
     # 根据店铺id获取全部分类与商品
     def get_pro_detail_by_sid(self, sid):
@@ -79,7 +72,3 @@ class SShop():
         finally:
             self.session.close()
         return proid_list
-
-if __name__ == "__main__":
-    shop = SShop()
-    print shop.get_homepage_products()

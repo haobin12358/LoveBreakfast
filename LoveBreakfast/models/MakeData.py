@@ -2,11 +2,35 @@
 # 兼容linux系统
 import sys
 import os
-sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
+args = sys.argv
+path = os.getcwd()
+if len(args) > 1:
+    path = args[1]  # /opt/LoveBreakfast
+print(path)
+sys.path.append(os.path.dirname(path))  # 增加系统路径
 import model
 import pymysql
 change_index = 10  # 循环中改变type的点
 info_count = 22  # 需要插入的数据库条数
+
+
+def add_model(model_name, **kwargs):
+    print(model_name)
+    if not getattr(model, model_name):
+        print("model name = {0} error ".format(model_name))
+        return
+    model_bean = eval(" models.{0}()".format(model_name))
+    for key in model_bean.__table__.columns.keys():
+        if key in kwargs:
+            setattr(model_bean, key, kwargs.get(key))
+    from services.DBSession import get_session
+    session, status = get_session()
+    if status:
+        session.add(model_bean)
+        session.commit()
+        session.close()
+        return
+    raise Exception("session connect error")
 
 
 class databse_deal():
@@ -51,6 +75,7 @@ def create():
 def drop():
     databse_deal().drop_database()
 
+
 if __name__ == "__main__":
     print("start")
     '''
@@ -64,9 +89,4 @@ if __name__ == "__main__":
 
     else:
         create()
-        #data = MakeData()
-        #tshop_ids = data.make_id()
-        # data.add_shops(tshop_ids)
-        # data.add_products(tshop_ids)
-        #data.add_conpons(tshop_ids)
-        print("over")
+    print("over")

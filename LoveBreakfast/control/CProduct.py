@@ -7,10 +7,10 @@ from flask import request
 from services.SProduct import SProduct
 from common.get_str import get_str
 from config.response import PARAMS_MISS, SYSTEM_ERROR
-from common.import_status import import_status
+from common.ImportManager import import_status
 from services.SCategory import SCategory
 from services.SMachinery import SMachinery
-from common.get_model_return_list import get_model_return_list, get_model_return_dict
+from common.ServiceManager import get_model_return_list, get_model_return_dict
 
 
 class CProduct():
@@ -20,6 +20,9 @@ class CProduct():
             self.sproduct = SProduct()
             self.service_category = SCategory()
             self.smach = SMachinery()
+            print("product service", id(self.sproduct))
+            print("category service", id(self.service_category))
+            print("mach service", id(self.smach))
         except Exception as e:
             print(self.title.format("error"))
             print(e.message)
@@ -60,8 +63,11 @@ class CProduct():
     # 根据商品id获取商品详情
     def get_info_by_id(self):
         args = request.args.to_dict()  # 捕获前端的URL参数，以字典形式呈现
+        print(self.title.format("args"))
+        print(args)
+        print(self.title.format("args"))
         # 判断url参数是否异常
-        if len(args) != 1 or "PRid" not in args.keys():
+        if "PRid" not in args.keys():
             return import_status("URL_PARAM_WRONG", "response_error", "URL_PARAM_WRONG")
 
         pid_to_str = get_str(args, "PRid")

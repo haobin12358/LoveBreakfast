@@ -5,21 +5,25 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
 import json
 import uuid
-from common.lovebreakfast_error import dberror
+from common.ErrorManager import dberror
 from common.TransformToList import add_model
 from config.response import SYSTEM_ERROR, PARAMS_MISS
-from common.import_status import import_status
+from common.ImportManager import import_status
+
 
 class CCarts():
     def __init__(self):
         from services.SCarts import SCarts
         self.scart = SCarts()
-        from services.SProduct import SProduct
-        self.spro = SProduct()
         from services.SUsers import SUsers
         self.susers = SUsers()
         from services.SProduct import SProduct
         self.sproduct = SProduct()
+        from services.SMachinery import SMachinery
+        self.smach = SMachinery()
+        print("cart service", id(self.scart))
+        print("user service", id(self.susers))
+        print("product service", id(self.sproduct))
         self.title = '============{0}============'
 
     def get_carts_by_uid(self):
@@ -49,16 +53,17 @@ class CCarts():
             if cart.CAstatus != 1:
                 continue
             PRid = cart.PRid
-            address_list = self.scart.get_address_list_by_prid(PRid)
-            print(self.title.format("address_list"))
-            print(address_list)
-            print(self.title.format("address_list"))
-            if not address_list:
-                return SYSTEM_ERROR
-            if AAid not in address_list:
-                continue
+            # address_list = self.scart.get_address_list_by_prid(PRid)
+            # print(self.title.format("address_list"))
+            # print(address_list)
+            # print(self.title.format("address_list"))
+            # if not address_list:
+            #     return SYSTEM_ERROR
+            # if AAid not in address_list:
+            #     continue
+            product = self.scart.get_cart_by_prid_aaid(PRid, AAid)
 
-            cart_service_info = self.spro.get_all_pro_fro_carts(PRid)
+            cart_service_info = self.sproduct.get_all_pro_fro_carts(PRid)
             print(self.title.format("cart_service_info"))
             print(cart_service_info)
             print(self.title.format("cart_service_info"))
@@ -79,7 +84,6 @@ class CCarts():
         back_response = import_status("SUCCESS_GET_MESSAGE", "OK")
         back_response["data"] = cart_info_list
         return back_response
-
 
     def add_or_update_cart(self):
         args = request.args.to_dict()
@@ -113,14 +117,14 @@ class CCarts():
                 pnum = int(CAnumber) + int(PBnumber)
                 self.scart.update_num_cart(pnum, cart.CAid)
             else:
-                add_model("Cart",
-                          **{
-                              "CAid": str(uuid.uuid1()),
-                              "CAnumber": CAnumber,
-                              "USid": uid,
-                              "CAstatus": 1,
-                              "PRid": pid
-                          })
+                self.scart.add_model("Cart",
+                                     **{
+                                         "CAid": str(uuid.uuid1()),
+                                         "CAnumber": CAnumber,
+                                         "USid": uid,
+                                         "CAstatus": 1,
+                                         "PRid": pid
+                                     })
         except dberror:
             return SYSTEM_ERROR
         except Exception as e:

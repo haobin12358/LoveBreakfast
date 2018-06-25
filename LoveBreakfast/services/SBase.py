@@ -3,23 +3,10 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 import DBSession
-from common.lovebreakfast_error import dberror
 import models.model as models
+from common.Decorator import closesession
 
-
-def close_session(fn):
-    def inner(self, *args, **kwargs):
-        try:
-            result = fn(self, *args, **kwargs)
-            self.session.commit()
-            return result
-        except Exception as e:
-            print("DBERROR" + e.message)
-            self.session.rollback()
-            raise dberror(e.message)
-        finally:
-            self.session.close()
-    return inner
+closesession = closesession
 
 
 # service 基础类
@@ -30,7 +17,7 @@ class SBase(object):
         except Exception as e:
             print(e.message)
 
-    @close_session
+    @closesession
     def add_model(self, model_name, **kwargs):
         print(model_name)
         if not getattr(models, model_name):
@@ -42,3 +29,14 @@ class SBase(object):
                 setattr(model_bean, key, kwargs.get(key))
 
         self.session.add(model_bean)
+
+    @closesession
+    def check_connection(self, index=0):
+        if index > 3:
+            raise Exception("mysql connection failed")
+        try:
+            self.session.execute("select 1")
+            print("mysql connection successful")
+        except Exception as e:
+            print("mysql connection error:", e.message)
+            self.check_connection(index+1)

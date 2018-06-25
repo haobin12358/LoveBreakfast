@@ -10,7 +10,7 @@ import json
 #引用项目类
 from services.SProduct import SProduct
 from common.get_str import get_str
-from common.import_status import import_status
+from common.ImportManager import import_status
 from services.SShop import SShop
 
 class CShop():
