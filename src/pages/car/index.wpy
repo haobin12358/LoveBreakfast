@@ -66,7 +66,7 @@
     import wepy from 'wepy';
     import api from '../../api/api';
     import tip from '../../utils/tip';
-    import car from '../../components/car';
+    import car from '../../components/shop';
     export default class carIndex extends wepy.page {
         config = {
             navigationBarTitleText: '购物车'
@@ -92,20 +92,10 @@
             tip.error(res.data.message);
           }
         }
-        onLoad() {
-          let that = this;
-          wx.getStorage({
-            key: 'token',
-            success: function(res) {
-              wx.getStorage({
-                key: 'AAid',
-                success: function(resId) {
-                  that.get_all_car(res.data,resId.data)
-                }
-              })
-
-            }
-          })
+        onShow() {
+          let res = wx.getStorageSync('token');
+          let resId = wx.getStorageSync('AAid');
+          this.get_all_car(res,resId)
         }
         methods = {
           productTap(){
@@ -119,18 +109,9 @@
             })
           },
           refresh(){
-            let that = this;
-            wx.getStorage({
-              key: 'token',
-              success: function(res) {
-                wx.getStorage({
-                  key: 'AAid',
-                  success: function(resId) {
-                    that.get_all_car(res.data,resId.data)
-                  }
-                })
-              }
-            })
+            let res = wx.getStorageSync('token');
+            let resId = wx.getStorageSync('AAid');
+            this.get_all_car(res,resId)
           }
         }
     }

@@ -21,7 +21,7 @@ const get_order_list = (params) => wxRequest(params, api + '/love/breakfast/orde
 const get_order_abo = (params) => wxRequest(params, api + '/love/breakfast/orders/get_order_abo');//获取订单详情
 const get_all_location = (params) => wxRequest(params, api + '/love/breakfast/locations/get_all_location');// 获取全部站点
 const get_lno = (params) => wxRequest(params, api + '/love/breakfast/locations/get_lno');//获取出口
-const sale_update = (params) => wxRequest(params, api + '/love/breakfast/salelist/update');//往购物车添加商品或者减少商品，可处理多个
+const sale_update = (params,token) => wxRequest(params, api + '/love/breakfast/salelist/update?token=' + token);//往购物车添加商品或者减少商品，可处理多个
 const get_all_car = (params) => wxRequest(params, api + '/love/breakfast/salelist/get_all');//获取购物车信息
 const delete_product = (params) => wxRequest(params, api + '/love/breakfast/salelist/delete_product');//购物车批量删除商品
 const get_all_product = (params) => wxRequest(params, api + '/love/breakfast/product/get_all');//获取所有商品信息

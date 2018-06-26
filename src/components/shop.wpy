@@ -2,7 +2,7 @@
     @import "../styles/common";
     .my-one-product{
       width: 690rpx;
-      padding:30rpx;
+      padding:40rpx;
       .flex-row(space-between);
       border-top: 0.8px solid @border_color;
       &:last-child{
@@ -20,9 +20,11 @@
           width: 85rpx;
           height: 85rpx;
           margin: 0 20rpx;
+          border-radius: 50%;
         }
         .my-name{
           font-size: 32rpx;
+          margin-bottom: 36rpx;
         }
         .my-price{
           line-height: 46rpx;
@@ -31,7 +33,7 @@
       .my-right{
         width: 170rpx;
         border: 1px solid @border_color;
-        border-radius: 10px;
+        border-radius: 5px;
         .flex-row(flex-start);
         .my-cut{
           height: 40rpx;
@@ -63,7 +65,7 @@
     </view>
     <view class="my-right">
       <p class="my-cut" catchtap="cutTap({{list}})">-</p>
-      <view class="my-input my-cut" >{{list.PRsalesvolume}}</view>
+      <view class="my-input my-cut" >{{list.CAnumber}}</view>
       <p class="my-cut" catchtap="addTap({{list}})">+</p>
     </view>
   </view>
@@ -83,7 +85,7 @@
         data = {}
       async operateCart(params,token) {
         tip.loading();
-        let res = await api.sale_update({query: params, token:token,  method: 'POST'})
+        let res = await api.sale_update({query: params,  method: 'POST'},token)
         if(res.data.status == '200'){
           this.$apply();
           wx.showToast({

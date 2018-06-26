@@ -34,7 +34,7 @@
 </style>
 <template>
 <view class="my-productDetail" >
-  <image src="{{all_data.PRimage}}" style="width: 670rpx;height: 400rpx;"></image>
+  <image src="{{all_data.PRimage}}" style="width: 670rpx;height: 400rpx;border-radius: 10px;"></image>
   <view class="my-title">{{all_data.PRname}}</view>
   <view class="my-product-info">
     <view class="my-name">
