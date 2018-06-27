@@ -74,7 +74,7 @@ export default class Tips {
   static alert(title) {
     wx.showToast({
       title: title,
-      image: "../images/alert.png",
+      image: "../../images/alert.png",
       mask: true,
       duration: 1500
     });
@@ -87,7 +87,7 @@ export default class Tips {
   static error(title, onHide) {
     wx.showToast({
       title: title,
-      image: "../images/error.png",
+      image: "../../images/error.png",
       mask: true,
       duration: 500
     });

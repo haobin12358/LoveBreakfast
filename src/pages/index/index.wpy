@@ -120,9 +120,9 @@
             CAnumber:1
           }},token);
         if(res.data.status == 200){
-
           that.$apply();
           tip.loaded();
+          tip.toast('添加购物车成功');
         }else{
           tip.error(res.data.message);
         }

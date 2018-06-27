@@ -14,7 +14,7 @@ const register = (params) => wxRequest(params, api + '/love/breakfast/users/regi
 const login = (params) => wxRequest(params, api + '/love/breakfast/users/login');//登录
 const update_info = (params) => wxRequest(params, api + '/love/breakfast/users/update_info');//修改个人信息
 const update_pwd = (params) => wxRequest(params, api + '/love/breakfast/users/update_pwd');//修改密码
-const all_info = (params) => wxRequest(params, api + '/love/breakfast/users/all_info');//获取个人信息
+const all_info = (params) => wxRequest(params, api + '/love/breakfast/users/all_info?token=' + params.token);//获取个人信息
 const make_main_order = (params) => wxRequest(params, api + '/love/breakfast/orders/make_main_order');//创建订单
 const update_order_status = (params) => wxRequest(params, api + '/love/breakfast/orders/update_order_status');//更新订单状态
 const get_order_list = (params) => wxRequest(params, api + '/love/breakfast/orders/get_order_list');//获取订单列表
@@ -36,6 +36,7 @@ const get_addsecond = (params) => wxRequest(params, api + '/love/breakfast/addre
 const get_addabo = (params) => wxRequest(params, api + '/love/breakfast/address/get_addabo');//通过asid获取机器详情地址及图片
 const get_city_location = (params) => wxRequest(params, api + '/love/breakfast/locations/get_city_location');//根据经纬度获取城市
 const picture = (params) => wxRequest(params, api + '/love/breakfast/other/picture');//获取首页图片
+const order_price = (params) => wxRequest(params,api + '/love/breakfast/orders/order_price?token=' + params.token);//获取商品总价
 export default {
   register,login,update_info,update_pwd,all_info,make_main_order,
   update_order_status,get_order_list,get_order_abo,get_all_location,
