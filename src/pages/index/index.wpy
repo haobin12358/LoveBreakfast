@@ -43,7 +43,7 @@
     <view class="my-head">
       <view class="my-location" @tap="modalChange">
         <image src="../../images/icon-order-loc.jpg" style="width: 30rpx;height: 40rpx;" />
-        <text>江陵路A口</text>
+        <text>{{select_city}}</text>
       </view>
       <view class="my-input-box">
         <image src="../../images/icon-search.jpg" style="width: 30rpx;height: 30rpx;margin: 0 20rpx;" />
@@ -56,7 +56,7 @@
       </repeat>
     </view>
     <view class="my-modal-state" wx:if="{{showModal}}">
-      <city></city>
+      <city @locChange.user="locChange"></city>
     </view>
   </view>
 </template>
@@ -76,8 +76,10 @@
           city:city
         }
         data = {
-          showModal:false,
-          all_data:[]
+          showModal:true,
+          all_data:[],
+          select_city:'',
+          point:''
         }
         async get_city_location(latitude,longitude) {
           let that = this;
@@ -86,12 +88,12 @@
               lat:latitude,
               lon:longitude
             }});
-          if(res.statusCode == 200){
-
+          if(res.data.status == 200){
+            that.select_city = res.data.data.city;
             that.$apply();
             tip.loaded();
           }else{
-            tip.error(res.error_msg);
+            tip.error(res.data.message);
           }
         }
         async get_all_product(aaid) {
@@ -109,22 +111,21 @@
             tip.error(res.data.message);
           }
         }
-
-      async sale_update(token,PRid,CAnumber) {
-        let that = this;
-        tip.loading();
-        let res = await api.sale_update({method:'POST',query:{
-            PRid:PRid,
-            CAnumber:1
-          }},token);
-        if(res.data.status == 200){
-          that.$apply();
-          tip.loaded();
-          tip.toast('添加购物车成功');
-        }else{
-          tip.error(res.data.message);
+        async sale_update(token,PRid,CAnumber) {
+          let that = this;
+          tip.loading();
+          let res = await api.sale_update({method:'POST',query:{
+              PRid:PRid,
+              CAnumber:1
+            }},token);
+          if(res.data.status == 200){
+            that.$apply();
+            tip.loaded();
+            tip.toast('添加购物车成功');
+          }else{
+            tip.error(res.data.message);
+          }
         }
-      }
         onLoad() {
           let _this = this;
           wx.getLocation({
@@ -133,11 +134,16 @@
               _this.get_city_location(data.latitude,data.longitude)
             }
           });
+
           _this.get_all_product('2f798cfb-84b3-4569-9513-aa1ad9c8fb54');
         }
         methods = {
           modalChange(){
-            this.showModal = !this.showModal;
+            if(this.point == ''){
+              tip.alert('请先选择准确点位');
+            }else{
+              this.showModal = !this.showModal;
+            }
           },
           productTap(v){
             wx.navigateTo({
@@ -148,6 +154,10 @@
             let that = this;
             let res = wx.getStorageSync('token');
             that.sale_update(res,v.PRid)
+          },
+          locChange(v){
+            this.point = v.point_name;
+            ///如何请求全部商品
 
           }
         }

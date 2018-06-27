@@ -23,53 +23,49 @@
 </style>
 <template>
   <view class="my-modal">
-    <picker bindchange="bindPickerChange1" value="{{index1}}" range="{{array1}}">
+    <picker bindchange="cityChange" value="{{city.city_index}}" range="{{city.city_name}}">
       <view class="my-pick-box" >
         <image src="../../images/icon-city.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
           城市：
         </view>
         <view class="my-picker">
-          {{array1[index1]}}
+          {{city.city_name[city.city_index]}}
         </view>
       </view>
-
     </picker>
-    <picker bindchange="bindPickerChange" value="{{index2}}" range="{{array2}}">
+    <picker bindchange="targetChange" value="{{target.target_index}}" range="{{target.target_name}}">
       <view class="my-pick-box" >
         <image src="../../images/icon-target.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
           目标：
         </view>
         <view class="my-picker">
-          {{array[index]}}
+          {{target.target_name[target.target_index]}}
         </view>
       </view>
-
     </picker>
-    <picker bindchange="bindPickerChange" value="{{index2}}" range="{{array2}}">
+    <picker bindchange="areaChange" value="{{area.area_index}}" range="{{area.area_name}}">
       <view class="my-pick-box" >
         <image src="../../images/icon-loc-s.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
           区域：
         </view>
         <view class="my-picker">
-          {{array[index]}}
+          {{area.area_name[area.area_index]}}
         </view>
       </view>
-
     </picker>
-    <picker bindchange="bindPickerChange" value="{{index2}}" range="{{array2}}">
+    <picker bindchange="pointChange" value="{{point.point_index}}" range="{{point.point_name}}">
       <view class="my-pick-box" >
         <image src="../../images/icon-dot.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
           点位：
         </view>
         <view class="my-picker">
-          {{array[index]}}
+          {{point.point_name[point.point_index]}}
         </view>
       </view>
-
     </picker>
   </view>
 </template>
@@ -78,34 +74,130 @@
     import wepy from 'wepy';
     import api from '../api/api';
     import tip from '../utils/tip';
-
-
     export default class Select extends wepy.page {
         data = {
-          array1: ['美国', '中国', '巴西', '日本'],
-          index1: -1,
-          array2: ['美国', '中国', '巴西', '日本'],
-          index2: -1,
+          city:{
+            city_id:[],
+            city_name:[],
+            city_index:-1
+          },
+          target:{
+            target_id:[1,2],
+            target_name:['地铁','商圈'],
+            target_index:-1
+          },
+          area:{
+            area_id:[],
+            area_name:[],
+            area_index:-1
+          },
+          point:{
+            point_id:[],
+            point_name:[],
+            point_index:-1
+          }
         }
-
-        computed = {}
-
+        async get_citys(token) {
+          let that = this;
+          tip.loading();
+          let res = await api.get_citys({method:'GET',token:token});
+          if(res.data.status == 200){
+            for(let i=0;i<res.data.data.length;i++){
+              that.city.city_name.push(res.data.data[i].ACname);
+              that.city.city_id.push(res.data.data[i].ACid);
+            }
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
+        async get_addfirst(token,ACname,AFtype) {
+          let that = this;
+          tip.loading();
+          let res = await api.get_addfirst({method:'GET',query:{
+              ACname:ACname,
+              AFtype:AFtype,
+              token:token
+            }});
+          if(res.data.status == 200){
+            for(let i=0;i<res.data.data.length;i++){
+              that.area.area_name.push(res.data.data[i].ASname);
+              that.area.area_id.push(res.data.data[i].ASid);
+            }
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
+        async get_addsecond(token,AFid) {
+          let that = this;
+          tip.loading();
+          let res = await api.get_addsecond({method:'GET',query:{
+              AFid:AFid,
+              token:token
+            }});
+          if(res.data.status == 200){
+            for(let i=0;i<res.data.data.length;i++){
+              that.area.area_name.push(res.data.data[i].ASname);
+              that.area.area_id.push(res.data.data[i].ASid);
+            }
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
         onLoad() {
-
+          let res = wx.getStorageSync('token');
+          this.get_citys(res);
         }
 
         methods = {
-          bindPickerChange: function(e) {
-            console.log('picker发送选择改变，携带值为', e.detail.value)
-            this.setData({
-              index2: e.detail.value
-            })
-          },
-          bindPickerChange1: function(e) {
-            console.log('picker发送选择改变，携带值为', e.detail.value)
-              this.index1 = e.detail.value;
+          cityChange: function(e) {
+            this.city.city_index = e.detail.value;
+            if(this.city.city_index == -1){
+              tip.alert('请选择城市');
+              return false;
+            }
             this.$apply();
           },
+          targetChange: function(e) {
+            this.target.target_index = e.detail.value;
+            if(this.target.target_index == -1){
+              tip.alert('请选择目标');
+              return false;
+            }
+            let res = wx.getStorageSync('token');
+            this.get_addfirst(res,this.city.city_id[this.city.city_index],this.target.target_id[this.target.target_index]);
+            this.$apply();
+          },
+          areaChange: function(e) {
+            if(this.area.area_index == -1){
+              tip.alert('请选择区域');
+              return false;
+            }
+            this.area.area_index = e.detail.value;
+            let res = wx.getStorageSync('token');
+            this.get_addsecond(res,this.area.area_id[this.city.area_index]);
+            this.$apply();
+          },
+          pointChange(e){
+            this.point.point_index = e.detail.value;
+            let loc = '';
+            if(this.point.point_index != -1){
+              loc = this.city.city_name[this.city.city_index]
+                + this.target.target_name[this.target.target_index]
+                + this.area.area_name[this.area.area_index]
+                + this.point.point_name[this.point.point_index];
+              wx.setStorageSync('loc', loc);
+              this.$emit('locChange',this.point);
+            }else{
+              tip.alert('请选择准确的地点');
+            }
+            this.$apply();
+          }
         }
     }
 </script>
