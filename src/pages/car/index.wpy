@@ -123,17 +123,17 @@
           playOrder(){
             let CAid = [];
             for(let i =0;i<this.all_data.length;i++){
-              // if(this.all_data[i].radio == true){
-              //   CAid = CAid.push(this.all_data[i].CAid);
-              // }
+              if(this.all_data[i].radio == true && this.all_data[i].CAid){
+                 CAid.push(this.all_data[i].CAid);
+              }
             }
-            // if(CAid.length <=0){
-            //   tip.alert('请选择商品');
-            // }else{
+            if(CAid.length <=0){
+              tip.alert('请选择商品');
+            }else{
               wx.navigateTo({
                 url:'/pages/car/playOneOrder?CAid=' + CAid
               })
-            // }
+            }
           },
           refresh(){
             let res = wx.getStorageSync('token');

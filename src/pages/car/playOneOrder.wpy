@@ -15,8 +15,11 @@
           }
           .my-pick{
             width: 440rpx;
-            text-align: right;
             height: 40rpx;
+            display: flex;
+            flex-flow: row;
+            align-items: center;
+            justify-content: flex-end;
           }
         }
       }
@@ -37,8 +40,16 @@
           .my-price{
             color: @main_color;
             text-align: right;
-            width: 140rpx;
+            width: 170rpx;
+            .my-num{
+              color: @grey_color;
+              margin-left: 20rpx;
+            }
           }
+          .my-you{
+
+          }
+
         }
         .my-total{
           text-align: right;
@@ -70,6 +81,40 @@
         }
       }
     }
+  .my-modal{
+    background-color: rgba(255,255,255,0.8);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1000;
+    .my-scroll{
+      width: 660rpx;
+      height: 400rpx;
+      padding: 20rpx 0;
+      background-color: #fff;
+      border-radius: 20px;
+      border: 1px solid @border_color;
+      box-shadow: 2px 2px 5px #888888;
+      position: absolute;
+      bottom: 360rpx;
+      left: 45rpx;
+      overflow-y: auto;
+      .m-modal-content{
+        width: 660rpx;
+        height: 400rpx;
+        padding: 20rpx 0;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
 </style>
 <template>
   <view class="my-playOneOrder">
@@ -83,8 +128,9 @@
         <image src="../../images/icon-date.jpg" style="width:40rpx;height:40rpx;"/>
         <view class="my-label">取餐时间</view>
         <picker mode="date" value="{{date}}" start="2018-06-01" end="2019-09-01" bindchange="bindDateChange">
-          <view class="my-pick"v>
-            {{date}}
+          <view class="my-pick">
+            <view>{{date}}</view>
+            <image src="/images/icon-more.jpg" style="width: 12rpx;height: 20rpx;margin-left: 20rpx;"/>
           </view>
         </picker>
       </view>
@@ -98,33 +144,42 @@
         <view class="my-label">联系方式</view>
         <view class="my-pick">{{user_ifo.UStelphone}}</view>
       </view>
-      <view class="my-row">
-        <image src="../../images/icon-gift.jpg" style="width:40rpx;height:40rpx;"/>
+      <view class="my-row" @tap="showModal">
+        <image src="../../images/icon-gift.jpg" style="width:40rpx;height:40rpx;" />
         <view class="my-label">优惠券</view>
-        <view class="my-pick">选择优惠方式</view>
+        <view class="my-pick" wx:if="{{!choose_ticket }}">
+          <view>选择优惠方式</view>
+          <image src="/images/icon-more.jpg" style="width: 12rpx;height: 20rpx;margin-left: 20rpx;"/>
+        </view>
+        <view class="my-you">
+          <view class="m-coupon" wx:if="{{choose_ticket.COdiscount }}">折扣：{{choose_ticket.COdiscount }}</view>
+          <view class="m-coupon" wx:if="{{choose_ticket.COuse }}">{{choose_ticket.COuse}}</view>
+        </view>
       </view>
     </view>
     <view class="my-product-info">
       <view class="my-text">订单详情：</view>
-      <view class="my-row">
+      <view class="my-row" wx:for="{{all_order}}" wx:key="item">
         <view class="my-left">
-          <view>1</view>
-          <image src="../../images/icon-logo.jpg" style="width: 90rpx;height: 90rpx;margin: 0 30rpx;"/>
-          <view>套餐1</view>
+          <view>{{index + 1}}</view>
+          <image src="{{item.PRimage}}" style="width: 90rpx;height: 90rpx;margin: 0 30rpx;"/>
+          <view>{{item.PRname}}</view>
         </view>
-        <view class="my-price">￥12.3</view>
+        <view class="my-price">￥{{item.PRprice}} <span class="my-num">X{{item.CAnumber}}</span></view>
       </view>
-      <view class="my-total">合计：<span class="my-price">￥12.3</span></view>
+      <view class="my-total">合计：<span class="my-price">￥{{total_money}}</span></view>
     </view>
     <view class="my-top my-other">
       <view class="my-row">
         <image src="../../images/icon-money.jpg" style="width:40rpx;height:40rpx;"/>
         <view class="my-label">支付方式</view>
-        <picker bindchange="bindPickerChange1" value="{{index1}}" range="{{array1}}">
+        <picker bindchange="bindPickerChange1" value="{{play_index}}" range="{{play_way}}">
             <view class="my-pick">
-              {{array1[index1]}}
+              <view>{{play_way[play_index]}}</view>
+              <image src="/images/icon-more.jpg" style="width: 12rpx;height: 20rpx;margin-left: 20rpx;"/>
             </view>
         </picker>
+
       </view>
       <view class="my-row">
         <image src="../../images/icon-remark.jpg" style="width:40rpx;height:40rpx;"/>
@@ -133,12 +188,21 @@
       </view>
     </view>
     <view class="my-foot">
-      <view>合计:<span class="my-price">￥12.3</span></view>
+      <view>合计:<span class="my-price">￥{{total_money}}</span></view>
       <view class="my-btn">支  付</view>
     </view>
-    <view class="my-modal">
-      <view class="my-content">
-
+    <view class="my-modal" catchtouchmove="Touch" wx:if="{{show_modal}}" catchtap="cancelModal">
+      <view class="my-scroll">
+        <scroll-view scroll-y="true"  catchtouchmove="modalTouch">
+          <view class="m-modal-content">
+            <view wx:if="{{card_data.length == 0}}">无可用优惠券</view>
+            <view wx:else class="my-card-box">
+              <repeat for="{{card_data}}" key="index" index="index" item="item">
+                <card :list.sync="item" @cardTap.user="cardTap" :choose.sync="choose_ticket"></card>
+              </repeat>
+            </view>
+          </view>
+        </scroll-view>
       </view>
     </view>
   </view>
@@ -148,16 +212,24 @@
     import wepy from 'wepy';
     import api from '../../api/api';
     import tip from '../../utils/tip';
+    import card from '../../components/card';
     export default class playOneOrder extends wepy.page {
         config = {
             navigationBarTitleText: ''
         }
         data = {
           user_ifo:{},
-          array1: ['美国', '中国', '巴西', '日本'],
-          index1: 0,
+          play_way:['微信支付'],
+          play_index:0,
+          show_modal:false,
+          card_data:[],
+          choose_ticket:null,
+          all_order:[],
+          total_money:0
         }
-
+        components={
+          card:card
+        }
         async get_all_info(token) {
           let that = this;
           tip.loading();
@@ -173,9 +245,62 @@
             tip.error(res.data.message);
           }
         }
+        async get_card(token) {
+          let that = this;
+          tip.loading();
+          let res = await api.get_cardpkg({method:'GET',query:{
+              token:token
+            }});
+          if(res.data.status == 200){
+            that.card_data = res.data.data;
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
+        async get_select_product(token,AAid,CAid) {
+          let that = this;
+          tip.loading();
+          let res = await api.get_select_product({method:'POST',query:{
+              CAid:CAid
+            }, token:token,AAid:AAid});
+          if(res.data.status == 200){
+            that.all_order = res.data.data;
+            let total = 0;
+            for(let i=0;i<that.all_order.length;i++){
+              total += Number(that.all_order[i].CAnumber * that.all_order[i].PRprice);
+            }
+            that.total_money = total;
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
+        async order_price(productlist,COid,token) {
+          let that = this;
+          tip.loading();
+          let res = await api.order_price({method:'POST',query:{
+              productlist:productlist,
+              COid:COid
+            },token:token});
+          if(res.data.status == 200){
+            that.total_money = res.data.data.OMprice;
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
         onLoad(options) {
+          let CAid = [];
           let res = wx.getStorageSync('token');
+          let resId = wx.getStorageSync('AAid');
           this.get_all_info(res);
+          this.get_card(res);
+          CAid = options.CAid.split(',');
+          this.get_select_product(res,resId,CAid);
         }
 
         methods = {
@@ -184,7 +309,49 @@
               this.setData({
                 date: e.detail.value
               })
-          }
+          },
+          modalTouch(e){
+            console.log(e)
+          },
+          Touch(e){
+            return false;
+          },
+          cancelModal(){
+            this.show_modal = false;
+            this.$apply();
+          },
+          showModal(){
+            this.show_modal = true;
+            this.$apply();
+          },
+          cardTap(v){
+            let that = this
+            this.show_modal = false;
+            if(this.choose_ticket != null) {
+              if(this.choose_ticket.COid == v.COid) {
+                this.choose_ticket = null;
+              }else {
+                this.choose_ticket = v;
+              }
+            }else {
+              this.choose_ticket = v;
+            }
+            let token =  wx.getStorageSync('token');
+            let len = this.all_order.length;
+            let param = {};
+            param = {
+              "productlist":[]
+            }
+            for(let i=0; i<len; i++){
+              param.productlist[i] = {};
+              param.productlist[i].PRid = this.all_order[i].PRid;
+              param.productlist[i].PRnumber = this.all_order[i].CAnumber;
+            }
+            let COid = that.choose_ticket?that.choose_ticket.COid:'';
+            that.order_price(param.productlist,COid,token);
+
+            that.$apply();
+          },
         }
     }
 </script>

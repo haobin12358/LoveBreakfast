@@ -1,0 +1,50 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../styles/common";
+  .my-card{
+    width: 430rpx;
+    border-radius: 10px;
+    text-align: center;
+    padding: 20rpx 0;
+    background-color: #999999;
+    color: #fff;
+    font-size: 24rpx;
+    margin-bottom: 20rpx;
+    &.m-active{
+      background-color: @main_color;
+    }
+    .my-title{
+      font-size: 38rpx;
+      margin-bottom: 20rpx;
+    }
+  }
+</style>
+<template>
+  <view class="my-card {{choose && (choose.COid == list.COid)?'m-active':''}}" catchtap="cardTap({{list}})">
+    <view class="my-title">{{list.COdiscount}}</view>
+    <view>满10元可用 限4月1日-4月10日使用</view>
+  </view>
+</template>
+<script>
+    import wepy from 'wepy';
+
+    export default class Card extends wepy.page {
+        props={
+          list:{
+            type:Object,
+            default:null
+          },
+          choose:{
+            type:Object,
+            default:null
+          }
+        }
+        data = {}
+        methods = {
+          cardTap(v){
+            console.log(v);
+            this.$emit('cardTap',v)
+          }
+        }
+    }
+</script>
+
