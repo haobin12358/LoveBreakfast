@@ -2,10 +2,8 @@
     @import "../../styles/common";
 
     @borderColor: #efefef;
-    @normalColor: #6666666;
-    @moneyColor: #f6992c;
+    @normalColor: #666666;
     @stateColor: #b3b3b3;
-    //@buttonBgColor: #f7931e;
     @buttonFtColor: #ffffff;
     @itemBorder: 1px solid @borderColor;
 
@@ -14,11 +12,14 @@
       height: 100%;
     }
     .order-group{
+      .fz24();
+      padding-bottom: 30rpx;
+
       .order-item{
         border-top: @itemBorder;
         width: 100%;
-        height: 150rpx*2;
-        padding: 30rpx 40rpx 23rpx 61rpx;
+        height: 260rpx;
+        padding: 44rpx 36rpx 45rpx;
         box-sizing: border-box;
 
         &:nth-last-child(1){
@@ -26,57 +27,43 @@
           margin-bottom: 10rpx;
         }
 
-        .item-hd{
-          display: flex;
-          justify-content: flex-end;
-          height: 16rpx*2;
-          .orderstate{
-            color: @stateColor;
-            font-size: 16rpx*2;
-            /*line-height: 16rpx;*/
-          }
-        }
-
         .item-bd{
           height: 160rpx;
-          /*background-color: #f7931e;*/
           display: flex;
-          /*justify-content: space-between;*/
 
             .good-img{
-              width: 100rpx;
-              height: 100rpx;
-              border-radius: 100rpx;
+              width: 145rpx;
+              height: 145rpx;
+              border-radius: 145rpx;
             }
 
             .bd-detail{
-              margin-left: 10rpx;
-              width: 100%;
+              margin-left: 20rpx;
               flex: 1;
               display: flex;
               flex-direction: column;
               justify-content: space-between;
-
-
-
             }
 
           .bd-end{
-            /*position: relative;*/
             display: flex;
-            justify-content: flex-end;
             flex-direction: column;
-            .end{
-              color: @stateColor;
-              font-size: 16rpx*2;
+            justify-content: space-between;
+            align-items: flex-end;
+            color: @stateColor;
+
+            .operatorArea{
+
               button{
                 background-color: @main_color;
                 color: #ffffff;
-                display:inline-block;
-                line-height:2.3;
-                font-size:26rpx;
-                padding:0;
                 width: 160rpx;
+
+                .fz24();
+              }
+
+              text{
+
               }
             }
           }
@@ -87,51 +74,48 @@
     }
 
     .doc{
-      font-size: 28rpx;
       color: @normalColor;
+
+      .fz28();
     }
 
     .doc-small{
-      font-size: 24rpx;
+      .fz24();
     }
 
     .doc-money{
-      color: @moneyColor;
+      color: @main_color;
       font-family: @num_family;
     }
 
 </style>
 <template>
   <view class="order-group">
-    <repeat for="{{orderList}}" key='index' index='index' item='item'>
+    <block wx:for="{{orderList}}" wx:key="{{OMcode}}" wx:index='index' wx:item='item'>
       <view class="order-item">
-        <view class="item-hd">
-          <view class="orderstate">
-            {{item.OMstatus}}
-          </view>
-        </view>
         <view class="item-bd" >
-          <image class="good-img" src="../../images/icon-shop-select.jpg"></image>
+          <image class="good-img" src="{{item.Orderitems[0].PRimage}}"></image>
           <view class="bd-detail" @tap="showDetail">
             <view class="doc">{{item.Orderitems[0].PRname}}</view>
             <view class="doc doc-small">{{item.OMtime}}</view>
             <view class="doc doc-small">数量: {{item.Orderitems[0].PRsalesvolume}}</view>
             <view class="doc doc-money">￥{{item.OMtotal}}</view>
-
           </view>
           <view class="bd-end">
-            <view class="end">
-
-              <button wx:if="{{item.OMstatus}} == '已评价'" size="mini">评价详情</button>
+              <view class="orderstate">
+                {{item.OMstatus}}
+              </view>
+            <view class="operatorArea">
+              <button wx:if="{{item.OMstatus}} == '未支付'">立即支付</button>
+              <button wx:elif ="{{item.OMstatus}} == '已评价'">评价详情</button>
+              <button wx:elif="{{item.OMstatus}} == '已评价'">评价详情</button>
             </view>
           </view>
         </view>
-
         <view >
-
         </view>
       </view>
-    </repeat>
+    </block>
 
   </view>
 
@@ -148,38 +132,29 @@
             navigationBarTitleText: '订单'
         }
         data = {
-          orderList: [
-
-          ]
+          orderList: []
         }
 
         computed = {}
 
-        watch = {
-          orderList(newVal){
-              console.log(newVal);
-          }
-        }
-
         async getOrderList(){
-          let json =await api.get_order_list({
-            query: {
-                token: '11aa9315-38b4-47c1-a31b-c29ca20aa02c'
-            }
+          let res =await api.get_order_list({
+            token: '11aa9315-38b4-47c1-a31b-c29ca20aa02c'
           });
 
-          if(json.data.status == 200){
-            this.orderList = json.data.data;
-            this.$apply;
+          if(res.data.status == 200){
+            this.orderList = res.data.data;
+            this.$apply();
           }else{
-            // tip.error(json.data.message)
+            tip.error(res.data.message)
           }
-
-
         }
 
         onLoad() {
-          this.getOrderList()
+        }
+
+        onShow(){
+          this.getOrderList();
         }
 
         methods = {
