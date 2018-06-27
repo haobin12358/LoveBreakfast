@@ -34,7 +34,7 @@
 </style>
 <template>
 <view class="my-productDetail" >
-  <image src="{{all_data.PRimage}}" style="width: 670rpx;height: 400rpx;"></image>
+  <image src="{{all_data.PRimage}}" style="width: 670rpx;height: 400rpx;border-radius: 10px;"></image>
   <view class="my-title">{{all_data.PRname}}</view>
   <view class="my-product-info">
     <view class="my-name">
@@ -42,7 +42,7 @@
     </view>
     <view class="my-price">￥{{all_data.PRprice}}</view>
   </view>
-  <view class="my-btn">添加购物车</view>
+  <view class="my-btn" @tap="carTap">添加购物车</view>
 </view>
 </template>
 
@@ -50,7 +50,6 @@
     import wepy from 'wepy';
     import api from '../../api/api';
     import tip from '../../utils/tip';
-
 
     export default class productDetail extends wepy.page {
         config = {
@@ -73,9 +72,32 @@
             tip.error(res.data.message);
           }
         }
+      async sale_update(token,PRid,CAnumber) {
+        let that = this;
+        tip.loading();
+        let res = await api.sale_update({method:'POST',query:{
+            PRid:PRid,
+            CAnumber:1
+          }},token);
+        if(res.data.status == 200){
+          that.$apply();
+          tip.loaded();
+          tip.toast('添加购物车成功');
+        }else{
+          tip.error(res.data.message);
+        }
+      }
         onLoad(options) {
+          this.PRid = options.PRid;
           this.get_info_by_id(options.PRid);
         }
-        methods = {}
+        methods = {
+          carTap(){
+            let that = this;
+            let res = wx.getStorageSync('token');
+            console.log(this.all_data)
+            that.sale_update(res,that.PRid)
+          }
+        }
     }
 </script>

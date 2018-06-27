@@ -2,7 +2,7 @@
     @import "../styles/common";
     .my-one-product{
       width: 690rpx;
-      padding:30rpx;
+      padding:40rpx;
       .flex-row(space-between);
       border-top: 0.8px solid @border_color;
       &:last-child{
@@ -20,9 +20,11 @@
           width: 85rpx;
           height: 85rpx;
           margin: 0 20rpx;
+          border-radius: 50%;
         }
         .my-name{
           font-size: 32rpx;
+          margin-bottom: 36rpx;
         }
         .my-price{
           line-height: 46rpx;
@@ -31,7 +33,7 @@
       .my-right{
         width: 170rpx;
         border: 1px solid @border_color;
-        border-radius: 10px;
+        border-radius: 5px;
         .flex-row(flex-start);
         .my-cut{
           height: 40rpx;
@@ -54,7 +56,8 @@
 <template>
   <view class="my-one-product" @tap="productTap({{list}})">
     <view class="my-left">
-      <image class="my-icon-img" src="../../images/icon-radio.jpg" ></image>
+      <image class="my-icon-img" wx:if="{{!list.radio}}" src="/images/icon-radio.jpg" catchtap="radioTap({{i}})"></image>
+      <image class="my-icon-img" wx:else src="/images/icon-radio-select.jpg" catchtap="radioTap({{i}})"></image>
       <image class='my-product-img' src="{{list.PRimage}}" ></image>
       <view class="my-product-info">
         <view class="my-name">{{list.PRname}}</view>
@@ -63,12 +66,11 @@
     </view>
     <view class="my-right">
       <p class="my-cut" catchtap="cutTap({{list}})">-</p>
-      <view class="my-input my-cut" >{{list.PRsalesvolume}}</view>
+      <view class="my-input my-cut" >{{list.CAnumber}}</view>
       <p class="my-cut" catchtap="addTap({{list}})">+</p>
     </view>
   </view>
 </template>
-
 <script>
     import wepy from 'wepy';
     import api from '../api/api';
@@ -79,11 +81,15 @@
             type:Object,
             default:null
           },
+          i:{
+            type:Number,
+            default:0
+          }
         }
         data = {}
       async operateCart(params,token) {
         tip.loading();
-        let res = await api.sale_update({query: params, token:token,  method: 'POST'})
+        let res = await api.sale_update({query: params,  method: 'POST'},token)
         if(res.data.status == '200'){
           this.$apply();
           wx.showToast({
@@ -104,7 +110,7 @@
           },
           cutTap(v) {
             let _that = this;
-            if (v.PRsalesvolume == 1) {
+            if (v.CAnumber == 1) {
               wx.showModal({
                 title: '提示',
                 content: '确定要删除该商品吗？',
@@ -114,23 +120,16 @@
                       PRid:v.PRid,
                       CAnumber: -1
                     }
-                    wx.getStorage({
-                      key: 'token',
-                      success: function(resToken) {
-                        _that.operateCart(param,resToken.data);
-                      }
-                    });
+                    let resToken = wx.getStorageSync('token');
+                    _that.operateCart(param,resToken);
                   } else if (res.cancel) {
                   }
                 }
               })
             } else {
-              wx.getStorage({
-                key: 'token',
-                success: function(res) {
-                  _that.operateCart({PRid: v.PRid, CAnumber: -1},res.data);
-                }
-              })
+              let res = wx.getStorageSync('token');
+              _that.operateCart({PRid: v.PRid, CAnumber: -1},res);
+
             }
           },
           addTap(v){
@@ -139,12 +138,11 @@
               PRid: v.PRid,
               CAnumber: +1
             }
-            wx.getStorage({
-              key: 'token',
-              success: function(res) {
-                that.operateCart(param,res.data);
-              }
-            })
+            let res = wx.getStorageSync('token');
+            that.operateCart(param,res);
+          },
+          radioTap(v){
+            this.$emit('radioTap',v);
           }
         }
     }

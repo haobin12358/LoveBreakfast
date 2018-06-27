@@ -52,7 +52,7 @@
     </view>
     <view class="my-content">
       <repeat for="{{all_data}}" key="index" index="index" item="item">
-        <product :list.sync="item" @productTap.user="productTap"></product>
+        <product :list.sync="item" @productTap.user="productTap" @addTap.user="addTap"></product>
       </repeat>
 
 
@@ -111,6 +111,22 @@
             tip.error(res.data.message);
           }
         }
+
+      async sale_update(token,PRid,CAnumber) {
+        let that = this;
+        tip.loading();
+        let res = await api.sale_update({method:'POST',query:{
+            PRid:PRid,
+            CAnumber:1
+          }},token);
+        if(res.data.status == 200){
+          that.$apply();
+          tip.loaded();
+          tip.toast('添加购物车成功');
+        }else{
+          tip.error(res.data.message);
+        }
+      }
         onLoad() {
           let _this = this;
           wx.getLocation({
@@ -129,6 +145,12 @@
             wx.navigateTo({
               url:'/pages/index/productDetail?PRid=' + v.PRid
             })
+          },
+          addTap(v){
+            let that = this;
+            let res = wx.getStorageSync('token');
+            that.sale_update(res,v.PRid)
+
           }
         }
     }

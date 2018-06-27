@@ -5,7 +5,6 @@
     font-size: 28rpx;
     .my-car-box{
       width: 100%;
-
     }
     .my-foot{
       position: fixed;
@@ -46,16 +45,17 @@
   <view class="my-car-index">
     <view class="my-car-box">
       <repeat for="{{all_data}}" key="index" index="index" item="item">
-        <car :list.sync="item" @refresh.user="refresh"></car>
+        <car :list.sync="item" :i.sync="index" @refresh.user="refresh" @radioTap.user="radioTap"></car>
       </repeat>
     </view>
     <view class="my-foot">
       <view class="my-left">
-        <image class="my-icon-img" src="../../images/icon-radio.jpg"></image>
+        <image class="my-icon-img" wx:if="{{!all_radio}}" src="/images/icon-radio.jpg" @tap="allRadio"></image>
+        <image class="my-icon-img" wx:else src="/images/icon-radio-select.jpg" @tap="allRadio"></image>
         <p>全选</p>
       </view>
       <view class="my-right">
-          <view>合计：￥ <span class="my-price">12.3</span></view>
+          <view>合计：￥ <span class="my-price">{{total_money}}</span></view>
         <view class="my-btn" @tap="playOrder">下单</view>
       </view>
     </view>
@@ -66,7 +66,7 @@
     import wepy from 'wepy';
     import api from '../../api/api';
     import tip from '../../utils/tip';
-    import car from '../../components/car';
+    import car from '../../components/shop';
     export default class carIndex extends wepy.page {
         config = {
             navigationBarTitleText: '购物车'
@@ -75,7 +75,9 @@
           car:car
         }
         data = {
-          all_data:[]
+          all_data:[],
+          all_radio:false,
+          total_money:0
         }
         async get_all_car(token,AAid) {
           let that = this;
@@ -86,51 +88,102 @@
             }});
           if(res.data.status == 200){
             that.all_data = res.data.data;
+            for(let i =0;i<that.all_data.length;i++){
+              that.all_data[i].radio = false;
+            }
+            that.all_radio = false;
+            that.total_money = 0;
             that.$apply();
             tip.loaded();
           }else{
             tip.error(res.data.message);
           }
         }
-        onLoad() {
+        async order_price(token) {
           let that = this;
-          wx.getStorage({
-            key: 'token',
-            success: function(res) {
-              wx.getStorage({
-                key: 'AAid',
-                success: function(resId) {
-                  that.get_all_car(res.data,resId.data)
-                }
-              })
+          tip.loading();
+          let res = await api.order_price({method:'POST',query:{
+              token:token
+            }});
+          if(res.data.status == 200){
+            that.total_money = res.data.OMprice;
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
 
-            }
-          })
+        onShow() {
+          let res = wx.getStorageSync('token');
+          let resId = wx.getStorageSync('AAid');
+          this.get_all_car(res,resId)
         }
         methods = {
-          productTap(){
-            wx.navigateTo({
-              url:'/pages/index/productDetail'
-            })
-          },
           playOrder(){
-            wx.navigateTo({
-              url:'/pages/car/playOneOrder'
-            })
+            let CAid = [];
+            for(let i =0;i<this.all_data.length;i++){
+              // if(this.all_data[i].radio == true){
+              //   CAid = CAid.push(this.all_data[i].CAid);
+              // }
+            }
+            // if(CAid.length <=0){
+            //   tip.alert('请选择商品');
+            // }else{
+              wx.navigateTo({
+                url:'/pages/car/playOneOrder?CAid=' + CAid
+              })
+            // }
           },
           refresh(){
+            let res = wx.getStorageSync('token');
+            let resId = wx.getStorageSync('AAid');
+            this.get_all_car(res,resId);
+          },
+          radioTap(v){
             let that = this;
-            wx.getStorage({
-              key: 'token',
-              success: function(res) {
-                wx.getStorage({
-                  key: 'AAid',
-                  success: function(resId) {
-                    that.get_all_car(res.data,resId.data)
-                  }
-                })
+            this.all_data[v].radio = !this.all_data[v].radio;
+            let all = 0;
+            for (let i =0;i<this.all_data.length;i++){
+              if(this.all_data[i].radio == false){
+                all = all + 1
               }
-            })
+            }
+            if(all == this.all_data.length){
+              this.all_radio = false;
+            }else if(all == 0){
+              this.all_radio = true;
+            }else{
+              this.all_radio = false;
+            }
+            let total = 0
+            for(let j=0;j< that.all_data.length;j++){
+              if(that.all_data[j].radio == true){
+                total += Number(that.all_data[j].CAnumber * that.all_data[j].PRprice);
+              }
+            }
+            total = total.toFixed(2);
+            this.total_money = total;
+          },
+          allRadio(){
+            this.all_radio = !this.all_radio;
+            let that = this;
+            let total = 0;
+            if(this.all_radio){
+              for(let j=0;j< that.all_data.length;j++){
+                that.all_data[j].radio = true
+                total += Number(that.all_data[j].CAnumber * that.all_data[j].PRprice);
+              }
+              total = total.toFixed(2);
+              console.log(total)
+              this.total_money = total;
+            }else{
+              for(let j=0;j< that.all_data.length;j++){
+                that.all_data[j].radio = false;
+              }
+              this.total_money = 0;
+            }
+            console.log(this.total_money)
           }
         }
     }

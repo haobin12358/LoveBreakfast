@@ -91,12 +91,12 @@
       <view class="my-row">
         <image src="../../images/icon-personal.jpg" style="width:40rpx;height:40rpx;"/>
         <view class="my-label">联系人</view>
-        <view class="my-pick">小白</view>
+        <view class="my-pick">{{user_ifo.USname}}</view>
       </view>
       <view class="my-row">
         <image src="../../images/icon-tel.jpg" style="width:40rpx;height:40rpx;"/>
         <view class="my-label">联系方式</view>
-        <view class="my-pick">1777777777</view>
+        <view class="my-pick">{{user_ifo.UStelphone}}</view>
       </view>
       <view class="my-row">
         <image src="../../images/icon-gift.jpg" style="width:40rpx;height:40rpx;"/>
@@ -136,6 +136,11 @@
       <view>合计:<span class="my-price">￥12.3</span></view>
       <view class="my-btn">支  付</view>
     </view>
+    <view class="my-modal">
+      <view class="my-content">
+
+      </view>
+    </view>
   </view>
 </template>
 
@@ -148,14 +153,29 @@
             navigationBarTitleText: ''
         }
         data = {
+          user_ifo:{},
           array1: ['美国', '中国', '巴西', '日本'],
           index1: 0,
         }
 
-        computed = {}
-
-        onLoad() {
-
+        async get_all_info(token) {
+          let that = this;
+          tip.loading();
+          let res = await api.all_info({method:'GET',query:{
+              token:token
+            }});
+          if(res.data.status == 200){
+            console.log(res)
+            that.user_ifo = res.data.data;
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
+        onLoad(options) {
+          let res = wx.getStorageSync('token');
+          this.get_all_info(res);
         }
 
         methods = {

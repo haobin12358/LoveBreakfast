@@ -2,7 +2,7 @@
     @import "../styles/common";
     .my-one-product{
       width: 670rpx;
-      padding: 20rpx 40rpx;
+      padding: 30rpx 40rpx;
       .flex-row(flex-start);
       border-bottom: 1px solid @border_color;
       .my-right{
@@ -20,10 +20,11 @@
         }
       }
     }
+
 </style>
 <template>
   <view class="my-one-product" @tap="productTap({{list}})">
-    <image src="{{list.PRimage}}" style="width: 150rpx;height: 150rpx;" />
+    <image src="{{list.PRimage}}" style="width: 150rpx;height: 150rpx;border-radius: 50%;" />
     <view class="my-right">
       <view class="my-row">
         <view class="my-title">{{list.PRname}}</view>
@@ -35,7 +36,7 @@
       <view class="my-row">
         <view class="my-price">￥{{list.PRprice}}</view>
         <view class="my-add-box">
-          <image  src="../../images/icon-add.jpg" style="width: 50rpx;height: 50rpx;"/>
+          <image  src="../../images/icon-add.jpg" style="width: 50rpx;height: 50rpx;" catchtap="addTap({{list}})"/>
         </view>
       </view>
     </view>
@@ -62,6 +63,9 @@
         methods = {
           productTap(v){
             this.$emit('productTap',v)
+          },
+          addTap(v){
+            this.$emit('addTap',v);
           }
         }
     }
