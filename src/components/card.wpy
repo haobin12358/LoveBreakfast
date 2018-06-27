@@ -20,8 +20,10 @@
 </style>
 <template>
   <view class="my-card {{choose && (choose.COid == list.COid)?'m-active':''}}" catchtap="cardTap({{list}})">
-    <view class="my-title">{{list.COdiscount}}</view>
-    <view>满10元可用 限4月1日-4月10日使用</view>
+    <view class="my-title" wx:if="{{list.COtype == 801}}">{{list.COamount}}元折扣券</view>
+    <view class="my-title" wx:if="{{list.COtype == 802}}">{{list.COamount * 10}}折扣券</view>
+    <view>
+      <span wx:if="{{list.COtype == 801}}">满{{list.COfilter}}元</span>可用 限{{list.COstart}}-{{list.COend}}使用</view>
   </view>
 </template>
 <script>

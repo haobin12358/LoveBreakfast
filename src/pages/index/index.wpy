@@ -54,8 +54,6 @@
       <repeat for="{{all_data}}" key="index" index="index" item="item">
         <product :list.sync="item" @productTap.user="productTap" @addTap.user="addTap"></product>
       </repeat>
-
-
     </view>
     <view class="my-modal-state" wx:if="{{showModal}}">
       <city></city>
