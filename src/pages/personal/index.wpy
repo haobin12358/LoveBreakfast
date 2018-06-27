@@ -1,31 +1,161 @@
 <style scoped lang="less" rel="stylesheet/less">
-    @import "../../styles/common";
+  @import "../../styles/common";
+  .m-header-box {
+    width: 100%;
+    height: 280rpx;
+  }
+  .login_block {
+    width: 100%;
+    height: 280rpx;
+    display: flex;
+    align-items: center;
+    float: right;
+  }
+  .m-button {
+    width: 400rpx;
+  }
+  .m-header-content {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 40rpx;
+    .m-avatar {
+      width: 150rpx;
+      height: 150rpx;
+      border-radius: 100px;
+    }
+    .m-nickname {
+      font-size: 24rpx;
+      padding-top: 15rpx;
+    }
+  }
+  .m-info_block-list {
+    margin-top: 10rpx;
+    /*padding: 0rpx 60rpx;*/
+    width: 100%;
+    font-size: 30rpx;
+    box-sizing: border-box;
+    .m-item {
+      border-top: 2rpx solid #dbdbdb;
+      background: #fff;
+      padding: 50rpx 68rpx;
+      display: flex;
 
+      align-items: center;
+      justify-content: space-between;
+      width: 630rpx;
+    }
+    .m-item:last-child {
+      border-bottom: 2rpx solid #dbdbdb;
+    }
+    .m-item_content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .m-item_img {
+        width: 40rpx;
+        height: 40rpx;
+      }
+      .m-text {
+        color: @personal_color;
+        margin-left: 30rpx;
+        font-size: 24rpx;
+      }
+    }
+    .m-arrow {
+      width: 13rpx;
+      height: 22rpx;
+    }
+    .m-item-info {
+      font-size: 24rpx;
+      width: auto;
+      height: 15px;
+    }
+  }
 </style>
 <template>
-  <view>
-    个人中心1
+  <view class="m-header-box">
+    <view class="m-header-content">
+      <image class="m-avatar" src="../../images/icon-image.jpg"></image>
+      <view class="m-nickname">{{ userInfo.USname }}</view>
+    </view>
+  </view>
+  <view class="m-info_block-list">
+    <navigator class="m-item" url="../personal/baseInfo?name={{userInfo.USname}}&sex={{userInfo.USsex}}">
+      <view class="m-item_content">
+        <image class="m-item_img" src="../../images/icon-edit.jpg"></image>
+        <view class="m-text">基本信息</view>
+      </view>
+      <image class="m-arrow" src="../../images/icon-more.jpg"></image>
+    </navigator>
+    <navigator class="m-item" url="../personal/setUp?tel={{userInfo.UStelphone}}&sex={{userInfo.USsex}}">
+      <view class="m-item_content">
+        <image class="m-item_img" src="../../images/icon-set.jpg"></image>
+        <view class="m-text">修改密码</view>
+      </view>
+      <image class="m-arrow" src="../../images/icon-more.jpg"></image>
+    </navigator>
+    <view class="m-item">
+      <view class="m-item_content">
+        <image class="m-item_img" src="../../images/icon-integral.jpg"></image>
+        <view class="m-text">积分</view>
+      </view>
+      <view class="m-item-info">{{ userInfo.UScoin }}</view>
+    </view>
+    <view class="m-item">
+      <view class="m-item_content">
+        <image class="m-item_img" src="../../images/icon-code.jpg"></image>
+        <view class="m-text">专属邀请码</view>
+      </view>
+      <view class="m-item-info">{{ userInfo.USinvatecode }}</view>
+    </view>
   </view>
 </template>
 
 <script>
-    import wepy from 'wepy';
-    import api from '../../api/api';
-    import tip from '../../utils/tip';
+  import wepy from 'wepy';
+  import tip from '../../utils/tip';
+  import api from '../../api/api';
 
 
-    export default class personalIndex extends wepy.page {
-        config = {
-            navigationBarTitleText: ''
-        }
-        data = {}
-
-        computed = {}
-
-        onLoad() {
-
-        }
-
-        methods = {}
+  export default class Personal extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的'
     }
+    data = {
+      userInfo: {USname: '', USsex: '', UScoin: 0, USinvatecode: ''},
+      isToken: false,
+      token: ''
+    }
+
+    async getPersonInfo(token) {
+      let that = this;
+      tip.loading();
+      let res = await api.all_info({query: {token: token}})
+      if (res.data.status == '200') {
+        that.userInfo = res.data.data;
+        tip.loaded();
+        that.$apply();
+      }
+      else tip.error("加载失败")
+    }
+
+    async onShow() {
+      let that = this;
+      let token =  wepy.getStorageSync('token')
+      if(token){
+        that.getPersonInfo(token)
+        that.$parent.globalData.token = token;
+        that.$apply()
+      }else{
+        wx.navigateTo({
+          url: '/pages/personal/login'
+        })
+      }
+
+    }
+
+    methods = {
+    }
+  }
 </script>

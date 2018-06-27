@@ -1,0 +1,161 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common.less";
+  .container{
+    height: 100%;
+    box-sizing: border-box;
+    background-color: #fff;
+  }
+  .m-top{
+    margin-top: 50rpx;
+  }
+  .m-avatar {
+    height: 150rpx;
+    width: 200rpx;
+    margin-left: 38%;
+    margin-bottom: 20rpx;
+  }
+  .m-section {
+    display: flex;
+    align-items: center;
+    padding: 40rpx 72rpx;
+    border-bottom: 1px solid #dbdbdb;
+    background: #fff;
+    width: 678rpx;
+    text{
+      text-align: right;
+    }
+    .m-icon {
+      width: 38rpx;
+      height: 38rpx;
+    }
+    .m-info-prefix {
+      color: @personal_color;
+      font-size: 24rpx;
+      float: left;
+      margin-left:38rpx;
+    }
+    .m-text {
+      font-size: 24rpx;
+      margin-left: 10rpx;
+      color: #B3B3B3;
+    }
+  }
+  .m-forget{
+    margin-top:26rpx;
+    font-size: 24rpx;
+    padding-right: 50rpx;
+    text-align: right;
+    line-height: 40rpx;
+    color: #B3B3B3;
+  }
+  .m-btn_confirm {
+    margin-top: 50rpx;
+    padding: 0 24rpx;
+  }
+  .m-button {
+    background-color: @main_color;
+    color: #ffffff;
+    border-radius: 10px;
+    width: 668rpx;
+    height:85rpx;
+    font-size: 38rpx;
+    line-height:80rpx;
+  }
+  .m-btn-reg{
+    font-size: 28rpx;
+    margin-top: 316rpx;
+    background-color: #fff;
+    border: 1px solid #B3B3B3;
+    color: #B3B3B3;
+    width: 348rpx;
+    height: 83rpx;
+    border-radius: 10px;
+   }
+  .m-btn {
+    border: 1px solid @main_color;
+    width: 250rpx;
+    height: 100rpx;
+    font-size: 35rpx;
+    margin: 0 35rpx 80rpx;
+    display: inline-block;
+    color: @main_color;
+    border-radius:25rpx;
+  }
+  .m-others{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    margin-bottom: 95rpx;
+  }
+  .m-wei{
+    font-size: 24rpx;
+    color: rgb(179,179,179);
+  }
+</style>
+<template>
+  <view class="container">
+    <view class="m-top">
+      <image class="m-avatar" src="../../images/icon-logo.jpg"></image>
+      <form bindsubmit="formSubmit">
+        <view class="m-section">
+          <image class="m-icon" src='/images/icon-tel.jpg'></image>
+          <text class="m-info-prefix">手机号：</text>
+          <input class="m-text" name="phone" type="number" placeholder="请输入手机号" maxlength="11" focus="true" />
+        </view>
+        <view class="m-section">
+          <image class="m-icon" src='/images/icon-set.jpg'></image>
+          <text class="m-info-prefix">密   码：</text>
+          <input class="m-text" password name="code"  placeholder="请输入密码" />
+        </view>
+        <navigator class="m-item" url="/pages/personal/forgetPwd">
+          <view class="m-forget" >忘记密码？</view>
+        </navigator>
+
+        <view class="m-btn_confirm">
+          <button class="m-button" formType="submit">登   录</button>
+          <button class="m-btn-reg" @tap="registerTap">注册</button>
+        </view>
+      </form>
+    </view>
+  </view>
+</template>
+<script >
+  import wepy from 'wepy';
+  import api from '../../api/api'
+  import tip from '../../utils/tip'
+  export default class Login extends wepy.page{
+    config = {
+      navigationBarTitleText: '登录'
+    }
+    data = {
+    }
+    async Login(phone, pass){
+      let that = this
+      let res = await api.login({query: {UStelphone: phone, USpassword: pass}, method: 'POST'});
+      if(res.data.status == 200){
+        wepy.setStorageSync('token', res.data.data.token);
+        wepy.navigateBack();
+        that.$apply();
+      }else{
+        tip.error(res.data.message)
+      }
+    }
+    methods = {
+      formSubmit(e){
+        let that = this;
+        let phone = e.detail.value.phone;
+        let pass = e.detail.value.code;
+        if(phone == '') tip.alert("请输入手机号")
+        if(pass == '') tip.alert("请输入密码")
+        that.Login(phone, pass)
+      },
+      registerTap(){
+        wx.navigateTo({
+          url: '/pages/personal/register'
+        })
+      },
+      authorizeTap(){
+      }
+    }
+  }
+</script>

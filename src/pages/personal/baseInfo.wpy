@@ -1,0 +1,157 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common.less";
+  .m-info-form {
+    margin-top: 20 rpx;
+    .m-bar{
+      width: 95%;
+      font-size: 30rpx;
+      float: left;
+      border-bottom: 1rpx solid @border_color;
+      padding: 40rpx 0;
+      padding-right: 45rpx;
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      justify-content: space-between;
+      &.m-bottom{
+        margin-bottom: 260rpx;
+      }
+      .m-info-prefix{
+        color: @personal_color;
+        font-size: 24rpx;
+        float: left;
+        margin: 0 63rpx;
+      }
+      .m-info-content{
+        float: right;
+        text-align: right;
+        font-size: 24rpx;
+      }
+    }
+  }
+  .m-info-button {
+    margin-top: 67rpx;
+    border: 1px solid #fff;
+    width: 450rpx;
+    height: 80rpx;
+    line-height: 80rpx;
+    font-size: 38rpx;
+    background-color: @main_color;
+    color: #ffffff;
+    border-radius: 10px;
+  }
+  .m-avatar {
+    width: 180rpx;
+    height: 180rpx;
+    border-radius: 50%;
+  }
+  .m-sex-box{
+    .m-sex{
+      width: 60rpx;
+      height: 40rpx;
+    }
+  }
+</style>
+<template>
+  <view class="m-info-form">
+    <form bindsubmit="formSubmit">
+      <view class="m-bar ">
+        <view class="m-info-prefix">头像</view>
+        <image class="m-avatar" src="../../images/icon-image.jpg"></image>
+      </view>
+      <view class="m-bar">
+        <view class="m-info-prefix">昵称</view>
+        <input class="m-info-content" value="{{name}}" name="name" focus="true"/>
+      </view>
+      <view class="m-bar">
+        <view class="m-info-prefix">手机</view>
+        <text class="m-info-content">{{userInfo.UStelphone}}</text>
+      </view>
+      <view class="m-bar m-bottom">
+        <view class="m-info-prefix">性别</view>
+        <view class="m-sex-box">
+          <image wx:if="{{index == 0}}" src="/images/icon-woman.jpg" class="m-sex" @tap="sexTap('1')"/>
+          <image wx:if="{{index == 1}}" src="/images/icon-woman-select.jpg" class="m-sex" />
+          <image wx:if="{{index == 1}}" src="/images/icon-man.jpg" class="m-sex" @tap="sexTap('0')"/>
+          <image wx:if="{{index == 0}}" src="/images/icon-man-select.jpg" class="m-sex"/>
+        </view>
+      </view>
+      <view class="m-btn-box">
+        <button class="m-info-button" formType="submit">修改</button>
+      </view>
+    </form>
+  </view>
+</template>
+<script>
+
+  import tip from '../../utils/tip';
+  import api from '../../api/api'
+  import wepy from 'wepy';
+
+  export default class BaseInfo extends wepy.page {
+    config = {
+      navigationBarTitleText: '基本信息'
+    }
+    data = {
+      token: '',
+      name: '',
+      tel:'',
+      array: ['男', '女'],
+      index: 0,
+      userInfo:{}
+    }
+    bindPickerChange(e){
+      this.index = e.detail.value
+    }
+    async getPersonInfo(token) {
+      let that = this;
+      tip.loading();
+      let res = await api.all_info({query: {token: token}})
+      if (res.data.status == '200') {
+        that.userInfo = res.data.data;
+        tip.loaded();
+        that.$apply();
+      }
+      else tip.error("加载失败")
+    }
+
+    async updateUserInfo(params){
+      let that = this;
+      tip.loading();
+      let res = await api.update_info({query: params, token : that.token, method: 'POST'})
+      if(res.data.status == '200'){
+        tip.success("修改信息成功")
+        setTimeout( wx.navigateBack, 1000)
+
+      }
+      else tip.error(res.data.message)
+    }
+    async formSubmit(e){
+      let that = this
+      let params = {
+        USsex: that.array[this.index],
+        USname: e.detail.value.name
+      }
+      this.updateUserInfo(params)
+
+    }
+    onLoad(params) {
+      let that = this;
+      this.name = params.name;
+      this.sex = params.sex;
+      let token =  wepy.getStorageSync('token');
+      this.token = token;
+      this.getPersonInfo(token);
+      for(let i=0; i<2; i++){
+        if(params.sex == that.array[i])
+          that.index = i;
+      }
+    }
+
+    methods = {
+      sexTap(v){
+        this.index = v
+      }
+    };
+  }
+</script>
