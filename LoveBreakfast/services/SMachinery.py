@@ -15,3 +15,7 @@ class SMachinery(SBase):
     @close_session
     def get_aaid_by_prid(self, prid):
         return self.session.query(Machinery.AAid).filter(Machinery.PRid == prid).all()
+
+    @close_session
+    def get_maid_by_aaid_prid(self, aaid, prid):
+        return self.session.query(Machinery.MAid).filter(Machinery.PRid == prid, Machinery.AAid == aaid).scalar()

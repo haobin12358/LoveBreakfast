@@ -163,12 +163,12 @@ class COrders():
                 print(self.title.format("prostatus"))
                 if prostatus.PRstatus != 1:
                     return import_status("error_no_pro", "LOVEBREAKFAST_ERROR", "error_no_pro")
-                aaid_mach_list = [i.AAid for i in self.smach.get_aaid_by_prid(op.get("PRid"))]
-                print(self.title.format("aaid_mach_list"))
-                print(aaid_mach_list)
-                print(self.title.format("aaid_mach_list"))
+                mach = self.smach.get_maid_by_aaid_prid(get_str(data, "AAid"), op.get("PRid"))
+                print(self.title.format("mach"))
+                print(mach)
+                print(self.title.format("mach"))
 
-                if aaid not in aaid_mach_list:
+                if not mach:
                     return SYSTEM_ERROR
 
                 self.sorders.add_model("Orderpart", **{
