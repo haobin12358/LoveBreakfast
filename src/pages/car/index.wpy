@@ -174,7 +174,7 @@
           },
           refresh(){
             let res = wx.getStorageSync('token');
-            let resId = wx.getStorageSync('AAid');
+            let resId = wx.getStorageSync('ASid');
             this.get_all_car(res,resId);
           },
           radioTap(v){

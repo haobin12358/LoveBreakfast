@@ -267,7 +267,7 @@
           tip.loading();
           let res = await api.get_select_product({method:'POST',query:{
               CAid:CAid
-            }, token:token,ASid:ASid});
+            }, token:token,ASid:ASid });
           if(res.data.status == 200){
             that.all_order = res.data.data;
             let total = 0;
