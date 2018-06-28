@@ -80,6 +80,7 @@ class CCoupons():
                 print(COtype)
                 print(self.title.format("COtype"))
                 cart["CAid"] = cart_pkg.CAid
+                cart["COid"] = cart_pkg.COid
                 if COtype == 801:
                     COfilter = coupon.COfilter
                     cart["COuse"] = "满{0}元可用".format(COfilter)
