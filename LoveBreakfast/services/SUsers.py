@@ -86,3 +86,8 @@ class SUsers(SBase):
     def get_user_by_usid(self, usid):
         return self.session.query(model.Users.USid, model.Users.UStelphone, model.Users.USinvatecode) \
             .filter_by(USid=usid).all()
+
+    @close_session
+    def get_uid_by_utel(self, utel):
+        return self.session.query(model.Users.USid).filter_by(UStelphone=utel).scalar()
+

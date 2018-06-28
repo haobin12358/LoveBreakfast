@@ -4,16 +4,18 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
 import json
+import datetime
 import uuid
-from config.status import response_ok as ok
-from common.ServiceManager import get_model_return_list, get_model_return_dict
+from common.ServiceManager import ServiceManager
 from common.ErrorManager import dberror
-from common.Tools import get_db_time_str
-from config.response import PARAMS_MISS, SYSTEM_ERROR
+from common.Tools import get_db_time_str, get_web_time_str, format_forweb_no_HMS
+from config.response import SYSTEM_ERROR, PARAMS_MISS
+from common.ImportManager import import_status
 
 
 class CCoupons():
     def __init__(self):
+        self.title = "============{0}==============="
         from services.SCoupons import SCoupons
         self.scoupons = SCoupons()
         print("coupons service", id(self.scoupons))
@@ -33,10 +35,8 @@ class CCoupons():
             cend = get_db_time_str()  # TODO 后期补充优惠券截止日期计算方法
             if cart_pkg:
                 if cart_pkg.CAstatus == 2:
-                    from config.status import response_error as status
-                    from config.status_code import error_coupon_used as code
-                    from config.messages import error_coupons_used as msg
-                    return {"status": status, "status_code": code, "message": msg}
+                    return import_status("error_coupons_used", "LOVEBREAKFAST_ERROR", "error_coupons_used")
+
                 self.scoupons.update_carbackage(cart_pkg.CAid)
             else:
                 self.scoupons.add_model("Cardpackage", **{
@@ -53,8 +53,7 @@ class CCoupons():
             print(e.message)
             return SYSTEM_ERROR
 
-        from config.messages import messages_add_coupons_success as msg
-        return {"status": ok, "message": msg}
+        return import_status("messages_add_coupons_success", "OK")
 
     def get_cart_pkg(self):
         args = request.args.to_dict()
@@ -64,16 +63,42 @@ class CCoupons():
 
         try:
             cart_list = []
-            cart_pkgs = get_model_return_list(self.scoupons.get_cardpackage_by_uid(uid))
+            cart_pkgs = ServiceManager().get_model_return_list(self.scoupons.get_cardpackage_by_uid(uid))
             for cart_pkg in cart_pkgs:
                 if cart_pkg.get("CAstatus") == 2:
                     continue
-                coupon = get_model_return_dict(self.scoupons.get_coupons_by_couid(cart_pkg.get("COid")))
-                for key in coupon.keys():
-                    cart_pkg[key] = coupon.get(key)
+                coupon = ServiceManager().get_model_return_dict(self.scoupons.get_coupons_by_couid(cart_pkg.get("COid")))
+                print(self.title.format("coupon"))
+                print(coupon)
+                print(self.title.format("coupon"))
+
+                coupon["COstart"] = get_web_time_str(coupon.get("COstart"), format_forweb_no_HMS)
+                coupon["COend"] = get_web_time_str(coupon.get("COend"), format_forweb_no_HMS)
+                cart_pkg["CAend"] = get_web_time_str(cart_pkg.get("CAend"), format_forweb_no_HMS)
+                cart_pkg["CAstart"] = get_web_time_str(cart_pkg.get("CAstart"), format_forweb_no_HMS)
+                cart_pkg.update(coupon)
+                if not self.check_carttime(cart_pkg):
+                    continue
                 cart_list.append(cart_pkg)
         except Exception as e:
             print("ERROR: " + e.message)
             return SYSTEM_ERROR
-        from config.messages import messages_get_carpkg_success as msg
-        return {"status": ok, "message": msg, "data": cart_list}
+        result = import_status("messages_get_carpkg_success", "OK")
+        result["data"] = cart_list
+        return result
+
+    def check_carttime(self, cartpkg):
+        time_now = datetime.datetime.now().date()
+        if cartpkg.get("CAend") and \
+                time_now > datetime.datetime.strptime(cartpkg.get("CAend"), format_forweb_no_HMS).date():
+            return False
+        if cartpkg.get("CAstart") and \
+                time_now < datetime.datetime.strptime(cartpkg.get("CAstart"), format_forweb_no_HMS).date():
+            return False
+        if cartpkg.get("COend") and \
+                time_now > datetime.datetime.strptime(cartpkg.get("COend"), format_forweb_no_HMS).date():
+            return False
+        if cartpkg.get("COstart") and \
+                time_now < datetime.datetime.strptime(cartpkg.get("COstart"), format_forweb_no_HMS).date():
+            return False
+        return True
