@@ -4,18 +4,12 @@ import os
 
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
-from config.status import response_system_error
-from config.status_code import error_wrong_apis
-from config.messages import error_messages_wrong_api
 from control.CAddress import CAddress
-
+from config.response import APIS_WRONG
 
 class AAddress(Resource):
     def __int__(self):
-        self.apis_wrong = {}
-        self.apis_wrong["status"] = response_system_error
-        self.apis_wrong["status_code"] = error_wrong_apis
-        self.apis_wrong["messages"] = error_messages_wrong_api
+        pass
 
     def get(self, address):
         print("=======================api===================")
@@ -33,4 +27,4 @@ class AAddress(Resource):
         if address in apis:
             return eval(apis[address])
 
-        return self.apis_wrong
+        return APIS_WRONG

@@ -53,6 +53,7 @@ messages_get_carpkg_success = "获取数据成功"
 error_messages_no_pid = "商品已下架"
 get_product_list_success = "获取成功"
 get_product_info_success = "获取成功"
+ERROR_MESSAGE_WRONG_TELCODE = "未知验证码"
 
 get_review_success = "获取评论成功"
 messages_get_area_success = "获取信息成功"

@@ -4,10 +4,8 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
 from config.Logs import PRINT_API_NAME
-from config.status import response_system_error
-from config.status_code import error_wrong_apis
-from config.messages import error_messages_wrong_api
 from control.Clocations import Clocations
+from config.response import APIS_WRONG
 
 class ALocations(Resource):
     def __int__(self):
@@ -27,8 +25,4 @@ class ALocations(Resource):
         if locations in apis:
             return eval(apis[locations])
 
-        apis_wrong = []
-        apis_wrong["status"] = response_system_error
-        apis_wrong["status_code"] = error_wrong_apis
-        apis_wrong["messages"] = error_messages_wrong_api
-        return apis_wrong
+        return APIS_WRONG
