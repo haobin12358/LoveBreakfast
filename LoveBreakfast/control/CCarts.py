@@ -23,6 +23,8 @@ class CCarts():
         self.sproduct = SProduct()
         from services.SAddress import SAddress
         self.sadd = SAddress()
+        from services.SMachinery import SMachinery
+        self.smach = SMachinery()
         self.title = '============{0}============'
 
     def get_carts_by_uid(self):
@@ -53,7 +55,7 @@ class CCarts():
             if cart.CAstatus != 1:
                 continue
             PRid = cart.PRid
-            address_list = self.scart.get_address_list_by_prid(PRid)
+            address_list = [i.AAid for i in self.smach.get_aaid_by_prid(PRid)]
             print(self.title.format("address_list"))
             print(address_list)
             print(self.title.format("address_list"))
@@ -202,7 +204,7 @@ class CCarts():
             if caid_list and cart.CAid not in caid_list:
                 continue
             PRid = cart.PRid
-            address_list = self.scart.get_address_list_by_prid(PRid)
+            address_list = [i.AAid for i in self.smach.get_aaid_by_prid(PRid)]
             print(self.title.format("address_list"))
             print(address_list)
             print(self.title.format("address_list"))
