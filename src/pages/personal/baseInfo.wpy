@@ -61,7 +61,7 @@
       </view>
       <view class="m-bar">
         <view class="m-info-prefix">昵称</view>
-        <input class="m-info-content" value="{{name}}" name="name" focus="true"/>
+        <input class="m-info-content" value="{{name}}" name="name"/>
       </view>
       <view class="m-bar">
         <view class="m-info-prefix">手机</view>

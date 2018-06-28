@@ -19,30 +19,35 @@
     .m_text {
       font-size: 24rpx;
       color: @personal_color;
+      white-space:nowrap;
     }
     .m-post {
       color: #b3b3b3;
       font-size: 24rpx;
       align-items: center;
       z-index: 0;
+      margin-left: 20rpx;
     }
   }
   .m-validation {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-bottom: 10rpx;
+    padding: 15rpx 0;
     border-bottom: 1px solid #dbdbdb;
     .m-vali {
       background-color: #FFF;
       z-index: 0;
       font-size: 24rpx;
+      margin-left: 20rpx;
+      width: 220rpx;
+      height: 100rpx;
     }
     .m-icon {
-      width: 44rpx;
-      height: 44rpx;
+      width: 31rpx;
+      height: 40rpx;
       padding-right: 30rpx;
-      margin-left: 80rpx;
+      margin-left: 86rpx;
     }
     .m_text {
       white-space:nowrap;
@@ -50,9 +55,7 @@
     }
     .m-btn {
       border: 1px solid #fff;
-      width: 250rpx;
-      height: 100rpx;
-      font-size: 35rpx;
+      font-size: 24rpx;
       display: inline-block;
       color: @main_color;
     }
@@ -121,18 +124,18 @@
       <form bindsubmit="formSubmit" bindreset="formReset">
         <view class="m-section">
           <image class="m-icon" src='/images/icon-set.jpg'></image>
-          <text class="m_text">密   码：</text>
+          <text class="m_text">新的密码：</text>
           <input class="m-post" password name="pass" type="number" placeholder="请输入密码" />
         </view>
         <view class="m-section">
           <image class="m-icon" src='/images/icon-set.jpg'></image>
-          <text class="m_text">再次输入密码：</text>
-          <input class="m-post" password name="passnew" type="number" placeholder="请输入密码" />
+          <text class="m_text">再次输入：</text>
+          <input class="m-post" password name="passnew" type="number" placeholder="请再次输入密码" />
         </view>
         <view class="m-section">
           <image class="m-icon" src='/images/icon-tel.jpg'></image>
           <text class="m_text">手机号：</text>
-          <input class="m-post" name="phone" type="number" bindinput="phoneInput" placeholder="请输入手机号" maxlength="11" focus="true" />
+          <input class="m-post" name="phone" type="number" bindinput="phoneInput" placeholder="请输入手机号" maxlength="11"/>
         </view>
         <view class="m-validation">
           <image class="m-icon" src='/images/icon-phone.jpg'></image>
