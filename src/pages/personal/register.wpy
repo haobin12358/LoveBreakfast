@@ -282,9 +282,10 @@
       },
       checkboxChange(e){
         if(e.detail.value.length == 0){
-          this.agree = true;
+          this.agree = false;
+          tip.alert("请阅读并同意")
         }
-        else this.agree = false;
+        else this.agree = true;
         this.$apply();
       },
       showM(){

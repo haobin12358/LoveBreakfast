@@ -147,8 +147,9 @@
         let that = this;
         let phone = e.detail.value.phone;
         let pass = e.detail.value.code;
-        if(phone == '') tip.alert("请输入手机号")
-        if(pass == '') tip.alert("请输入密码")
+        if(phone == ''){ tip.alert("请输入手机号"); return false; }
+        if(pass == ''){ tip.alert("请输入密码"); return false; }
+        // if(phone == '' || pass == '' || phone == '' & pass == '') tip.alert("请完整输入")
         that.Login(phone, pass)
       },
       registerTap(){
