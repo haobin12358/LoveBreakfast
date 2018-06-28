@@ -63,6 +63,7 @@ class COrders():
                 for raw in order_items:
                     Pid = raw.get("PRid")
                     product = get_model_return_dict(self.sproduct.get_product_all_by_pid(Pid))
+                    product["PRid"] = Pid
                     print(self.title.format("product"))
                     print(product)
                     print(self.title.format("product"))
@@ -118,6 +119,7 @@ class COrders():
             print(self.title.format("product"))
             print(product)
             print(self.title.format("product"))
+            product["PRid"] = row.get("PRid")
             row.update(product)
 
         response_make_main_order = import_status("messages_get_item_ok", "OK")
