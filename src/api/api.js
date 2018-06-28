@@ -13,7 +13,7 @@ const api= 'http://123.207.97.185:7444';
 const getValidate = (params) => wxRequest(params, api+'/love/breakfast/users/get_inforcode');//获取验证码
 const register = (params) => wxRequest(params, api + '/love/breakfast/users/register');//注册
 const login = (params) => wxRequest(params, api + '/love/breakfast/users/login');//登录
-const forgetPwd = (params) => wxRequest(params,api2 + '/love/breakfast/users/forget_pwd');//忘记密码
+const forgetPwd = (params) => wxRequest(params,api + '/love/breakfast/users/forget_pwd');//忘记密码
 const update_info = (params) => wxRequest(params, api + '/love/breakfast/users/update_info?token='+params.token);//修改个人信息
 const update_pwd = (params) => wxRequest(params, api + '/love/breakfast/users/update_pwd');//修改密码
 const all_info = (params) => wxRequest(params, api + '/love/breakfast/users/all_info');//获取个人信息
@@ -32,14 +32,14 @@ const create_review = (params) => wxRequest(params, api + '/love/breakfast/revie
 const get_review = (params) => wxRequest(params, api + '/love/breakfast/review/get_review');//通过评论id获取评论详情
 const get_cardpkg = (params) => wxRequest(params, api + '/love/breakfast/cardpkg/get_cardpkg?token=' + params.token);// 查看个人所有优惠券
 const update_coupons = (params) => wxRequest(params, api + '/love/breakfast/cardpkg/update_coupons');//更新优惠券
-const get_citys = (params) => wxRequest(params, api + '/love/breakfast/address/get_citys?token=' + params.token);//获取所有可选城市
+const get_citys = (params) => wxRequest(params, api + '/love/breakfast/address/get_citys');//获取所有可选城市
 const get_addfirst = (params) => wxRequest(params, api + '/love/breakfast/address/get_addfirst');//通过所选类型获取城市的已开通区域或线路信息
 const get_addsecond = (params) => wxRequest(params, api + '/love/breakfast/address/get_addsecond');//通过区域或线路id 获取园区或站点信息
 const get_addabo = (params) => wxRequest(params, api + '/love/breakfast/address/get_addabo');//通过asid获取机器详情地址及图片
 const get_city_location = (params) => wxRequest(params, api + '/love/breakfast/locations/get_city_location');//根据经纬度获取城市
 const picture = (params) => wxRequest(params, api + '/love/breakfast/other/picture');//获取首页图片
 const order_price = (params) => wxRequest(params,api + '/love/breakfast/orders/order_price?token=' + params.token);//获取商品总价
-const get_select_product = (params) => wxRequest(params,api + '/love/breakfast/salelist/get_select_product?token=' + params.token + '&AAid=' +params.AAid);//获取已选择商品
+const get_select_product = (params) => wxRequest(params,api + '/love/breakfast/salelist/get_select_product?token=' + params.token + '&ASid=' + params.ASid);//获取已选择商品
 export default {
   getValidate,register,login,forgetPwd,update_info,update_pwd,all_info,make_main_order,
   update_order_status,get_order_list,get_order_abo,get_all_location,

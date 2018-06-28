@@ -36,7 +36,7 @@
       <view class="my-row">
         <view class="my-price">￥{{list.PRprice}}</view>
         <view class="my-add-box">
-          <image  src="../../images/icon-add.jpg" style="width: 50rpx;height: 50rpx;" catchtap="addTap({{list}})"/>
+          <image  src="/images/icon-add.jpg" style="width: 50rpx;height: 50rpx;" catchtap="addTap({{list}})"/>
         </view>
       </view>
     </view>

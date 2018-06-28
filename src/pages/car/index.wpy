@@ -17,8 +17,8 @@
       .flex-row(space-between);
       .my-left{
         .my-icon-img{
-          width: 30rpx;
-          height:30rpx;
+          width: 40rpx;
+          height:40rpx;
           margin: 0 20rpx;
         }
       }
@@ -40,15 +40,32 @@
       }
     }
   }
+  .my-login-btn{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    height: 900rpx;
+    view{
+      padding: 20rpx 40rpx;
+      background-color: @main_color;
+      color: #fff;
+      border-radius: 10rpx;
+    }
+  }
 </style>
 <template>
   <view class="my-car-index">
-    <view class="my-car-box">
+    <view class="my-login-btn" wx:if="{{!isLogin}}" @tap="goLogin">
+      <view>去登录</view>
+
+    </view>
+    <view class="my-car-box" wx:if="{{isLogin}}">
       <repeat for="{{all_data}}" key="index" index="index" item="item">
         <car :list.sync="item" :i.sync="index" @refresh.user="refresh" @radioTap.user="radioTap"></car>
       </repeat>
     </view>
-    <view class="my-foot">
+    <view class="my-foot" wx:if="{{isLogin}}">
       <view class="my-left">
         <image class="my-icon-img" wx:if="{{!all_radio}}" src="/images/icon-radio.jpg" @tap="allRadio"></image>
         <image class="my-icon-img" wx:else src="/images/icon-radio-select.jpg" @tap="allRadio"></image>
@@ -77,13 +94,14 @@
         data = {
           all_data:[],
           all_radio:false,
-          total_money:0
+          total_money:0,
+          isLogin:false
         }
-        async get_all_car(token,AAid) {
+        async get_all_car(token,ASid) {
           let that = this;
           tip.loading();
           let res = await api.get_all_car({method:'GET',query:{
-              AAid:AAid,
+              ASid:ASid,
               token:token
             }});
           if(res.data.status == 200){
@@ -116,8 +134,27 @@
 
         onShow() {
           let res = wx.getStorageSync('token');
-          let resId = wx.getStorageSync('AAid');
-          this.get_all_car(res,resId)
+          let resId = wx.getStorageSync('ASid');
+          if(res && resId){
+            this.isLogin = true;
+            this.get_all_car(res,resId)
+          }else if(!res){
+            this.isLogin = false;
+            // tip.alert('请先登录',600);
+            // setTimeout(() => {
+            //   wx.navigateTo({
+            //     url:'/pages/personal/login'
+            //   })
+            // }, 600);
+          }else if(!resId){
+            this.isLogin = true;
+            tip.alert('请先选择具体点位',600);
+            setTimeout(() => {
+              wx.switchTab({
+                url:'/pages/index/index'
+              })
+            }, 600);
+          }
         }
         methods = {
           playOrder(){
@@ -137,7 +174,7 @@
           },
           refresh(){
             let res = wx.getStorageSync('token');
-            let resId = wx.getStorageSync('AAid');
+            let resId = wx.getStorageSync('ASid');
             this.get_all_car(res,resId);
           },
           radioTap(v){
@@ -184,6 +221,11 @@
               this.total_money = 0;
             }
             console.log(this.total_money)
+          },
+          goLogin(){
+            wx.navigateTo({
+              url:'/pages/personal/login'
+            })
           }
         }
     }

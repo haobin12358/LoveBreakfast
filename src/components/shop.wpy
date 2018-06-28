@@ -12,8 +12,8 @@
         width: 520rpx;
         .flex-row(flex-start);
         .my-icon-img{
-          width: 30rpx;
-          height:30rpx;
+          width: 40rpx;
+          height:40rpx;
           margin: 0 20rpx;
         }
         .my-product-img{
@@ -36,8 +36,8 @@
         border-radius: 5px;
         .flex-row(flex-start);
         .my-cut{
-          height: 40rpx;
-          line-height: 40rpx;
+          height: 60rpx;
+          line-height: 60rpx;
         }
         p{
           width: 50rpx;
@@ -89,18 +89,19 @@
         data = {}
       async operateCart(params,token) {
         tip.loading();
-        let res = await api.sale_update({query: params,  method: 'POST'},token)
+        let res = await api.sale_update({query: params,  method: 'POST'},token);
         if(res.data.status == '200'){
-          this.$apply();
           wx.showToast({
             title: '修改成功',
             icon: 'success',
             duration: 800
-          })
-          this.$emit('refresh')
+          });
+          this.$emit('refresh');
+          this.$apply();
         }
       }
         onLoad() {
+
         }
         methods = {
           productTap(v){

@@ -47,7 +47,10 @@
             }
           }
           .my-you{
-
+            display: flex;
+            flex-flow: row;
+            align-items: center;
+            justify-content: space-between;
           }
 
         }
@@ -120,14 +123,19 @@
   <view class="my-playOneOrder">
     <view class="my-top">
        <view class="my-row">
-         <image src="../../images/icon-loc.jpg" style="width:40rpx;height:40rpx;"/>
+         <image src="/images/icon-loc.jpg" style="width:40rpx;height:40rpx;"/>
          <view class="my-label">取餐点</view>
-         <view class="my-pick">杭州市地铁1号线江陵路A口</view>
+         <picker bindchange="pointChange" value="{{point.point_index}}" range="{{point.point_name}}">
+           <view class="my-pick">
+             <view>{{point.point_name[point.point_index]}}</view>
+             <image src="/images/icon-more.jpg" style="width: 12rpx;height: 20rpx;margin-left: 20rpx;"/>
+           </view>
+         </picker>
        </view>
       <view class="my-row">
-        <image src="../../images/icon-date.jpg" style="width:40rpx;height:40rpx;"/>
-        <view class="my-label">取餐时间</view>
-        <picker mode="date" value="{{date}}" start="2018-06-01" end="2019-09-01" bindchange="bindDateChange">
+        <image src="/images/icon-date.jpg" style="width:40rpx;height:40rpx;"/>
+        <view class="my-label">取餐日期</view>
+        <picker mode="date" value="{{date}}" start="{{nowDate}}" end="" bindchange="bindDateChange">
           <view class="my-pick">
             <view>{{date}}</view>
             <image src="/images/icon-more.jpg" style="width: 12rpx;height: 20rpx;margin-left: 20rpx;"/>
@@ -135,25 +143,35 @@
         </picker>
       </view>
       <view class="my-row">
-        <image src="../../images/icon-personal.jpg" style="width:40rpx;height:40rpx;"/>
+        <image src="/images/icon-date.jpg" style="width:40rpx;height:40rpx;"/>
+        <view class="my-label">取餐时间</view>
+        <picker mode="time" value="{{time}}" start="06:01" end="22:01" bindchange="bindTimeChange">
+          <view class="my-pick">
+            <view>{{time}}</view>
+            <image src="/images/icon-more.jpg" style="width: 12rpx;height: 20rpx;margin-left: 20rpx;"/>
+          </view>
+        </picker>
+      </view>
+      <view class="my-row">
+        <image src="/images/icon-personal.jpg" style="width:40rpx;height:40rpx;"/>
         <view class="my-label">联系人</view>
         <view class="my-pick">{{user_ifo.USname}}</view>
       </view>
       <view class="my-row">
-        <image src="../../images/icon-tel.jpg" style="width:40rpx;height:40rpx;"/>
+        <image src="/images/icon-tel.jpg" style="width:40rpx;height:40rpx;"/>
         <view class="my-label">联系方式</view>
         <view class="my-pick">{{user_ifo.UStelphone}}</view>
       </view>
       <view class="my-row" @tap="showModal">
-        <image src="../../images/icon-gift.jpg" style="width:40rpx;height:40rpx;" />
+        <image src="/images/icon-gift.jpg" style="width:40rpx;height:40rpx;" />
         <view class="my-label">优惠券</view>
         <view class="my-pick" wx:if="{{!choose_ticket }}">
           <view>选择优惠方式</view>
           <image src="/images/icon-more.jpg" style="width: 12rpx;height: 20rpx;margin-left: 20rpx;"/>
         </view>
         <view class="my-you">
-          <view class="m-coupon" wx:if="{{choose_ticket.COdiscount }}">折扣：{{choose_ticket.COdiscount }}</view>
-          <view class="m-coupon" wx:if="{{choose_ticket.COuse }}">{{choose_ticket.COuse}}</view>
+          <span class="m-coupon" wx:if="{{choose_ticket.COcut }}">折扣：{{choose_ticket.COcut }} </span>
+          <span class="m-coupon" wx:if="{{choose_ticket.COuse }}"> {{choose_ticket.COuse}}</span>
         </view>
       </view>
     </view>
@@ -171,7 +189,7 @@
     </view>
     <view class="my-top my-other">
       <view class="my-row">
-        <image src="../../images/icon-money.jpg" style="width:40rpx;height:40rpx;"/>
+        <image src="/images/icon-money.jpg" style="width:40rpx;height:40rpx;"/>
         <view class="my-label">支付方式</view>
         <picker bindchange="bindPickerChange1" value="{{play_index}}" range="{{play_way}}">
             <view class="my-pick">
@@ -182,14 +200,14 @@
 
       </view>
       <view class="my-row">
-        <image src="../../images/icon-remark.jpg" style="width:40rpx;height:40rpx;"/>
+        <image src="/images/icon-remark.jpg" style="width:40rpx;height:40rpx;"/>
         <view class="my-label">备注</view>
         <view class="my-pick"><input type="text"></view>
       </view>
     </view>
     <view class="my-foot">
       <view>合计:<span class="my-price">￥{{total_money}}</span></view>
-      <view class="my-btn">支  付</view>
+      <view class="my-btn" @tap="placeAnOrder">支  付</view>
     </view>
     <view class="my-modal" catchtouchmove="Touch" wx:if="{{show_modal}}" catchtap="cancelModal">
       <view class="my-scroll">
@@ -225,7 +243,16 @@
           card_data:[],
           choose_ticket:null,
           all_order:[],
-          total_money:0
+          total_money:0,
+          point:{
+            point_id:[],
+            point_name:[],
+            point_img:[],
+            point_index:-1
+          },
+          date:'',
+          time:'06:00',
+          nowDate:''
         }
         components={
           card:card
@@ -259,18 +286,19 @@
             tip.error(res.data.message);
           }
         }
-        async get_select_product(token,AAid,CAid) {
+        async get_select_product(token,ASid,CAid) {
           let that = this;
           tip.loading();
           let res = await api.get_select_product({method:'POST',query:{
               CAid:CAid
-            }, token:token,AAid:AAid});
+            }, token:token,ASid:ASid });
           if(res.data.status == 200){
             that.all_order = res.data.data;
             let total = 0;
             for(let i=0;i<that.all_order.length;i++){
               total += Number(that.all_order[i].CAnumber * that.all_order[i].PRprice);
             }
+            total = total.toFixed(2);
             that.total_money = total;
             that.$apply();
             tip.loaded();
@@ -293,22 +321,46 @@
             tip.error(res.data.message);
           }
         }
+        async get_addabo(ASid) {
+          let that = this;
+          tip.loading();
+          let res = await api.get_addabo({method:'GET',query:{
+              ASid:ASid
+            }});
+          if(res.data.status == 200){
+            for(let i=0;i<res.data.data.length;i++){
+              that.point.point_name.push(res.data.data[i].AAmessage);
+              that.point.point_id.push(res.data.data[i].AAid);
+              that.point.point_img.push(res.data.data[i].AAimage);
+            }
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
         onLoad(options) {
+          let now = new Date();
+          this.nowDate = now.getFullYear() +'-'+ (now.getMonth()  <9 ? ('0' + (Number(now.getMonth()) +1)) :( Number(now.getMonth()) +1) ) + '-' + (now.getDate() <10?('0'+ now.getDate()):now.getDate())
+          console.log(this.date)
           let CAid = [];
           let res = wx.getStorageSync('token');
-          let resId = wx.getStorageSync('AAid');
+          let resId = wx.getStorageSync('ASid');
           this.get_all_info(res);
           this.get_card(res);
           CAid = options.CAid.split(',');
           this.get_select_product(res,resId,CAid);
+          this.get_addabo(resId);
         }
 
         methods = {
           bindDateChange(e){
-              console.log('picker发送选择改变，携带值为', e.detail.value);
-              this.setData({
-                date: e.detail.value
-              })
+              this.date = e.detail.value;
+              this.$apply();
+          },
+          bindTimeChange(e){
+            this.time= e.detail.value;
+            this.$apply();
           },
           modalTouch(e){
             console.log(e)
@@ -351,6 +403,23 @@
             that.order_price(param.productlist,COid,token);
 
             that.$apply();
+          },
+          pointChange(e){
+            this.point.point_index = e.detail.value;
+            this.$apply();
+          },
+          async placeAnOrder(e){
+            let that = this;
+            if(that.point.point_index == -1){
+              tip.error("请选择取餐点");
+              return false;
+            }
+            if(that.date != ''){
+              tip.error("请选择取餐时间");
+              return false;
+            }
+
+
           },
         }
     }
