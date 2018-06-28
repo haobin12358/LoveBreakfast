@@ -45,7 +45,7 @@ class SProduct(SBase):
 
     @close_session
     def get_product_all_by_pid(self, pid):
-        return self.session.query(Products.PRname, Products.PRsalesvolume, Products.PRscore,
+        return self.session.query(Products.PRid, Products.PRname, Products.PRsalesvolume, Products.PRscore,
                                   Products.PRprice, Products.PRimage).filter_by(PRid=pid).first()
 
     @close_session

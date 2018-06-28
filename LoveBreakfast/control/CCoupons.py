@@ -62,23 +62,60 @@ class CCoupons():
 
         try:
             cart_list = []
-            cart_pkgs = get_model_return_list(self.scoupons.get_cardpackage_by_uid(uid))
+            cart_pkgs = self.scoupons.get_cardpackage_by_uid(uid)
+            print(self.title.format("cart_pkgs"))
+            print(cart_pkgs)
+            print(self.title.format("cart_pkgs"))
             for cart_pkg in cart_pkgs:
-                if cart_pkg.get("CAstatus") == 2:
+                if cart_pkg.CAstatus == 2:
                     continue
-                coupon = get_model_return_dict(self.scoupons.get_coupons_by_couid(cart_pkg.get("COid")))
+                coupon = self.scoupons.get_coupons_by_couid(cart_pkg.COid)
                 print(self.title.format("coupon"))
                 print(coupon)
                 print(self.title.format("coupon"))
 
-                coupon["COstart"] = get_web_time_str(coupon.get("COstart"), format_forweb_no_HMS)
-                coupon["COend"] = get_web_time_str(coupon.get("COend"), format_forweb_no_HMS)
-                cart_pkg["CAend"] = get_web_time_str(cart_pkg.get("CAend"), format_forweb_no_HMS)
-                cart_pkg["CAstart"] = get_web_time_str(cart_pkg.get("CAstart"), format_forweb_no_HMS)
-                cart_pkg.update(coupon)
-                if not self.check_carttime(cart_pkg):
-                    continue
-                cart_list.append(cart_pkg)
+                cart = {}
+                COtype = coupon.COtype
+                print(self.title.format("COtype"))
+                print(COtype)
+                print(self.title.format("COtype"))
+                cart["CAid"] = cart_pkg.CAid
+                cart["COid"] = cart_pkg.COid
+                if COtype == 801:
+                    COfilter = coupon.COfilter
+                    cart["COuse"] = "满{0}元可用".format(COfilter)
+                    COcut = coupon.COamount
+                    cart["COcut"] = str(COcut) + "元"
+                    COstart = coupon.COstart
+                    cart["COstart"] = get_web_time_str(COstart, format_forweb_no_HMS)
+                    COend = coupon.COend
+                    cart["COend"] = get_web_time_str(COend, format_forweb_no_HMS)
+                elif COtype == 802:
+                    COfilter = coupon.COfilter
+                    cart["COuse"] = "满{0}元可用".format(COfilter)
+                    cart["COcut"] = str(coupon.COdiscount * 10) + "折"
+                    COstart = coupon.COstart
+                    cart["COstart"] = get_web_time_str(COstart, format_forweb_no_HMS)
+                    COend = coupon.COend
+                    cart["COend"] = get_web_time_str(COend, format_forweb_no_HMS)
+                elif COtype == 803:
+                    CObrand = coupon.CObrand.encode("utf8")
+                    cart["COuse"] = "限{0}商品可用".format(str(CObrand))
+                    cart["COcut"] = str(coupon.COamount) + "元"
+                    COstart = coupon.COstart
+                    cart["COstart"] = get_web_time_str(COstart, format_forweb_no_HMS)
+                    COend = coupon.COend
+                    cart["COend"] = get_web_time_str(COend, format_forweb_no_HMS)
+                elif COtype == 804:
+                    cart["COuse"] = "无限制"
+                    cart["COcut"] = str(coupon.COamount) + "元"
+                    COstart = coupon.COstart
+                    cart["COstart"] = get_web_time_str(COstart, format_forweb_no_HMS)
+                    COend = coupon.COend
+                    cart["COend"] = get_web_time_str(COend, format_forweb_no_HMS)
+                else:
+                    return
+                cart_list.append(cart)
         except Exception as e:
             print("ERROR: " + e.message)
             return SYSTEM_ERROR

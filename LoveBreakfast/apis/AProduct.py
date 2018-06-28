@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
 from config.Logs import PRINT_API_NAME
 from control.CProduct import CProduct
+from config.response import APIS_WRONG
 
 class AProduct(Resource):
     def __init__(self):
@@ -24,7 +25,7 @@ class AProduct(Resource):
         if product in apis:
             return eval(apis[product])
 
-        return
+        return APIS_WRONG
 
     def get(self, product):
         print(PRINT_API_NAME.format(product))
@@ -36,4 +37,4 @@ class AProduct(Resource):
         if product in apis:
             return eval(apis[product])
 
-        return
+        return APIS_WRONG

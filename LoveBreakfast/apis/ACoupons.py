@@ -4,19 +4,13 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
 from config.Logs import PRINT_API_NAME
-from config.status import response_system_error
-from config.status_code import error_wrong_apis
-from config.messages import error_messages_wrong_api
 from control.CCoupons import CCoupons
-
+from config.response import APIS_WRONG
 
 class ACoupons(Resource):
 
     def __init__(self):
-        self.apis_wrong = {}
-        self.apis_wrong["status"] = response_system_error
-        self.apis_wrong["status_code"] = error_wrong_apis
-        self.apis_wrong["messages"] = error_messages_wrong_api
+        pass
 
     def post(self, card):
         print(PRINT_API_NAME.format(card))
@@ -29,7 +23,7 @@ class ACoupons(Resource):
         if card in apis:
             return eval(apis[card])
 
-        return self.apis_wrong
+        return APIS_WRONG
 
     def get(self, card):
         print(PRINT_API_NAME.format(card))
@@ -43,4 +37,4 @@ class ACoupons(Resource):
         if card in apis:
             return eval(apis[card])
 
-        return self.apis_wrong
+        return APIS_WRONG
