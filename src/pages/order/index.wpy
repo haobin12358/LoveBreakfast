@@ -106,8 +106,10 @@
                 {{item.OMstatus}}
               </view>
             <view class="operatorArea">
-              <button wx:if="{{item.OMstatus == '未支付'}}">立即支付</button>
-              <button wx:elif ="{{item.OMstatus == '已完成'}}">评价</button>
+
+              <!--<button @tap="goEvaluatePage({{item.orderId}})" >评价</button>-->
+              <button wx:if="{{item.OMstatus == '未支付'}}" @tap="toPay">立即支付</button>
+              <button wx:elif ="{{item.OMstatus == '已完成'}}" @tap="goEvaluatePage({{item.Orderitems[0].PRid}})">评价</button>
               <text wx:elif ="{{item.OMstatus == '已评价'}}">评价详情</text>
             </view>
           </view>
@@ -138,19 +140,23 @@
         computed = {}
 
         async getOrderList(){
-          let res =await api.get_order_list({
-            token: '11aa9315-38b4-47c1-a31b-c29ca20aa02c'
-          });
+          let token = wepy.getStorageSync('token');
+          let res;
 
-          if(res.data.status == 200){
-            this.orderList = res.data.data;
-            this.$apply();
+          if(token){
+            res = await api.get_order_list({
+              token
+            })
+
+            if(res.data.status == 200){
+              this.orderList = res.data.data;
+              this.$apply();
+            }else{
+              tip.error(res.data.message)
+            }
           }else{
-            tip.error(res.data.message)
+            this.$navigate('/pages/personal/login');
           }
-        }
-
-        onLoad() {
         }
 
         onShow(){
@@ -160,6 +166,15 @@
         methods = {
           showDetail(omId){
             this.$navigate('./orderDetail',{OMid: omId});
+          },
+
+          toPay(){
+            // this.$navigate('../car/payOneOrder',{OMid: omId});
+            console.log('支付');
+          },
+
+          goEvaluatePage(prId){
+            this.$navigate('./productEvaluate', {prId});
           }
         }
     }
