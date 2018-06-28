@@ -144,7 +144,7 @@
         <view class="m-section">
           <image class="m-icon" src='/images/icon-set.jpg'></image>
           <text class="m_text">密     码：</text>
-          <input class="m-post" password name="pass" type="number" placeholder="请输入密码" />
+          <input class="m-post" password name="pass" placeholder="请输入密码" />
         </view>
         <view class="m-section">
           <image class="m-icon" src='/images/icon-code.jpg'></image>
