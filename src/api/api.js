@@ -13,7 +13,7 @@ const api= 'http://123.207.97.185:7444';
 const getValidate = (params) => wxRequest(params, api+'/love/breakfast/users/get_inforcode');//获取验证码
 const register = (params) => wxRequest(params, api + '/love/breakfast/users/register');//注册
 const login = (params) => wxRequest(params, api + '/love/breakfast/users/login');//登录
-const forgetPwd = (params) => wxRequest(params,api2 + '/love/breakfast/users/forget_pwd');//忘记密码
+const forgetPwd = (params) => wxRequest(params,api + '/love/breakfast/users/forget_pwd');//忘记密码
 const update_info = (params) => wxRequest(params, api + '/love/breakfast/users/update_info?token='+params.token);//修改个人信息
 const update_pwd = (params) => wxRequest(params, api + '/love/breakfast/users/update_pwd');//修改密码
 const all_info = (params) => wxRequest(params, api + '/love/breakfast/users/all_info');//获取个人信息
