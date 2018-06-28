@@ -299,7 +299,7 @@
         onLoad(options) {
           let CAid = [];
           let res = wx.getStorageSync('token');
-          let resId = wx.getStorageSync('AAid');
+          let resId = wx.getStorageSync('ASid');
           this.get_all_info(res);
           this.get_card(res);
           CAid = options.CAid.split(',');
