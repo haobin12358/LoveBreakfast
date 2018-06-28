@@ -16,12 +16,12 @@
             autoplay="{{swiper.autoplay}}" interval="{{swiper.interval}}" duration="{{swiper.duration}}"   bindscroll="scrollHide" style="height:340rpx;width: 670rpx;">
       <block wx:for="{{swiper.imgUrls}}" wx:key="{{index}}">
         <swiper-item>
-          <image src="{{item}}" class="slide-image" wx:if="{{swiper.showIndex + 24 > index && swiper.showIndex - 6 < index}}" style="height:270rpx;width:670rpx; border-radius: 15rpx;"/>
+          <image mode="aspectFit" src="{{item}}" class="slide-image" wx:if="{{swiper.showIndex + 24 > index && swiper.showIndex - 6 < index}}" style="height:270rpx;width:670rpx; border-radius: 15rpx;"/>
         </swiper-item>
       </block>
     </swiper>
     <view class="my-img" @tap="beginTap">
-      <image src="{{indexImg}}" style="height:800rpx;width:670rpx; border-radius: 15rpx;"/>
+      <image mode="aspectFit" src="{{indexImg}}" style="height:800rpx;width:670rpx; border-radius: 15rpx;"/>
     </view>
   </view>
 </template>
@@ -38,9 +38,7 @@
     data = {
       swiper:{
         imgUrls: [
-          'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-          'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-          'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
+
         ],
         indicatorDots: true,
         autoplay: true,

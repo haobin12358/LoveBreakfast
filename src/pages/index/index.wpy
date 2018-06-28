@@ -42,11 +42,11 @@
   <view class="my-product-index">
     <view class="my-head">
       <view class="my-location" @tap="modalChange">
-        <image src="../../images/icon-order-loc.jpg" style="width: 30rpx;height: 40rpx;" />
+        <image src="/images/icon-order-loc.jpg" style="width: 30rpx;height: 40rpx;" />
         <text>{{select_city}}</text>
       </view>
       <view class="my-input-box">
-        <image src="../../images/icon-search.jpg" style="width: 30rpx;height: 30rpx;margin: 0 20rpx;" />
+        <image src="/images/icon-search.jpg" style="width: 30rpx;height: 30rpx;margin: 0 20rpx;" />
         <input type="text" placeholder="搜索商品" placeholder-style="text-align:center;">
       </view>
     </view>
@@ -133,8 +133,6 @@
               _this.get_city_location(data.latitude,data.longitude)
             }
           });
-
-
         }
         methods = {
           modalChange(){
@@ -152,7 +150,22 @@
           addTap(v){
             let that = this;
             let res = wx.getStorageSync('token');
-            that.sale_update(res,v.PRid)
+            if(res){
+              that.sale_update(res,v.PRid);
+            }else{
+              wx.showToast({
+                title: '请先登录',
+                icon: "none",
+                mask: true,
+                duration: 800
+              });
+              setTimeout(() => {
+                wx.navigateTo({
+                  url:'/pages/personal/login'
+                })
+              }, 800);
+            }
+
           },
           locChange(v){
             this.point = v;

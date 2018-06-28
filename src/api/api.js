@@ -32,7 +32,7 @@ const create_review = (params) => wxRequest(params, api + '/love/breakfast/revie
 const get_review = (params) => wxRequest(params, api + '/love/breakfast/review/get_review');//通过评论id获取评论详情
 const get_cardpkg = (params) => wxRequest(params, api + '/love/breakfast/cardpkg/get_cardpkg?token=' + params.token);// 查看个人所有优惠券
 const update_coupons = (params) => wxRequest(params, api + '/love/breakfast/cardpkg/update_coupons');//更新优惠券
-const get_citys = (params) => wxRequest(params, api + '/love/breakfast/address/get_citys?token=' + params.token);//获取所有可选城市
+const get_citys = (params) => wxRequest(params, api + '/love/breakfast/address/get_citys');//获取所有可选城市
 const get_addfirst = (params) => wxRequest(params, api + '/love/breakfast/address/get_addfirst');//通过所选类型获取城市的已开通区域或线路信息
 const get_addsecond = (params) => wxRequest(params, api + '/love/breakfast/address/get_addsecond');//通过区域或线路id 获取园区或站点信息
 const get_addabo = (params) => wxRequest(params, api + '/love/breakfast/address/get_addabo');//通过asid获取机器详情地址及图片

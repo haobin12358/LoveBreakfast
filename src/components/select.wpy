@@ -28,7 +28,7 @@
   <view class="my-modal">
     <picker bindchange="cityChange" value="{{city.city_index}}" range="{{city.city_name}}">
       <view class="my-pick-box" >
-        <image src="../../images/icon-city.jpg" style="width: 25rpx;height: 30rpx;"/>
+        <image src="/images/icon-city.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
           城市：
         </view>
@@ -39,7 +39,7 @@
     </picker>
     <picker bindchange="targetChange" value="{{target.target_index}}" range="{{target.target_name}}">
       <view class="my-pick-box" >
-        <image src="../../images/icon-target.jpg" style="width: 25rpx;height: 30rpx;"/>
+        <image src="/images/icon-target.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
           目标：
         </view>
@@ -50,7 +50,7 @@
     </picker>
     <picker bindchange="areaChange" value="{{area.area_index}}" range="{{area.area_name}}">
       <view class="my-pick-box" >
-        <image src="../../images/icon-loc-s.jpg" style="width: 25rpx;height: 30rpx;"/>
+        <image src="/images/icon-loc-s.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
           区域：
         </view>
@@ -61,7 +61,7 @@
     </picker>
     <picker bindchange="pointChange" value="{{point.point_index}}" range="{{point.point_name}}">
       <view class="my-pick-box" >
-        <image src="../../images/icon-dot.jpg" style="width: 25rpx;height: 30rpx;"/>
+        <image src="/images/icon-dot.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
           点位：
         </view>
@@ -100,10 +100,10 @@
             point_index:-1
           }
         }
-        async get_citys(token) {
+        async get_citys() {
           let that = this;
           tip.loading();
-          let res = await api.get_citys({method:'GET',token:token});
+          let res = await api.get_citys({method:'GET'});
           if(res.data.status == 200){
             that.city.city_name = [];
             that.city.city_id = [];
@@ -117,13 +117,12 @@
             tip.error(res.data.message);
           }
         }
-        async get_addfirst(token,ACname,AFtype) {
+        async get_addfirst(ACname,AFtype) {
           let that = this;
           tip.loading();
           let res = await api.get_addfirst({method:'GET',query:{
               ACname:ACname,
-              AFtype:AFtype,
-              token:token
+              AFtype:AFtype
             }});
           if(res.data.status == 200){
             that.area.area_name = [];
@@ -138,12 +137,11 @@
             tip.error(res.data.message);
           }
         }
-        async get_addsecond(token,AFid) {
+        async get_addsecond(AFid) {
           let that = this;
           tip.loading();
           let res = await api.get_addsecond({method:'GET',query:{
-              AFid:AFid,
-              token:token
+              AFid:AFid
             }});
           if(res.data.status == 200){
             that.point.point_name = [];
@@ -181,8 +179,7 @@
               tip.alert('请选择目标');
               return false;
             }
-            let res = wx.getStorageSync('token');
-            this.get_addfirst(res,this.city.city_name[this.city.city_index],this.target.target_id[this.target.target_index]);
+            this.get_addfirst(this.city.city_name[this.city.city_index],this.target.target_id[this.target.target_index]);
             this.area.area_index = -1;
             this.point.point_index = -1;
             this.$apply();
@@ -193,8 +190,7 @@
               tip.alert('请选择区域');
               return false;
             }
-            let res = wx.getStorageSync('token');
-            this.get_addsecond(res,this.area.area_id[this.area.area_index]);
+            this.get_addsecond(this.area.area_id[this.area.area_index]);
             this.point.point_index = -1;
             this.$apply();
           },

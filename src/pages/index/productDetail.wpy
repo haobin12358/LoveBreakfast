@@ -95,8 +95,14 @@
           carTap(){
             let that = this;
             let res = wx.getStorageSync('token');
-            console.log(this.all_data)
-            that.sale_update(res,that.PRid)
+            if(res){
+              that.sale_update(res,that.PRid)
+            }else{
+              tip.alert('请先登录');
+              wx.navigateTo({
+                url:'/pages/personal/login'
+              });
+            }
           }
         }
     }

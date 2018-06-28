@@ -1,7 +1,7 @@
 <style scoped lang="less" rel="stylesheet/less">
   @import "../styles/common";
   .my-card{
-    width: 430rpx;
+    width: 500rpx;
     border-radius: 10px;
     text-align: center;
     padding: 20rpx 0;
@@ -19,11 +19,10 @@
   }
 </style>
 <template>
-  <view class="my-card {{choose && (choose.COid == list.COid)?'m-active':''}}" catchtap="cardTap({{list}})">
-    <view class="my-title" wx:if="{{list.COtype == 801}}">{{list.COamount}}元折扣券</view>
-    <view class="my-title" wx:if="{{list.COtype == 802}}">{{list.COamount * 10}}折扣券</view>
+  <view class="my-card {{choose && (choose.CAid == list.CAid)?'m-active':''}}" catchtap="cardTap({{list}})">
+    <view class="my-title" >{{list.COcut }}</view>
     <view>
-      <span wx:if="{{list.COtype == 801}}">满{{list.COfilter}}元</span>可用 限{{list.COstart}}-{{list.COend}}使用</view>
+      <span>{{list.COuse}}</span>  限{{list.COstart}}-{{list.COend}}使用</view>
   </view>
 </template>
 <script>
