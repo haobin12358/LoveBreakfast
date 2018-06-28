@@ -8,6 +8,7 @@ from common.get_model_return_list import get_model_return_dict, get_model_return
 from common.get_str import get_str
 from common.import_status import import_status
 from config.response import PARAMS_MISS, SYSTEM_ERROR
+from config.cityconfig import AFTYPE
 
 
 class CAddress():
@@ -38,7 +39,8 @@ class CAddress():
             print(city)
             print(self.title.format("city"))
             af_type = get_str(args, "AFtype")
-            list_first = get_model_return_list(self.sadd.get_addfirst_by_acid_astype(city.get("ACid"), af_type))
+            list_first = get_model_return_list(
+                self.sadd.get_addfirst_by_acid_astype(city.get("ACid"), AFTYPE.index(af_type)))
             print(self.title.format("list_first"))
             print(list_first)
             print(self.title.format("list_first"))
@@ -59,6 +61,10 @@ class CAddress():
             print(self.title.format("city_list"))
             print(city_list)
             print(self.title.format("city_list"))
+            for city in city_list:
+                # todo 不同城市可能开通的type不同，考虑增加字段来解决
+                city["AFtype"] = AFTYPE
+
             return_data = import_status("messages_get_area_success", "OK")
             return_data["data"] = city_list
             return return_data
