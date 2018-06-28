@@ -245,12 +245,14 @@ class CUsers():
         time_time = datetime.datetime.now()
         time_str = datetime.datetime.strftime(time_time, format_for_db)
 
+        """
         utel_list = self.susers.get_user_by_utel(Utel)
         print(self.title.format("utel_list"))
         print(utel_list)
         print(self.title.format("utel_list"))
         if utel_list:
             return import_status("ERROR_MESSAGE_REPEAT_TELPHONE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_REPEAT_TELPHONE")
+            """
         # 根据电话号码获取时间
         time_up = self.susers.get_uptime_by_utel(Utel)
         print(self.title.format("time_up"))
