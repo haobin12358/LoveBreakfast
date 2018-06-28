@@ -36,10 +36,13 @@ class CProduct():
             print(self.title.format("pro_list_of_product"))
             print(pro_list_of_product)
             print(self.title.format("pro_list_of_product"))
-            aaid_list = self.sadd.get_addabo_by_asid(get_str(args, "ASid"))
+            aaid_list = get_model_return_list(self.sadd.get_addabo_by_asid(get_str(args, "ASid")))
+            print(self.title.format("aaid_list"))
+            print(aaid_list)
+            print(self.title.format("aaid_list"))
             pro_list_of_addabo = []
             for aaid in aaid_list:
-                pro_list_of_addabo.extend([i.PRid for i in self.smach.get_pro_by_aaid(aaid)])
+                pro_list_of_addabo.extend([i.PRid for i in self.smach.get_pro_by_aaid(aaid.get("AAid"))])
 
             pro_list_of_addabo = {}.fromkeys(pro_list_of_addabo).keys()
             print(self.title.format("pro_list_of_addabo"))

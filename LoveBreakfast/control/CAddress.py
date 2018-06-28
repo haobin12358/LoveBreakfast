@@ -25,7 +25,7 @@ class CAddress():
         print(self.title.format("args"))
         print(args)
         print(self.title.format("args"))
-        if "token" not in args or "ACname" not in args or "AFtype" not in args:
+        if "ACname" not in args or "AFtype" not in args:
             return PARAMS_MISS
 
         try:
@@ -52,12 +52,6 @@ class CAddress():
             return SYSTEM_ERROR
 
     def get_citys(self):
-        args = request.args.to_dict()
-        print(self.title.format("args"))
-        print(args)
-        print(self.title.format("args"))
-        if "token" not in args:
-            return PARAMS_MISS
         try:
             city_list = get_model_return_list(self.sadd.get_citys())
             if not city_list:
@@ -79,7 +73,7 @@ class CAddress():
         print(self.title.format("args"))
         print(args)
         print(self.title.format("args"))
-        if "token" not in args or "AFid" not in args:
+        if "AFid" not in args:
             return PARAMS_MISS
         try:
             afid = get_str(args, "AFid")
@@ -103,7 +97,7 @@ class CAddress():
         print(self.title.format("args"))
         print(args)
         print(self.title.format("args"))
-        if "token" not in args or "ASid" not in args:
+        if "ASid" not in args:
             return PARAMS_MISS
         try:
             asid = get_str(args, "ASid")
