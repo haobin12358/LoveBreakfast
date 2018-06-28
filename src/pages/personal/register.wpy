@@ -11,18 +11,18 @@
     margin-left: 38%;
   }
   .m-section {
-    margin: 40rpx 0;
     display: flex;
     align-items: center;
-    padding: 20rpx 30rpx;
+    padding: 30rpx 30rpx;
     border-bottom: 1px solid #dbdbdb;
     .m_text{
       font-size: 24rpx;
-      margin-left: 40rpx;
+      margin-left: 30rpx;
+      white-space:nowrap;
     }
     .m-icon {
-      width: 50rpx;
-      height: 50rpx;
+      width: 43rpx;
+      height: 40rpx;
       margin-left: 30rpx;
     }
     .m-post {
@@ -43,21 +43,27 @@
       background-color: #FFF;
       color: #b3b3b3;
       height: 100rpx;
+      width: 300rpx;
       z-index: 0;
+      margin-left: 10rpx;
+      margin-right: 20rpx;
+      white-space:nowrap;
     }
     .m-icon {
-      width: 50rpx;
-      height: 50rpx;
+      width: 31rpx;
+      height: 40rpx;
       padding-right: 30rpx;
       margin-left: 64rpx;
     }
     .m_text {
       color: @personal_color;
       font-size: 24rpx;
+      white-space:nowrap;
+      margin-left: 10rpx;
     }
     .m-btn {
       border: 1px solid #fff;
-      font-size: 35rpx;
+      font-size: 24rpx;
       display: inline-block;
       color: @main_color;
     }
@@ -133,7 +139,7 @@
         <view class="m-section">
           <image class="m-icon" src='/images/icon-tel.jpg'></image>
           <text class="m_text">手机号：</text>
-          <input class="m-post" name="phone" type="number" bindinput="phoneInput" placeholder="请输入手机号" maxlength="11" focus="true" />
+          <input class="m-post" name="phone" type="number" bindinput="phoneInput" placeholder="请输入手机号" maxlength="11"/>
         </view>
         <view class="m-section">
           <image class="m-icon" src='/images/icon-set.jpg'></image>
