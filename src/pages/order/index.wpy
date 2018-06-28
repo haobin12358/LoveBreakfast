@@ -95,7 +95,7 @@
       <view class="order-item">
         <view class="item-bd" >
           <image class="good-img" src="{{item.Orderitems[0].PRimage}}"></image>
-          <view class="bd-detail" @tap="showDetail">
+          <view class="bd-detail" @tap="showDetail({{item.OMid}})">
             <view class="doc">{{item.Orderitems[0].PRname}}</view>
             <view class="doc doc-small">{{item.OMtime}}</view>
             <view class="doc doc-small">数量: {{item.Orderitems[0].PRsalesvolume}}</view>
@@ -106,9 +106,9 @@
                 {{item.OMstatus}}
               </view>
             <view class="operatorArea">
-              <button wx:if="{{item.OMstatus}} == '未支付'">立即支付</button>
-              <button wx:elif ="{{item.OMstatus}} == '已评价'">评价详情</button>
-              <button wx:elif="{{item.OMstatus}} == '已评价'">评价详情</button>
+              <button wx:if="{{item.OMstatus == '未支付'}}">立即支付</button>
+              <button wx:elif ="{{item.OMstatus == '已完成'}}">评价</button>
+              <text wx:elif ="{{item.OMstatus == '已评价'}}">评价详情</text>
             </view>
           </view>
         </view>
@@ -158,8 +158,8 @@
         }
 
         methods = {
-          showDetail(){
-            this.$navigate('./orderDetail');
+          showDetail(omId){
+            this.$navigate('./orderDetail',{OMid: omId});
           }
         }
     }

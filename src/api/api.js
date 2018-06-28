@@ -17,8 +17,8 @@ const update_pwd = (params) => wxRequest(params, api + '/love/breakfast/users/up
 const all_info = (params) => wxRequest(params, api + '/love/breakfast/users/all_info');//获取个人信息
 const make_main_order = (params) => wxRequest(params, api + '/love/breakfast/orders/make_main_order');//创建订单
 const update_order_status = (params) => wxRequest(params, api + '/love/breakfast/orders/update_order_status');//更新订单状态
-const get_order_list = (params) => wxRequest(params, api + '/love/breakfast/orders/get_order_list');//获取订单列表
-const get_order_abo = (params) => wxRequest(params, api + '/love/breakfast/orders/get_order_abo');//获取订单详情
+const get_order_list = (params) => wxRequest(params, api + `/love/breakfast/orders/get_order_list?token=${params.token}`);//获取订单列表
+const get_order_abo = (params) => wxRequest(params, api + `/love/breakfast/orders/get_order_abo?token=${params.token}&OMid=${params.OMid}`);//获取订单详情
 const get_all_location = (params) => wxRequest(params, api + '/love/breakfast/locations/get_all_location');// 获取全部站点
 const get_lno = (params) => wxRequest(params, api + '/love/breakfast/locations/get_lno');//获取出口
 const sale_update = (params,token) => wxRequest(params, api + '/love/breakfast/salelist/update?token=' + token);//往购物车添加商品或者减少商品，可处理多个
