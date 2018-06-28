@@ -17,8 +17,8 @@
       .flex-row(space-between);
       .my-left{
         .my-icon-img{
-          width: 30rpx;
-          height:30rpx;
+          width: 40rpx;
+          height:40rpx;
           margin: 0 20rpx;
         }
       }
