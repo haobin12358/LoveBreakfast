@@ -23,7 +23,8 @@ class ACarts(Resource):
         control_cart = CCarts()
         apis = {
             "delete_product": "control_cart.del_product()",
-            "update": "control_cart.add_or_update_cart()"
+            "update": "control_cart.add_or_update_cart()",
+            "get_select_product": "control_cart.get_carts_by_uid_caid()"
         }
 
         if cart in apis:
@@ -36,7 +37,7 @@ class ACarts(Resource):
 
         control_cart = CCarts()
         apis = {
-            "get_all": "control_cart.get_carts_by_uid()"
+            "get_all": "control_cart.get_carts_by_uid_caid()"
         }
 
         if cart in apis:

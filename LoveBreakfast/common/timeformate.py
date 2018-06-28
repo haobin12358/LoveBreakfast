@@ -10,6 +10,7 @@ fomat_for_db = '%Y%m%d%H%M%S'
 fomat_for_web_second = '%Y-%m-%d %H:%M:%S'
 re_fomat_for_web = r"^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$"
 fomat_forweb_no_second = '%Y-%m-%d %H:%M'
+format_forweb_no_HMS = "%Y-%m-%d"
 
 
 def get_db_time_str(time_info=None):
@@ -21,8 +22,9 @@ def get_db_time_str(time_info=None):
     return datetime.datetime.now().strftime(fomat_for_db)
 
 
-def get_web_time_str(time_str):
-    return datetime.datetime.strptime(time_str, fomat_for_db).strftime(fomat_for_web_second)
+def get_web_time_str(time_str, formattype=fomat_for_web_second):
+    return datetime.datetime.strptime(time_str, fomat_for_db).strftime(formattype)
+
 
 if __name__ == "__main__":
     # print get_db_time_str("2018-04-24 09:00")

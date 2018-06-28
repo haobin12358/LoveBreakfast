@@ -113,11 +113,12 @@ class Cart(Base):
 class Coupons(Base):
     __tablename__ = "Coupon"
     COid = Column(String(64), primary_key=True)
-    COfilter = Column(Float)  # 优惠券优惠条件，到达金额
-    COdiscount = Column(Float)  # 折扣，值为0-1，其中0为免单
-    COamount = Column(Float)  # 优惠金额，减免金额，限制最大数目
+    COfilter = Column(Float)      # 优惠券优惠条件，到达金额
+    COdiscount = Column(Float)    # 折扣，值为0-1，其中0为免单
+    COamount = Column(Float)      # 优惠金额，减免金额，限制最大数目
     COstart = Column(String(14))  # 优惠券的开始时间
-    COend = Column(String(14))  # 优惠券的结束时间
+    COend = Column(String(14))    # 优惠券的结束时间
+    COtype = Column(Integer)      # 优惠券的类型 {801 满减， 802 满折， 803 商品类目限制， 804 无限制， 805 用户类型限制}
 
 
 class Cardpackage(Base):

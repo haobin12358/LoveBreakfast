@@ -51,5 +51,5 @@ class SCoupons(SBase):
     def get_coupons_by_couid(self, couid):
         return self.session.query(
             Coupons.COid, Coupons.COamount, Coupons.COdiscount,
-            Coupons.COstart, Coupons.COend, Coupons.COfilter
+            Coupons.COstart, Coupons.COend, Coupons.COfilter, Coupons.COtype
         ).filter(Coupons.COid == couid).first()
