@@ -10,6 +10,7 @@ const api= 'http://123.207.97.185:7444';
  * @param  {[type]} params [description]
  * @return {[type]}        [description]
  */
+const getValidate = (params) => wxRequest(params, api+'/love/breakfast/users/get_inforcode');//获取验证码
 const register = (params) => wxRequest(params, api + '/love/breakfast/users/register');//注册
 const login = (params) => wxRequest(params, api + '/love/breakfast/users/login');//登录
 const update_info = (params) => wxRequest(params, api + '/love/breakfast/users/update_info?token='+params.token);//修改个人信息
@@ -39,7 +40,7 @@ const picture = (params) => wxRequest(params, api + '/love/breakfast/other/pictu
 const order_price = (params) => wxRequest(params,api + '/love/breakfast/orders/order_price?token=' + params.token);//获取商品总价
 const get_select_product = (params) => wxRequest(params,api + '/love/breakfast/salelist/get_select_product?token=' + params.token + '&AAid=' +params.AAid);//获取已选择商品
 export default {
-  register,login,update_info,update_pwd,all_info,make_main_order,
+  getValidate,register,login,update_info,update_pwd,all_info,make_main_order,
   update_order_status,get_order_list,get_order_abo,get_all_location,
   get_lno,sale_update,get_all_car,delete_product,get_all_product,get_info_by_id,
   get_cardpkg,update_coupons,get_citys,get_addfirst,get_addsecond,get_addabo,
