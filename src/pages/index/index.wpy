@@ -96,14 +96,13 @@
             tip.error(res.data.message);
           }
         }
-        async get_all_product(aaid) {
+        async get_all_product(asid) {
           let that = this;
           tip.loading();
           let res = await api.get_all_product({method:'GET',query:{
-              AAid:aaid
+              ASid:asid
             }});
           if(res.data.status == 200){
-            console.log(res)
             that.all_data = res.data.data;
             that.$apply();
             tip.loaded();
@@ -135,7 +134,7 @@
             }
           });
 
-          _this.get_all_product('2f798cfb-84b3-4569-9513-aa1ad9c8fb54');
+
         }
         methods = {
           modalChange(){
@@ -156,9 +155,10 @@
             that.sale_update(res,v.PRid)
           },
           locChange(v){
-            this.point = v.point_name;
-            ///如何请求全部商品
-
+            this.point = v;
+            wx.setStorageSync('ASid', v.point_id[v.point_index]);
+            this.get_all_product(this.point.point_id[this.point.point_index]);
+            this.showModal = false;
           }
         }
     }

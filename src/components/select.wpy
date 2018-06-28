@@ -17,6 +17,9 @@
           height: 46rpx;
           line-height: 46rpx;
           text-align: center;
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space:nowrap;
         }
       }
     }
@@ -82,7 +85,7 @@
             city_index:-1
           },
           target:{
-            target_id:[1,2],
+            target_id:[0,1],
             target_name:['地铁','商圈'],
             target_index:-1
           },
@@ -102,6 +105,8 @@
           tip.loading();
           let res = await api.get_citys({method:'GET',token:token});
           if(res.data.status == 200){
+            that.city.city_name = [];
+            that.city.city_id = [];
             for(let i=0;i<res.data.data.length;i++){
               that.city.city_name.push(res.data.data[i].ACname);
               that.city.city_id.push(res.data.data[i].ACid);
@@ -121,9 +126,11 @@
               token:token
             }});
           if(res.data.status == 200){
+            that.area.area_name = [];
+            that.area.area_id = [];
             for(let i=0;i<res.data.data.length;i++){
-              that.area.area_name.push(res.data.data[i].ASname);
-              that.area.area_id.push(res.data.data[i].ASid);
+              that.area.area_name.push(res.data.data[i].AFname);
+              that.area.area_id.push(res.data.data[i].AFid);
             }
             that.$apply();
             tip.loaded();
@@ -139,9 +146,11 @@
               token:token
             }});
           if(res.data.status == 200){
+            that.point.point_name = [];
+            that.point.point_id = [];
             for(let i=0;i<res.data.data.length;i++){
-              that.area.area_name.push(res.data.data[i].ASname);
-              that.area.area_id.push(res.data.data[i].ASid);
+              that.point.point_name.push(res.data.data[i].ASname);
+              that.point.point_id.push(res.data.data[i].ASid);
             }
             that.$apply();
             tip.loaded();
@@ -161,6 +170,9 @@
               tip.alert('请选择城市');
               return false;
             }
+            this.target.target_index = -1;
+            this.area.area_index = -1;
+            this.point.point_index = -1;
             this.$apply();
           },
           targetChange: function(e) {
@@ -170,17 +182,20 @@
               return false;
             }
             let res = wx.getStorageSync('token');
-            this.get_addfirst(res,this.city.city_id[this.city.city_index],this.target.target_id[this.target.target_index]);
+            this.get_addfirst(res,this.city.city_name[this.city.city_index],this.target.target_id[this.target.target_index]);
+            this.area.area_index = -1;
+            this.point.point_index = -1;
             this.$apply();
           },
           areaChange: function(e) {
+            this.area.area_index = e.detail.value;
             if(this.area.area_index == -1){
               tip.alert('请选择区域');
               return false;
             }
-            this.area.area_index = e.detail.value;
             let res = wx.getStorageSync('token');
-            this.get_addsecond(res,this.area.area_id[this.city.area_index]);
+            this.get_addsecond(res,this.area.area_id[this.area.area_index]);
+            this.point.point_index = -1;
             this.$apply();
           },
           pointChange(e){
@@ -191,7 +206,6 @@
                 + this.target.target_name[this.target.target_index]
                 + this.area.area_name[this.area.area_index]
                 + this.point.point_name[this.point.point_index];
-              wx.setStorageSync('loc', loc);
               this.$emit('locChange',this.point);
             }else{
               tip.alert('请选择准确的地点');
