@@ -10,52 +10,82 @@
     padding-top: 30rpx ;
     box-sizing: border-box;
   }
-  .container{
-    /*padding: 0rpx 70rpx;*/
-    box-sizing: border-box;
 
-    height: 100%;
+  .container{
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+
     .order-card{
-      width: 600rpx;
-      height: 928rpx;
+      width: 604rpx;
+      /*min-height: 929rpx;*/
       border-radius: 20rpx;
-      /*background-color: rgb(255,255,255);*/
-      background: rgba(255,255,255,1);
+      background: #ffffff;
       margin-bottom: 38rpx;
       padding-top:56rpx ;
-      flex: .8;
+      padding-bottom:79rpx ;
       display: flex;
       flex-direction: column;
       align-items: center;
-      box-sizing: border-box;
       box-shadow: 10rpx 10rpx 5rpx #888888;
+
       .card-icon{
-        margin-bottom: 54rpx;
+
         image{
-          width: 150rpx;
-          height: 150rpx;
-          /*opacity: .7;*/
+          width: 186rpx;
+          height: 186rpx;
         }
-
-
       }
       .card-money{
+        margin-top: 54rpx;
         margin-bottom: 100rpx;
 
-        font-size: 53rpx;
+
+        font-size: 72rpx;
         color: #c1272d;
         font-family: @num_family;
       }
-      .card-detail{
 
+      .card-money-small-margin{
+        margin-top: 14rpx;
+        margin-bottom: 20rpx;
+      }
+
+      .card-detail{
+        color: #000000;
+
+        /*订单详情和实际支付*/
         .detail-hd{
-          margin-bottom: 30rpx;
+          margin-bottom: 45rpx;
+
+          .fz28();
         }
 
+        .detail-bd{
+          .fz26();
+        }
+
+        .detail-item{
+          margin-bottom: 12rpx;
+          display: flex;
+          width: 460rpx;
+
+          .item-label {
+            float:left;
+            margin-right:1em;
+            min-width:5em;
+            text-align:justify;
+            text-align-last: justify;
+          }
+          .item-value{
+            overflow:hidden;
+            word-break:normal;
+            word-wrap:break-word;
+
+          }
+        }
       }
     }
 
@@ -63,64 +93,62 @@
       background-color: @main_color;
       margin: auto;
       color: #ffffff;
-      width: 300rpx;
+      width: 442rpx;
+      height: 82rpx;
     }
   }
 
-  .doc{
-    font-size: 32rpx;
-    color: #000000;
-  }
-
-  .doc-small{
-    font-size: 28rpx;
-  }
-
   .doc-money{
-    color: @moneyColor;
+    color: @main_color;
     font-family: @num_family;
   }
 </style>
 
 <template>
   <view class="container">
-    <view class="order-card">
+    <view class="order-card  ">
       <view class="card-icon">
         <image src="../../images/icon-logo.jpg"></image>
       </view>
-      <view class="card-money">
-        123456
+      <view class="card-money {{order.AAmessage.length > 30 ? 'card-money-small-margin' : ''}}">
+        {{order.Orderitems[0].PRprice *order.Orderitems[0].PRnum}}
       </view>
       <view class="card-detail">
         <view class="detail-hd">
-          <view class="doc">
-            实际支付：
-            <text class="doc-money">￥12.3</text>
+          <view class="detail-item">
+            <view class="item-label">实际支付:</view>
+            <view class="item-value doc-money">￥{{order.OMtotal}}</view>
           </view>
-          <view class="doc">
-            订单详情: 套餐1+豆浆
+          <view class="detail-item">
+            <view class="item-label">订单详情:</view>
+            <view class="item-value">{{order.Orderitems[0].PRname}}</view>
           </view>
         </view>
         <view class="detail-bd">
-          <view class="doc doc-small">
-            取货地点: xxxx
+          <view class="detail-item">
+            <view class="item-label">取货地点:</view>
+            <view class="item-value">{{order.AAmessage}}</view>
           </view>
-          <view class="doc doc-small">
-            取货时间: 2018-04
+          <view class="detail-item">
+            <view class="item-label">取货时间:</view>
+            <view class="item-value">{{order.OMdate}}</view>
           </view>
-          <view class="doc doc-small">
-            联系人: xxx
+          <view class="detail-item">
+            <view class="item-label">联系人:</view>
+            <view class="item-value">{{order.USname}}</view>
           </view>
-          <view class="doc doc-small">
-            联系电话: 123
+          <view class="detail-item">
+            <view class="item-label">联系电话:</view>
+            <view class="item-value">{{order.UStelphone}}</view>
           </view>
-          <view class="doc doc-small">
-            下单时间: 1222
+          <view class="detail-item">
+            <view class="item-label">下单时间:</view>
+            <view class="item-value">{{order.OMtime}}</view>
           </view>
         </view>
       </view>
     </view>
-    <button class="cancel-button">取消订单</button>
+    <button class="cancel-button" @tap="tapCancelOrder">取消订单</button>
   </view>
 
 </template>
@@ -135,15 +163,59 @@
           navigationBarTitleText: '订单详情'
         }
 
-        data = {}
+        data = {
+          order: {
+            Orderitems: [
+              {
+                PRprice: 0,
+                PRnum: 0
+              }
+            ]
+          },
+          minCardMoneyHeight: false
+        }
+
         computed = {}
 
-        methods = {}
+        checkCardHeight(){
+          let query = wx.createSelectorQuery(),
+              that = this
+
+          query.select('.order-card').boundingClientRect(rect=>{
+            console.log(rect.height );
+
+            if(rect.height > 480){
+              that.minCardMoneyHeight = true;
+              that.$apply()
+            }
+          }).exec();
+
+        }
+
+        methods = {
+          tapCancelOrder(){
+            console.log('取消订单');
+          }
+        }
 
         events = {}
 
-        onLoad() {
+        async getOrderAbo(omId){
+          let res = await api.get_order_abo({
+            token: '11aa9315-38b4-47c1-a31b-c29ca20aa02c',
+            OMid: omId
+          });
 
+          if(res.data.status == 200){
+            this.order = res.data.data;
+            this.$apply();
+          }else{
+            tip.error(res.data.message)
+          }
+        }
+
+        onLoad(param) {
+          this.getOrderAbo(param.OMid);
         }
     }
 </script>
