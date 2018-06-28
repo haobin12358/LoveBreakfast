@@ -21,8 +21,6 @@
     padding-top: 40rpx;
     .m-avatar {
       width: 150rpx;
-      height: 150rpx;
-      border-radius: 100px;
     }
     .m-nickname {
       font-size: 24rpx;
@@ -76,7 +74,7 @@
 <template>
   <view class="m-header-box">
     <view class="m-header-content">
-      <image class="m-avatar" src="../../images/icon-image.jpg"></image>
+      <image class="m-avatar" mode="widthFix" src="../../images/icon-image.jpg"></image>
       <view class="m-nickname">{{ userInfo.USname }}</view>
     </view>
   </view>
