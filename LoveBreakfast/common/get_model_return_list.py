@@ -24,9 +24,10 @@ def get_model_return_dict(model_params):
     :param model_params:
     :return:
     """
-
-    item_dict = model_params.keys()
     model_item = {}
-    for index, key in enumerate(item_dict):
-        model_item[key] = model_params[index]
+    if model_params:
+        item_dict = model_params.keys()
+
+        for index, key in enumerate(item_dict):
+            model_item[key] = model_params[index]
     return model_item
