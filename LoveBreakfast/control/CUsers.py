@@ -9,6 +9,7 @@ from config.response import SYSTEM_ERROR, PARAMS_MISS
 from common.import_status import import_status
 from common.get_model_return_list import get_model_return_dict
 
+
 class CUsers():
     def __init__(self):
         from services.SUsers import SUsers
@@ -228,26 +229,27 @@ class CUsers():
         print(self.title.format("data"))
         print(data)
         print(self.title.format("data"))
-        if "Utel" not in data:
+        if "UStelphone" not in data:
             return PARAMS_MISS
-        Utel = data["Utel"]
+        Utel = data["UStelphone"]
         # 拼接验证码字符串（6位）
         code = ""
         while len(code) < 6:
             import random
-            item = random.randint(1,9)
+            item = random.randint(1, 9)
             code = code + str(item)
 
         # 获取当前时间，与上一次获取的时间进行比较，小于60秒的获取直接报错
         import datetime
+        from common.timeformate import format_for_db
         time_time = datetime.datetime.now()
-        time_str = datetime.datetime.strftime(time_time, "%Y%m%d%H%M%S")
+        time_str = datetime.datetime.strftime(time_time, format_for_db)
 
         utel_list = self.susers.get_user_by_utel(Utel)
         print(self.title.format("utel_list"))
         print(utel_list)
         print(self.title.format("utel_list"))
-        if not utel_list:
+        if utel_list:
             return import_status("ERROR_MESSAGE_REPEAT_TELPHONE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_REPEAT_TELPHONE")
         # 根据电话号码获取时间
         time_up = self.susers.get_uptime_by_utel(Utel)
@@ -255,7 +257,7 @@ class CUsers():
         print time_up
         print(self.title.format("time_up"))
         if time_up:
-            time_up_time = datetime.datetime.strptime(time_up.ICtime, "%Y%m%d%H%M%S")
+            time_up_time = datetime.datetime.strptime(time_up.ICtime, format_for_db)
             delta = time_time - time_up_time
             if delta.seconds < 60:
                 return import_status("ERROR_MESSAGE_GET_CODE_FAST", "LOVEBREAKFAST_ERROR", "ERROR_CODE_GET_CODE_FAST")

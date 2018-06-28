@@ -9,6 +9,7 @@ from config.status_code import error_wrong_apis
 from config.messages import error_messages_wrong_api
 from control.CCoupons import CCoupons
 
+
 class ACoupons(Resource):
 
     def __init__(self):
