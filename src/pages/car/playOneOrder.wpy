@@ -3,6 +3,7 @@
     .my-playOneOrder{
       width: 100%;
       font-size: 28rpx;
+      padding-bottom:80rpx;
       .my-top{
         .my-row{
           width: 630rpx;
@@ -249,7 +250,7 @@
             point_id:[],
             point_name:[],
             point_img:[],
-            point_index:-1
+            point_index:0
           },
           date:'',
           time:'06:00',
@@ -350,6 +351,7 @@
         onLoad(options) {
           let now = new Date();
           this.nowDate = now.getFullYear() +'-'+ (now.getMonth()  <9 ? ('0' + (Number(now.getMonth()) +1)) :( Number(now.getMonth()) +1) ) + '-' + (now.getDate() <10?('0'+ now.getDate()):now.getDate());
+          this.date = this.nowDate;
           let CAid = [];
           let res = wx.getStorageSync('token');
           let resId = wx.getStorageSync('ASid');
@@ -449,7 +451,7 @@
                         'success':function(res){
                           tip.success("支付成功")
                           setTimeout( () => {
-                            wepy.switchTab({
+                            wepy.navigateTo({
                               url: '/pages/order/orderDetail?OMid='+OMid
                             })
                           }, 1000)
@@ -474,6 +476,8 @@
                   }
                 }
               });
+            }else{
+              tip.alert(resOrder.data.message);
             }
           },
         }
