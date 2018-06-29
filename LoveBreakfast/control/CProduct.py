@@ -10,6 +10,7 @@ from config.response import PARAMS_MISS, SYSTEM_ERROR
 from common.import_status import import_status
 from services.SCategory import SCategory
 from services.SMachinery import SMachinery
+from services.SAddress import SAddress
 from common.get_model_return_list import get_model_return_list, get_model_return_dict
 
 
@@ -20,6 +21,7 @@ class CProduct():
             self.sproduct = SProduct()
             self.service_category = SCategory()
             self.smach = SMachinery()
+            self.sadd = SAddress()
         except Exception as e:
             print(self.title.format("error"))
             print(e.message)
@@ -27,15 +29,22 @@ class CProduct():
 
     def get_all(self):
         args = request.args.to_dict()
-        if "AAid" not in args:
+        if "ASid" not in args:
             return PARAMS_MISS
         try:
             pro_list_of_product = get_model_return_list(self.sproduct.get_all())
             print(self.title.format("pro_list_of_product"))
             print(pro_list_of_product)
             print(self.title.format("pro_list_of_product"))
+            aaid_list = get_model_return_list(self.sadd.get_addabo_by_asid(get_str(args, "ASid")))
+            print(self.title.format("aaid_list"))
+            print(aaid_list)
+            print(self.title.format("aaid_list"))
+            pro_list_of_addabo = []
+            for aaid in aaid_list:
+                pro_list_of_addabo.extend([i.PRid for i in self.smach.get_pro_by_aaid(aaid.get("AAid"))])
 
-            pro_list_of_addabo = [i.PRid for i in self.smach.get_pro_by_aaid(get_str(args, "AAid"))]
+            pro_list_of_addabo = {}.fromkeys(pro_list_of_addabo).keys()
             print(self.title.format("pro_list_of_addabo"))
             print(pro_list_of_addabo)
             print(self.title.format("pro_list_of_addabo"))

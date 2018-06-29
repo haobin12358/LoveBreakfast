@@ -21,6 +21,10 @@ class CCarts():
         self.susers = SUsers()
         from services.SProduct import SProduct
         self.sproduct = SProduct()
+        from services.SAddress import SAddress
+        self.sadd = SAddress()
+        from services.SMachinery import SMachinery
+        self.smach = SMachinery()
         self.title = '============{0}============'
 
     def get_carts_by_uid(self):
@@ -32,7 +36,7 @@ class CCarts():
             return PARAMS_MISS
 
         uid = args.get("token")
-        AAid = args.get("AAid")
+        ASid = args.get("ASid")
         is_user = self.susers.get_user_by_usid(uid)
         print(self.title.format("is_user"))
         print(is_user)
@@ -45,20 +49,21 @@ class CCarts():
         print(self.title.format("cartlist"))
         print(cart_list)
         print(self.title.format("cartlist"))
+        aaid_list = self.sadd.get_addabo_by_asid(ASid)
 
         for cart in cart_list:
             if cart.CAstatus != 1:
                 continue
             PRid = cart.PRid
-            address_list = self.scart.get_address_list_by_prid(PRid)
+            address_list = [i.AAid for i in self.smach.get_aaid_by_prid(PRid)]
             print(self.title.format("address_list"))
             print(address_list)
             print(self.title.format("address_list"))
             if not address_list:
                 return SYSTEM_ERROR
-            if AAid not in address_list:
-                continue
 
+            if not set(address_list).intersection(aaid_list):
+                continue
             cart_service_info = self.spro.get_all_pro_fro_carts(PRid)
             print(self.title.format("cart_service_info"))
             print(cart_service_info)
@@ -177,7 +182,7 @@ class CCarts():
             print(self.title.format("data"))
             caid_list = data.get("CAid")
         uid = args.get("token")
-        AAid = args.get("AAid")
+        ASid = args.get("ASid")
 
         is_user = self.susers.get_user_by_usid(uid)
         print(self.title.format("is_user"))
@@ -186,6 +191,7 @@ class CCarts():
         if not is_user:
             return import_status("ERROR_MESSAGE_NONE_USER", "LOVEBREAKFAST_ERROR", "ERROR_CODE_NONE_USER")
 
+        aaid_list = [i.AAid for i in self.sadd.get_addabo_by_asid(ASid)]
         cart_info_list = []
         cart_list = self.scart.get_carts_by_Uid(uid)
         print(self.title.format("cartlist"))
@@ -198,13 +204,13 @@ class CCarts():
             if caid_list and cart.CAid not in caid_list:
                 continue
             PRid = cart.PRid
-            address_list = self.scart.get_address_list_by_prid(PRid)
+            address_list = [i.AAid for i in self.smach.get_aaid_by_prid(PRid)]
             print(self.title.format("address_list"))
             print(address_list)
             print(self.title.format("address_list"))
             if not address_list:
                 return SYSTEM_ERROR
-            if AAid not in address_list:
+            if not set(address_list).intersection(aaid_list):
                 continue
 
             cart_service_info = self.spro.get_all_pro_fro_carts(PRid)
