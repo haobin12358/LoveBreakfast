@@ -95,6 +95,7 @@
       color: #ffffff;
       width: 442rpx;
       height: 82rpx;
+      line-height: 82rpx;
     }
   }
 
