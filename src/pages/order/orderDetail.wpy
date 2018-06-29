@@ -206,8 +206,8 @@
         wx.showModal({
           title: '提示',
           content: '是否取消订单?',
-          success: confirm => {
-            if (confirm) {
+          success: e => {
+            if (e.confirm) {
               let query = {
                 OMid: this.order.OMid,
                 OMstatus: '已取消'
@@ -217,12 +217,11 @@
                 res => {
                   if (res.data.status == 200) {
                     that.order.OMstatus = query.OMstatus;
+                    tip.success('取消成功');
                     that.$apply();
                   }
                 }
               )
-
-
             }
           }
         })
