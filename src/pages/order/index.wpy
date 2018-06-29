@@ -109,8 +109,10 @@
 
               <!--<button @tap="goEvaluatePage({{item.orderId}})" >评价</button>-->
               <button wx:if="{{item.OMstatus == '未支付'}}" @tap="toPay">立即支付</button>
-              <button wx:elif ="{{item.OMstatus == '已完成'}}" @tap="goEvaluatePage({{item.Orderitems[0].PRid}})">评价</button>
-              <text wx:elif ="{{item.OMstatus == '已评价'}}">评价详情</text>
+              <button wx:elif ="{{item.OMstatus == '已完成'}}"
+                      @tap="goEvaluatePage({{item.OMid}},{{item.Orderitems[0].PRid}},{{false}})">评价</button>
+              <text wx:elif ="{{item.OMstatus == '已评价'}}"　
+                    @tap="goEvaluatePage({{item.OMid}},{{item.Orderitems[0].PRid}},{{true}})">评价详情 ＞</text>
             </view>
           </view>
         </view>
@@ -173,9 +175,10 @@
             console.log('支付');
           },
 
-          goEvaluatePage(prId){
+          //  去评价页
+          goEvaluatePage(omId,prId,readonly){
             if(typeof prId == 'string'){
-              this.$navigate('./productEvaluate', {prId,readonly:false});
+              this.$navigate('./productEvaluate', {omId,prId,readonly});
             }else{
               tip.error('系统错误');
             }

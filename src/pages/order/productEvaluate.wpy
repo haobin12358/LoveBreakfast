@@ -41,6 +41,10 @@
       .item-block {
         display: flex;
         justify-content: center;
+        .comment{
+          margin-top: 30rpx;
+        }
+
         textarea{
           border: 1px solid #cdcdcd ;
           border-radius: 30rpx;
@@ -74,18 +78,18 @@
           <view class="m-goods-specification">{{product.PRinfo}}</view>
         </view>
         <view class="item-block" style="padding-right: 40rpx">
-          <rate :key.sync="key" :readonly.sync="readonly" @change.user="changeRate"></rate>
+          <rate :key.sync="rate" :readonly.sync="readonly" @change.user="changeRate"></rate>
         </view>
         <view class="item-block">
-          <block wx:if="{{readonly}}" class="content">
-            这是一条评论
+          <block wx:if="{{readonly}}" class="comment">
+            {{comment}}
           </block>
           <block wx:else>
             <textarea @input="bindText" value="{{word}}" data-index="{{idx}}" style="height: 6em; margin-top: 20rpx" placeholder="  你对宝贝有什么想说的呢"  maxlength="140"/>
           </block>
         </view>
       </view>
-      <button class="button type_red" formType="submit">提交评价</button>
+      <button wx:if="{{!readonly}}" class="button type_red" formType="submit">提交评价</button>
     </form>
   </view>
 </template>
@@ -100,6 +104,7 @@
       config = {}
 
       data = {
+        omId: '',
         product: {},
         rate: 0,
         readonly: false,
@@ -112,23 +117,29 @@
       computed = {}
 
       methods = {
-        submitEvaluate() {
+       async submitEvaluate() {
 
           if(this.rate == 0){
             tip.alert('请打分');
           }else{
-            let query = {
+            let query = [{
               PRid: this.product.PRid,
               REscore: this.rate,
               REcontent:this.comment
-            }
+            }],
+              token = wx.getStorageSync('token');
 
-            api.create_review({method: 'POST',query}).then(
-              ()=>{
-                tip.success('评价成功!');
-                wx.navigateBack();
-              }
+           let res = await api.create_review({method: 'POST',token,OMid: this.omId,query});
+
+          if(res.data.status == 200){
+            tip.success('评价成功!').then(
+              ()=>wx.navigateBack()
             )
+          }else{
+            tip.error('系统错误...',()=>wx.navigateBack());
+          }
+
+
           }
         },
 
@@ -141,6 +152,7 @@
         }
       }
 
+      //  获取商品详情
       async getProductInfo(prId) {
         let res = await api.get_info_by_id({PRid: prId});
 
@@ -153,9 +165,34 @@
         }
       }
 
+      //  获取评论信息
+      async getReview(omId){
+        let
+          token = wx.getStorageSync('token'),
+          res = await api.get_review({token,OMid:omId}),
+        data = res.data.data[0];
+
+        if(res.data.status == 200){
+          this.getProductInfo(data.PRid);
+          this.comment = data.REcontent;
+          this.rate = data.REscore;
+
+          console.log(this.comment);
+          this.$apply();
+        }
+      }
+
       onLoad(param) {
-        // this.readonly = param.readonly;
-        this.getProductInfo(param.prId)
+        this.omId = param.omId;
+
+        this.readonly = param.readonly;
+        if(this.readonly){
+          this.getReview(this.omId);
+        }else {
+
+          this.getProductInfo(param.prId)
+        }
+
       }
     }
 </script>
