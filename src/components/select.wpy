@@ -37,14 +37,14 @@
         </view>
       </view>
     </picker>
-    <picker bindchange="targetChange" value="{{target.target_index}}" range="{{target.target_name}}">
+    <picker bindchange="targetChange" value="{{city.AFtype_index}}" range="{{city.AFtype_array[city.city_index]}}">
       <view class="my-pick-box" >
         <image src="/images/icon-target.jpg" style="width: 25rpx;height: 30rpx;"/>
         <view class="picker">
           目标：
         </view>
         <view class="my-picker">
-          {{target.target_name[target.target_index]}}
+          {{city.AFtype_array[city.city_index][city.AFtype_index]}}
         </view>
       </view>
     </picker>
@@ -82,12 +82,9 @@
           city:{
             city_id:[],
             city_name:[],
-            city_index:-1
-          },
-          target:{
-            target_id:[0,1],
-            target_name:['地铁','商圈'],
-            target_index:-1
+            city_index:-1,
+            AFtype_array:[],
+            AFtype_index:-1
           },
           area:{
             area_id:[],
@@ -110,6 +107,7 @@
             for(let i=0;i<res.data.data.length;i++){
               that.city.city_name.push(res.data.data[i].ACname);
               that.city.city_id.push(res.data.data[i].ACid);
+              that.city.AFtype_array[i] = res.data.data[i].AFtype;
             }
             that.$apply();
             tip.loaded();
@@ -168,18 +166,18 @@
               tip.alert('请选择城市');
               return false;
             }
-            this.target.target_index = -1;
+            this.city.AFtype_index = -1;
             this.area.area_index = -1;
             this.point.point_index = -1;
             this.$apply();
           },
           targetChange: function(e) {
-            this.target.target_index = e.detail.value;
-            if(this.target.target_index == -1){
+            this.city.AFtype_index = e.detail.value;
+            if(this.city.AFtype_index == -1){
               tip.alert('请选择目标');
               return false;
             }
-            this.get_addfirst(this.city.city_name[this.city.city_index],this.target.target_id[this.target.target_index]);
+            this.get_addfirst(this.city.city_name[this.city.city_index],this.city.AFtype_array[this.city.city_index][this.city.AFtype_index]);
             this.area.area_index = -1;
             this.point.point_index = -1;
             this.$apply();
@@ -199,7 +197,7 @@
             let loc = '';
             if(this.point.point_index != -1){
               loc = this.city.city_name[this.city.city_index]
-                + this.target.target_name[this.target.target_index]
+                + this.city.AFtype_array[this.city.city_index][this.city.AFtype_index]
                 + this.area.area_name[this.area.area_index]
                 + this.point.point_name[this.point.point_index];
               this.$emit('locChange',this.point);
