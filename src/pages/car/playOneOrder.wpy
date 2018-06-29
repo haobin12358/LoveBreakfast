@@ -3,6 +3,7 @@
     .my-playOneOrder{
       width: 100%;
       font-size: 28rpx;
+      padding-bottom:80rpx;
       .my-top{
         .my-row{
           width: 630rpx;

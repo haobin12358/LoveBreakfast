@@ -74,12 +74,7 @@ export default class extends wepy.app {
   }
 
   async onLaunch(option) {
-    wx.setStorage({
-      key:"AAid",
-      data:"2f798cfb-84b3-4569-9513-aa1ad9c8fb54"
-    })
-    // wx.setStorageSync('token', '11aa9315-38b4-47c1-a31b-c29ca20aa02c');
-    wx.setStorageSync('AAid', '2f798cfb-84b3-4569-9513-aa1ad9c8fb54');
+
   }
 }
 
