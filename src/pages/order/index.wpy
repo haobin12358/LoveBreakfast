@@ -98,7 +98,7 @@
           <view class="bd-detail" @tap="showDetail({{item.OMid}})">
             <view class="doc">{{item.Orderitems[0].PRname}}</view>
             <view class="doc doc-small">{{item.OMtime}}</view>
-            <view class="doc doc-small">数量: {{item.Orderitems[0].PRsalesvolume}}</view>
+            <view class="doc doc-small">数量: {{item.Orderitems[0].PRnumber}}</view>
             <view class="doc doc-money">￥{{item.OMtotal}}</view>
           </view>
           <view class="bd-end">
@@ -189,6 +189,7 @@
                   console.log(res.code, 'this is code')
                   let successFun = (res3) => {
                     console.log(res3, 'gg')
+
                     let timeStamp = res3.data.timeStamp.toString()
                     wx.requestPayment({
                       'appId': res3.data.appId,
@@ -200,9 +201,7 @@
                       'success': function (res) {
                         tip.success("支付成功")
                         setTimeout(() => {
-                          wepy.switchTab({
-                            url: '/pages/order/orderDetail?OMid='+OMid
-                          })
+                          this.$navigate('/pages/order/orderDetail?OMid='+OMid)
                         }, 1000)
                       },
                       'fail': function (res) {
