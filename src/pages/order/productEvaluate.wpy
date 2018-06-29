@@ -41,8 +41,13 @@
       .item-block {
         display: flex;
         justify-content: center;
+        margin-top: 60rpx;
+
         .comment{
-          margin-top: 30rpx;
+          word-break: break-word;
+          width: 600rpx;
+          text-indent: 2em;
+          .fz28()
         }
 
         textarea{
@@ -81,8 +86,11 @@
           <rate :key.sync="rate" :readonly.sync="readonly" @change.user="changeRate"></rate>
         </view>
         <view class="item-block">
-          <block wx:if="{{readonly}}" class="comment">
-            {{comment}}
+          <block wx:if="{{readonly}}" >
+            <view class="comment">
+              {{comment}}
+
+            </view>
           </block>
           <block wx:else>
             <textarea @input="bindText" value="{{word}}" data-index="{{idx}}" style="height: 6em; margin-top: 20rpx" placeholder="  你对宝贝有什么想说的呢"  maxlength="140"/>
@@ -174,7 +182,7 @@
 
         if(res.data.status == 200){
           this.getProductInfo(data.PRid);
-          this.comment = data.REcontent;
+          this.comment = data.REcontent != null ? data.REcontent: '没有填写评价';
           this.rate = data.REscore;
 
           console.log(this.comment);

@@ -141,15 +141,18 @@
 
         computed = {}
 
+        //  获取订单列表
         async getOrderList(){
           let token = wepy.getStorageSync('token');
           let res;
 
+          tip.loading();
           if(token){
             res = await api.get_order_list({
               token
             })
 
+            tip.loaded();
             if(res.data.status == 200){
               this.orderList = res.data.data;
               this.$apply();
@@ -162,17 +165,54 @@
         }
 
         onShow(){
+          //  跳转页面时更新订单列表
           this.getOrderList();
         }
 
         methods = {
+          //  去订单详情页
           showDetail(omId){
             this.$navigate('./orderDetail',{OMid: omId});
           },
 
+          //  支付
           toPay(){
-            // this.$navigate('../car/payOneOrder',{OMid: omId});
-            console.log('支付');
+            return
+            wx.login({
+              success: function (res) {
+                if (res.code) {
+                  console.log(res.code, 'this is code')
+                  let successFun = (res3) => {
+                    let timeStamp = res3.data.timeStamp.toString()
+                    wx.requestPayment({
+                      'appId': res3.data.appId,
+                      'timeStamp': timeStamp,
+                      'nonceStr': res3.data.nonceStr,
+                      'package': res3.data.package,
+                      'signType': res3.data.signType,
+                      'paySign': res3.data.paySign,
+                      'success': function (res) {
+                        tip.success("支付成功")
+                        that.getAllOrder(that.token)
+                        that.$apply()
+                        console.log(res)
+                      },
+                      'fail': function (res) {
+                        tip.error("支付失败")
+                        console.log(res)
+                      }
+                    })
+                  }
+                  let failFun = (res) => {
+                    console.log(res, 'fail!')
+                    tip.error("服务器开小差了")
+                  }
+                  api.getPayParam({query: {OMid: param, code: res.code}}).then(successFun, failFun)
+                } else {
+                  console.log('获取用户登录态失败！' + res.errMsg)
+                }
+              }
+            });
           },
 
           //  去评价页
