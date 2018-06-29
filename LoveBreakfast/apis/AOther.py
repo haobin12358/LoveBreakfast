@@ -119,7 +119,7 @@ class AOther(Resource):
             body["time_start"] = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
             body["time_expire"] = (datetime.datetime.now() + datetime.timedelta(hours=2)).strftime("%Y%m%d%H%M%S")
             # TODO 修改响应地址
-            body["notify_url"] = "https://h878.cn/love/breakfast/other/getdata"
+            body["notify_url"] = "http://123.207.97.185:7444/love/breakfast/other/getdata"
             body["trade_type"] = "JSAPI"
             body["openid"] = openid
             key_sign = "appid={0}&body={1}&device_info={2}&mch_id={3}&nonce_str={4}&notify_url={5}&openid={6}" \

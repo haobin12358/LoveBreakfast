@@ -12,6 +12,7 @@ from common.get_model_return_list import get_model_return_list, get_model_return
 from common.get_str import get_str
 from common.MakeToken import token_to_usid
 
+
 class COrders():
 
     def __init__(self):
@@ -28,6 +29,8 @@ class COrders():
         self.scoupons = SCoupons()
         from services.SMachinery import SMachinery
         self.smach = SMachinery()
+        from services.SCarts import SCarts
+        self.scart = SCarts()
         global OMstatus_list
         OMstatus_list = ("已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价")
 
@@ -68,7 +71,7 @@ class COrders():
                     PRnumber = raw.get("PRnumber")
                     product = get_model_return_dict(self.sproduct.get_product_all_by_pid(Pid))
                     product["PRid"] = Pid
-                    product["PRnum"] = PRnumber
+                    product["PRnumber"] = PRnumber
                     print(self.title.format("product"))
                     print(product)
                     print(self.title.format("product"))
@@ -125,8 +128,6 @@ class COrders():
             print(self.title.format("product"))
             print(product)
             print(self.title.format("product"))
-            product["PRid"] = row.get("PRid")
-            product["PRnum"] = row.get("PRnumber")
             row.update(product)
 
         response_make_main_order = import_status("messages_get_item_ok", "OK")
@@ -183,6 +184,13 @@ class COrders():
                     "PRid": op.get("PRid"),
                     "PRnumber": op.get("PRnumber")
                 })
+
+                cart = get_model_return_dict(
+                    self.scart.get_cart_by_uid_pid(Uid, get_str(op, "PRid")))
+                print(self.title.format("cartt"))
+                print(cart)
+                print(self.title.format("cartt"))
+                self.scart.del_carts(cart.get("CAid"))
 
             print(self.title.format("success add orderpart"))
 
