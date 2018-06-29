@@ -10,7 +10,7 @@ from common import timeformate
 from common.import_status import import_status
 from common.get_model_return_list import get_model_return_list, get_model_return_dict
 from common.get_str import get_str
-
+from common.MakeToken import token_to_usid
 
 class COrders():
 
@@ -40,7 +40,8 @@ class COrders():
         print(args)
         print(self.title.format("args"))
 
-        Uid = args["token"]
+        token = args.get("token")
+        Uid = token_to_usid(token)
         # 暂时不处理过滤
         order_list = get_model_return_list(self.sorders.get_all_order_by_uid(Uid))
         print(self.title.format("order_list"))
@@ -88,7 +89,8 @@ class COrders():
         print(args)
         print(self.title.format("args"))
         Oid = args["OMid"]
-        Uid = args["token"]
+        token = args.get("token")
+        Uid = token_to_usid(token)
         order_abo = get_model_return_dict(self.sorders.get_order_abo_by_oid(Oid))
         print(self.title.format("order_abo"))
         print(order_abo)
@@ -147,7 +149,8 @@ class COrders():
             if params not in data:
                 return PARAMS_MISS
 
-        Uid = args["token"]
+        token = args.get("token")
+        Uid = token_to_usid(token)
         OMtime = timeformate.get_db_time_str(data["OMtime"])
         OMdate = timeformate.get_db_time_str(data["OMdate"])
         order_item = data["Order_items"]
@@ -245,7 +248,8 @@ class COrders():
         print(args)
         print(self.title.format("args"))
 
-        Uid = args["token"]
+        token = args.get("token")
+        Uid = token_to_usid(token)
 
         users_info = self.susers.get_all_users_info(Uid)
 

@@ -15,7 +15,7 @@ from services.SOrders import SOrders
 from config.response import PARAMS_MISS, SYSTEM_ERROR
 from common.TransformToList import add_model
 from common.get_model_return_list import get_model_return_dict, get_model_return_list
-
+from common.MakeToken import token_to_usid
 
 class CReview():
     def __init__(self):
@@ -34,7 +34,8 @@ class CReview():
         if "token" not in args.keys() or "OMid" not in args.keys():
             return PARAMS_MISS
 
-        USid = get_str(args, "token")
+        token = args.get("token")
+        USid = token_to_usid(token)
         OMid = get_str(args, "OMid")
         OMstatus = self.service_order.get_omstatus_by_omid(OMid)
         if OMstatus >= 49:
@@ -111,7 +112,8 @@ class CReview():
         if "OMid" not in args.keys() or "token" not in args.keys():
             return PARAMS_MISS
 
-        USid = get_str(args, "token")
+        token = args.get("token")
+        USid = token_to_usid(token)
         # TODO USid的作用？
 
         OMid = get_str(args, "OMid")
