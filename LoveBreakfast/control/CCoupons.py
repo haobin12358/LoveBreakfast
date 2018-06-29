@@ -6,12 +6,11 @@ from flask import request
 import json
 import datetime
 import uuid
-from common.get_model_return_list import get_model_return_list, get_model_return_dict
 from common.lovebreakfast_error import dberror
-from common.timeformate import get_db_time_str, get_web_time_str, format_forweb_no_HMS, format_for_db
+from common.timeformate import get_db_time_str, get_web_time_str, format_forweb_no_HMS
 from config.response import SYSTEM_ERROR, PARAMS_MISS
 from common.import_status import import_status
-
+from common.MakeToken import token_to_usid
 
 class CCoupons():
     def __init__(self):
@@ -25,7 +24,8 @@ class CCoupons():
 
         if "token" not in args:
             return PARAMS_MISS
-        uid = args.get("token")
+        token = args.get("token")
+        uid = token_to_usid(token)
 
         couid = data.get("COid")
 
@@ -58,7 +58,8 @@ class CCoupons():
         args = request.args.to_dict()
         if "token" not in args:
             return PARAMS_MISS
-        uid = args.get("token")
+        token = args.get("token")
+        uid = token_to_usid(token)
 
         try:
             cart_list = []

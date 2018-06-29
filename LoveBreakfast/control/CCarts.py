@@ -9,7 +9,7 @@ from common.lovebreakfast_error import dberror
 from common.TransformToList import add_model
 from config.response import SYSTEM_ERROR, PARAMS_MISS
 from common.import_status import import_status
-
+from common.MakeToken import token_to_usid
 
 class CCarts():
     def __init__(self):
@@ -35,7 +35,8 @@ class CCarts():
         if "token" not in args or "AAid" not in args:
             return PARAMS_MISS
 
-        uid = args.get("token")
+        token = args.get("token")
+        uid = token_to_usid(token)
         ASid = args.get("ASid")
         is_user = self.susers.get_user_by_usid(uid)
         print(self.title.format("is_user"))
@@ -98,7 +99,8 @@ class CCarts():
 
         if "token" not in args:
             return PARAMS_MISS
-        uid = args.get("token")
+        token = args.get("token")
+        uid = token_to_usid(token)
         pid = data.get("PRid")
         CAnumber = data.get("CAnumber")
         if CAnumber <= 0:
@@ -162,8 +164,9 @@ class CCarts():
 
         if "PRid" not in data:
             return PARAMS_MISS
-
-        return self.del_cart(args.get("token"), data.get("PRid"))
+        token = args.get("token")
+        uid = token_to_usid(token)
+        return self.del_cart(uid, data.get("PRid"))
 
     def get_carts_by_uid_caid(self):
         args = request.args.to_dict()
@@ -181,7 +184,8 @@ class CCarts():
             print(data)
             print(self.title.format("data"))
             caid_list = data.get("CAid")
-        uid = args.get("token")
+        token = args.get("token")
+        uid = token_to_usid(token)
         ASid = args.get("ASid")
 
         is_user = self.susers.get_user_by_usid(uid)
