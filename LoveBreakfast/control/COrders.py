@@ -175,7 +175,7 @@ class COrders():
                     "OPid": str(uuid.uuid1()),
                     "OMid": OMid,
                     "PRid": op.get("PRid"),
-                    "PRnum": op.get("PRnum")
+                    "PRnumber": op.get("PRnumber")
                 })
 
             print(self.title.format("success add orderpart"))

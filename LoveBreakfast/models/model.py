@@ -98,7 +98,7 @@ class Orderpart(Base):
     OPid = Column(String(64), primary_key=True)  # 分订单id
     OMid = Column(String(64), nullable=False)    # 主订单id
     PRid = Column(String(64), nullable=False)     # 商品id
-    PRnum = Column(Integer, nullable=False)       # 商品数量
+    PRnumber = Column(Integer, nullable=False)       # 商品数量
 
 
 class Cart(Base):
