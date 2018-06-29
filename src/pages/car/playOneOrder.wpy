@@ -450,7 +450,7 @@
                           tip.success("支付成功")
                           setTimeout( () => {
                             wepy.switchTab({
-                              url: '/pages/order/index?OMid='+OMid
+                              url: '/pages/order/orderDetail?OMid='+OMid
                             })
                           }, 1000)
                         },

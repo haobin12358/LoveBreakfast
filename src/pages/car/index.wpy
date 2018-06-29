@@ -16,6 +16,9 @@
       border-top: 1px solid @border_color;
       .flex-row(space-between);
       .my-left{
+        display: flex;
+        flex-flow: row;
+        align-items: center;
         .my-icon-img{
           width: 40rpx;
           height:40rpx;
