@@ -28,7 +28,7 @@ const get_all_car = (params) => wxRequest(params, api + '/love/breakfast/salelis
 const delete_product = (params) => wxRequest(params, api + '/love/breakfast/salelist/delete_product');//购物车批量删除商品
 const get_all_product = (params) => wxRequest(params, api + '/love/breakfast/product/get_all');//获取所有商品信息
 const get_info_by_id = (params) => wxRequest(params, api + `/love/breakfast/product/get_info_by_id?PRid=${params.PRid}`);//通过商品id获取商品详情
-const create_review = (params) => wxRequest(params, api + '/love/breakfast/review/create_review');// 添加评论
+const create_review = (params) => wxRequest(params, api + `/love/breakfast/review/create_review?token=${params.token}&OMid=${params.OMid}`);// 添加评论
 const get_review = (params) => wxRequest(params, api + '/love/breakfast/review/get_review');//通过评论id获取评论详情
 const get_cardpkg = (params) => wxRequest(params, api + '/love/breakfast/cardpkg/get_cardpkg?token=' + params.token);// 查看个人所有优惠券
 const update_coupons = (params) => wxRequest(params, api + '/love/breakfast/cardpkg/update_coupons');//更新优惠券

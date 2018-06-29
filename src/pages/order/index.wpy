@@ -174,7 +174,11 @@
           },
 
           goEvaluatePage(prId){
-            this.$navigate('./productEvaluate', {prId});
+            if(typeof prId == 'string'){
+              this.$navigate('./productEvaluate', {prId,readonly:false});
+            }else{
+              tip.error('系统错误');
+            }
           }
         }
     }

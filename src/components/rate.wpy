@@ -1,42 +1,26 @@
 <template>
-  <view>
-    <form class="form" bindsubmit="formSubmit">
-      <view class="block">
-        <view class="m-goods-info">
-          <image src="{{info.PRimage}}"></image>
-          <view class="m-goods-name">{{info.PRname}}</view>
-          <view class="m-goods-specification">{{info.PRinfo}}</view>
-        </view>
-        <view class="item-block" style="padding-right: 40rpx">
-          <block wx:for="{{stars}}" wx:key="index">
-            <!--<image wx:if="{{readonly}}" class="star-image-read" style="left: {{item}}rpx" src="{{key > item ?(keys-item == 0.5?halfSrc:selectedSrc) : normalSrc}}">-->
-            <!--</image>-->
-            <image class="star-image" style="left: {{item*10}}rpx" src="{{key > item ?(key-item == 0.5?halfSrc:selectedSrc) : normalSrc}}">
-              <view class="item" style="left:0rpx" data-key="{{item+0.5}}" @tap="selectLeft"></view>
-              <view class="item" style="left:25rpx" data-key="{{item+1}}" @tap="selectRight"></view>
-            </image>
-          </block>
-        </view>
-        <view class="item-block">
-          <block wx:if="{{readonly}}" class="content">
-            这是一条评论
-          </block>
-          <block wx:else>
-            <textarea @input="bindText" data-index="{{idx}}" style="height: 6em; margin-top: 20rpx" placeholder="  你对宝贝有什么想说的呢"  maxlength="140"/>
-          </block>
-        </view>
-      </view>
-      <button class="button type_red" formType="submit">提交评价</button>
-    </form>
-  </view>
+    <block wx:for="{{stars}}" wx:key="index">
+      <image wx:if="{{readonly}}" class="star-image-read" style="left: {{item}}rpx"
+             src="{{key > item ?(keys-item == 0.5?halfSrc:selectedSrc) : normalSrc}}">
+      </image>
+      <image class="star-image" style="left:{{item*10}}rpx"
+             src="{{key > item ?(key-item == 0.5?halfSrc:selectedSrc) : normalSrc}}">
+        <view class="item" style="left:0rpx" data-key="{{item+0.5}}" @tap="selectLeft"></view>
+        <view class="item" style="left:25rpx" data-key="{{item+1}}" @tap="selectRight"></view>
+      </image>
+    </block>
 </template>
 <script>
   import wepy from 'wepy';
   export default class Rate extends wepy.component {
     props = {
-      info: Object,
+      key: {
+        type: Number,
+        default: 0
+      },
       readonly: {
-        default: false
+        type:Boolean,
+        default:false
       }
     }
     data = {
@@ -44,8 +28,6 @@
       normalSrc: '../../images/star.png',
       selectedSrc: '../../images/star-full.png',
       halfSrc: '../../images/star-half.png',
-      key: 0,
-      words: ''
     }
 
     events = {
@@ -55,129 +37,52 @@
       selectLeft(e){
         let key = e.currentTarget.dataset.key;
 
+        //  最低0.5分好了
+        // if (this.key == 0.5 && e.currentTarget.dataset.key == 0.5) {
+          //只有一颗星的时候,再次点击,变为0颗
+          // key = 0;
+        // }
+
         this.key = key;
+        this.$emit("change", this.key)
       },
       selectRight(e){
         let key = e.currentTarget.dataset.key;
 
         this.key = key;
+        this.$emit("change", this.key)
       },
-      formSubmit(e) {
-        let that = this
-
-        this.$emit('dealAll', that.keys, that.words)
-      },
-      bindText(e){
-        let word = e.detail.value
-
-        this.words =word
-      }
     }
 
     onLoad() {
 
     }
     events = {
-      getLen(len){
-        this.len = len;
-        for( let i = 0; i<this.len ; i++){
-          this.keys[i] = 0;
-          this.words[i] = ""
-        }
-        this.$apply()
-      },
-      getAll(){
 
-      }
     }
   }
 
 </script>
 <style lang="less">
   @import "../styles/common";
+    .star-image {
+      position: relative;
+      width: 50rpx;
+      height: 50rpx;
+      src: "../../images/star.jpg";
 
-  .form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .block{
-      margin-top: 39rpx;
-      margin-bottom: 39rpx;
-
-      .m-goods-info{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 100%;
-
-        image{
-          width: 640rpx;
-          height: 480rpx;
-          border-radius: 20rpx;
-        }
-        .m-goods-name {
-          margin-top: 38rpx;
-          text-align: center;
-          color: #666666;
-
-          .fz38();
-        }
-        .m-goods-specification {
-          margin-top: 24rpx;
-          margin-bottom: 24rpx;
-          text-align: center;
-          color: #999999;
-
-          .fz28();
-        }
-      }
-
-      .item-block {
-        display: flex;
-        justify-content: center;
-
-        .star-image {
-          position: relative;
-          width: 50rpx;
-          height: 50rpx;
-          src: "../../images/star.jpg";
-
-          .item {
-            position: absolute;
-            width: 25rpx;
-            top: 0;
-            height: 50rpx;
-          }
-        }
-
-        .star-image-read {
-          position: relative;
-          width: 30rpx;
-          height: 30rpx;
-          src: "../../images/star.jpg";
-        }
-
-        textarea{
-          border: 1px solid #cdcdcd ;
-          border-radius: 30rpx;
-          width: 660rpx;
-          height: 145rpx;
-          color: #666666;
-          padding: 30rpx;
-          box-sizing: border-box;;
-        }
+      .item {
+        position: absolute;
+        width: 25rpx;
+        top: 0;
+        height: 50rpx;
       }
     }
 
-    .button {
-      background-color: @main_color;
-      color: #fff;
-      width: 450rpx;
-      height: 80rpx;
-      border-radius: 40rpx;
-      margin-bottom: 89rpx;
+    .star-image-read {
+      position: relative;
+      width: 30rpx;
+      height: 30rpx;
+      src: "../../images/star.jpg";
     }
-  }
-
 </style>
