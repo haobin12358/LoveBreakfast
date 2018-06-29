@@ -19,6 +19,7 @@
           background-color: #eaeaea;
           .flex-row(flex-start);
           border-radius: 20px;
+          padding: 5rpx 0;
           input{
             font-size: 28rpx;
           }
@@ -46,9 +47,10 @@
         <text>{{select_city}}</text>
       </view>
       <view class="my-input-box">
-        <image src="/images/icon-search.jpg" style="width: 30rpx;height: 30rpx;margin: 0 20rpx;" />
+        <image src="/images/icon-search.jpg" style="width: 40rpx;height:40rpx;margin: 0 20rpx;" />
         <input type="text" placeholder="搜索商品" placeholder-style="text-align:center;">
       </view>
+
     </view>
     <view class="my-content">
       <repeat for="{{all_data}}" key="index" index="index" item="item">
