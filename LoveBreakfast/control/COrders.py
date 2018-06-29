@@ -156,6 +156,8 @@ class COrders():
         token = args.get("token")
         Uid = token_to_usid(token)
         OMtime = timeformate.get_db_time_str(data["OMtime"])
+        if self.checktime():
+            return import_status("error_make_ordermain_time", "LOVEBREAKFAST_ERROR", "error_make_ordermain_time")
         OMdate = timeformate.get_db_time_str(data["OMdate"])
         order_item = data["Order_items"]
         OMcode = self.make_code()

@@ -60,3 +60,4 @@ messages_get_area_success = "获取信息成功"
 
 error_no_city = "该城市未开通"
 error_no_pro = "存在下架商品"
+error_make_ordermain_time = "下单时间不在预售时间之内(6:00~22:00)"
