@@ -108,7 +108,7 @@
             <view class="operatorArea">
 
               <!--<button @tap="goEvaluatePage({{item.orderId}})" >评价</button>-->
-              <button wx:if="{{item.OMstatus == '未支付'}}" @tap="toPay">立即支付</button>
+              <button wx:if="{{item.OMstatus == '未支付'}}" @tap="toPay({{item.OMid}})">立即支付</button>
               <button wx:elif ="{{item.OMstatus == '已完成'}}"
                       @tap="goEvaluatePage({{item.OMid}},{{item.Orderitems[0].PRid}},{{false}})">评价</button>
               <text wx:elif ="{{item.OMstatus == '已评价'}}"　
@@ -164,6 +164,10 @@
           }
         }
 
+        async unpayOrder(){
+
+        }
+
         onShow(){
           //  跳转页面时更新订单列表
           this.getOrderList();
@@ -176,13 +180,15 @@
           },
 
           //  支付
-          toPay(){
-            return
-            wx.login({
+          async toPay(omId) {
+            let OMid = omId;
+
+            await wx.login({
               success: function (res) {
                 if (res.code) {
                   console.log(res.code, 'this is code')
                   let successFun = (res3) => {
+                    console.log(res3, 'gg')
                     let timeStamp = res3.data.timeStamp.toString()
                     wx.requestPayment({
                       'appId': res3.data.appId,
@@ -193,13 +199,14 @@
                       'paySign': res3.data.paySign,
                       'success': function (res) {
                         tip.success("支付成功")
-                        that.getAllOrder(that.token)
-                        that.$apply()
-                        console.log(res)
+                        setTimeout(() => {
+                          wepy.switchTab({
+                            url: '/pages/order/orderDetail?OMid='+OMid
+                          })
+                        }, 1000)
                       },
                       'fail': function (res) {
                         tip.error("支付失败")
-                        console.log(res)
                       }
                     })
                   }
@@ -207,7 +214,7 @@
                     console.log(res, 'fail!')
                     tip.error("服务器开小差了")
                   }
-                  api.getPayParam({query: {OMid: param, code: res.code}}).then(successFun, failFun)
+                  api.payconfig({method: 'GET', query: {OMid: OMid, code: res.code}}).then(successFun, failFun)
                 } else {
                   console.log('获取用户登录态失败！' + res.errMsg)
                 }
@@ -216,10 +223,10 @@
           },
 
           //  去评价页
-          goEvaluatePage(omId,prId,readonly){
-            if(typeof prId == 'string'){
-              this.$navigate('./productEvaluate', {omId,prId,readonly});
-            }else{
+          goEvaluatePage(omId, prId, readonly) {
+            if (typeof prId == 'string') {
+              this.$navigate('./productEvaluate', {omId, prId, readonly});
+            } else {
               tip.error('系统错误');
             }
           }

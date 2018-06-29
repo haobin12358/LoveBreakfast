@@ -19,7 +19,7 @@ const update_info = (params) => wxRequest(params, api + '/love/breakfast/users/u
 const update_pwd = (params) => wxRequest(params, api + '/love/breakfast/users/update_pwd');//修改密码
 const all_info = (params) => wxRequest(params, api + '/love/breakfast/users/all_info');//获取个人信息
 const make_main_order = (params) => wxRequest(params, api + '/love/breakfast/orders/make_main_order?token=' + params.token);//创建订单
-const update_order_status = (params) => wxRequest(params, api + '/love/breakfast/orders/update_order_status');//更新订单状态
+const update_order_status = (params) => wxRequest(params, api + `/love/breakfast/orders/update_order_status?token=${params.token}`);//更新订单状态
 const get_order_list = (params) => wxRequest(params, api + `/love/breakfast/orders/get_order_list?token=${params.token}`);//获取订单列表
 const get_order_abo = (params) => wxRequest(params, api + `/love/breakfast/orders/get_order_abo?token=${params.token}&OMid=${params.OMid}`);//获取订单详情
 const get_all_location = (params) => wxRequest(params, api + '/love/breakfast/locations/get_all_location');// 获取全部站点
@@ -47,6 +47,6 @@ export default {
   update_order_status,get_order_list,get_order_abo,get_all_location,
   get_lno,sale_update,get_all_car,delete_product,get_all_product,get_info_by_id,
   get_cardpkg,update_coupons,get_citys,get_addfirst,get_addsecond,get_addabo,
-  get_city_location,picture,create_review,get_review,order_price,get_select_product
+  get_city_location,picture,create_review,get_review,order_price,get_select_product,payconfig
 
 }
