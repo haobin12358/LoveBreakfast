@@ -108,11 +108,8 @@
 
 </style>
 <template>
-  <view wx:if="{{!isLogin}}" class="unlogin-block" @tap="goLogin">
-    <button>请登录</button>
-  </view>
-  <block wx:else>
-    <view wx:if="{{orderList.length == 0}}" class="empty-placeholder">
+    <notLogin :isLogin.sync="isLogin"></notLogin>
+    <view wx:if="{{isLogin && orderList.length == 0}}" class="empty-placeholder">
       订单数目为空
     </view>
     <view wx:else class="order-group">
@@ -135,16 +132,15 @@
                 <!--<button @tap="goEvaluatePage({{item.orderId}})" >评价</button>-->
                 <button wx:if="{{item.OMstatus == '未支付'}}" @tap="toPay({{item.OMid}})">立即支付</button>
                 <button wx:elif ="{{item.OMstatus == '已完成'}}"
-                        @tap="goEvaluatePage({{item.OMid}},{{item.Orderitems[0].PRid}},{{false}})">评价</button>
+                        @tap="goEvaluatePage({{item.OMid}},{{item.Orderitems[0].PRid}},false)">评价</button>
                 <text wx:elif ="{{item.OMstatus == '已评价'}}"　
-                      @tap="goEvaluatePage({{item.OMid}},{{item.Orderitems[0].PRid}},{{true}})">评价详情 ＞</text>
+                      @tap="goEvaluatePage({{item.OMid}},{{item.Orderitems[0].PRid}},true)">评价详情 ＞</text>
               </view>
             </view>
           </view>
         </view>
       </block>
     </view>
-  </block>
 
 
 </template>
@@ -153,6 +149,7 @@
     import wepy from 'wepy';
     import api from '../../api/api';
     import tip from '../../utils/tip';
+    import notLogin from '../../components/notLogin'
 
 
     export default class orderIndex extends wepy.page {
@@ -165,6 +162,9 @@
           isLogin: true
         }
         computed = {}
+        components={
+          notLogin
+        }
 
         //  获取订单列表
         async getOrderList(){
@@ -191,17 +191,12 @@
           this.getOrderList();
 
           this.isLogin = !!wx.getStorageSync('token')
-          console.log(this.isLogin);
         }
 
         methods = {
           //  去订单详情页
           showDetail(omId){
             this.$navigate('./orderDetail',{OMid: omId});
-          },
-
-          goLogin(){
-              this.$navigate('/pages/personal/login');
           },
 
           //  支付
@@ -226,7 +221,7 @@
                       'success': function (res) {
                         tip.success("支付成功")
                         setTimeout(() => {
-                          this.$navigate('/pages/order/orderDetail?OMid='+OMid)
+                          wx.navigateTo({url: '/pages/order/orderDetail?OMid=' + OMid});
                         }, 1000)
                       },
                       'fail': function (res) {

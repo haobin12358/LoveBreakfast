@@ -46,7 +46,8 @@
         .comment{
           word-break: break-word;
           width: 600rpx;
-          text-indent: 2em;
+          /*text-indent: 2em;*/
+          text-align: center;
           .fz28()
         }
 
@@ -193,7 +194,8 @@
       onLoad(param) {
         this.omId = param.omId;
 
-        this.readonly = param.readonly;
+        this.readonly = param.readonly == 'true' ? true: false;
+
         if(this.readonly){
           this.getReview(this.omId);
         }else {
