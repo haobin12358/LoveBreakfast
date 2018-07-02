@@ -108,7 +108,7 @@
         </view>
         <view class="m-section">
           <image class="m-icon" src='/images/icon-set.jpg'></image>
-          <text class="m-info-prefix">密  码：</text>
+          <text class="m-info-prefix" space="emsp">密 码：</text>
           <input class="m-text" password name="code"  placeholder="请输入密码" />
         </view>
         <navigator class="m-item" url="/pages/personal/forgetPwd">
