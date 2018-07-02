@@ -188,7 +188,7 @@
 
         async getOrderAbo(omId){
           let res = await api.get_order_abo({
-            token: '11aa9315-38b4-47c1-a31b-c29ca20aa02c',
+            token: wx.getStorageSync('token'),
             OMid: omId
           });
 
