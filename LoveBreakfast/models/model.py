@@ -53,7 +53,7 @@ class Review(Base):
     OMid = Column(String(64), nullable=False)  # 对应的订单编号
     PRid = Column(String(64), nullable=False)  # 对应的商品编号
     USid = Column(String(64), nullable=False)  # 用户id
-    REscore = Column(Integer, nullable=False)  # 对应的商品评分
+    REscore = Column(Float, nullable=False)  # 对应的商品评分
     REcontent = Column(Text)  # 评价内容
     REstatus = Column(Integer, default=1)  # 对应的评价状态 {1:有效评价 2:无效状态}
 

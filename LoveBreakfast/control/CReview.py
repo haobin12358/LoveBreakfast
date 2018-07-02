@@ -53,12 +53,15 @@ class CReview():
             print(self.title.format("data_item"))
             if "PRid" not in row or "REscore" not in row:
                 return PARAMS_MISS
-            if "REcontent" in data:
+            if "REcontent" in row:
                 REcontent = row["REcontent"]
             else:
                 REcontent = None
             PRid = row["PRid"]
             REscore = row["REscore"]
+            print(self.title.format("REscore"))
+            print(REscore)
+            print(self.title.format("REscore"))
             try:
                 add_model("Review",
                           **{
