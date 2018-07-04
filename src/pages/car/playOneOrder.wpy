@@ -187,7 +187,7 @@
         </view>
         <view class="my-price">￥{{item.PRprice}} <span class="my-num">X{{item.CAnumber}}</span></view>
       </view>
-      <view class="my-total">合计：<span class="my-price">￥{{total_money}}</span></view>
+      <view class="my-total">合计：<span class="my-price">¥{{total_money}}</span></view>
     </view>
     <view class="my-top my-other">
       <view class="my-row">
@@ -208,7 +208,7 @@
       </view>
     </view>
     <view class="my-foot">
-      <view>合计:<span class="my-price">￥{{total_money}}</span></view>
+      <view>合计:<span class="my-price">¥{{total_money}}</span></view>
       <view class="my-btn" @tap="placeAnOrder">支  付</view>
     </view>
     <view class="my-modal" catchtouchmove="Touch" wx:if="{{show_modal}}" catchtap="cancelModal">

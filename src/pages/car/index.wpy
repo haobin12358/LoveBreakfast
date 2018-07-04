@@ -61,7 +61,7 @@
         <p>全选</p>
       </view>
       <view class="my-right">
-          <view>合计：￥ <span class="my-price">{{total_money}}</span></view>
+          <view>合计：¥ <span class="my-price">{{total_money}}</span></view>
         <view class="my-btn" @tap="playOrder">下单</view>
       </view>
     </view>
