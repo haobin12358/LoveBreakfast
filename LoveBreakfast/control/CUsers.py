@@ -8,6 +8,9 @@ import uuid
 from config.response import SYSTEM_ERROR, PARAMS_MISS
 from common.ImportManager import import_status
 from common.ServiceManager import get_model_return_dict
+from common.import_status import import_status
+from common.get_model_return_list import get_model_return_dict
+from common.MakeToken import token_to_usid
 
 
 class CUsers():
@@ -101,8 +104,10 @@ class CUsers():
             return import_status("ERROR_MESSAGE_WRONG_PASSWORD", "LOVEBREAKFAST_ERROR", "ERROR_CODE_WRONG_PASSWORD")
 
         back_response = import_status("SUCCESS_MESSAGE_LOGIN", "OK")
+        from common.MakeToken import usid_to_token
+        token = usid_to_token(usid.get("USid"))
         back_response["data"] = {}
-        back_response["data"]["token"] = usid.get("USid")
+        back_response["data"]["token"] = token
         return back_response
 
     def update_info(self):
@@ -112,7 +117,8 @@ class CUsers():
         print(self.title.format("args"))
         if "token" not in args:
             return PARAMS_MISS
-        Uid = args["token"]
+        token = args.get("token")
+        Uid = token_to_usid(token)
         is_user = self.susers.get_user_by_usid(Uid)
         print(self.title.format("is_user"))
         print(is_user)
@@ -199,7 +205,8 @@ class CUsers():
         print(self.title.format("args"))
         if "token" not in args:
             return PARAMS_MISS
-        Uid = args["token"]
+        token = args.get("token")
+        Uid = token_to_usid(token)
 
         users_info = get_model_return_dict(self.susers.get_all_users_info(Uid))
         print(self.title.format("users_info"))
@@ -245,12 +252,14 @@ class CUsers():
         time_time = datetime.datetime.now()
         time_str = datetime.datetime.strftime(time_time, format_for_db)
 
+        """
         utel_list = self.susers.get_user_by_utel(Utel)
         print(self.title.format("utel_list"))
         print(utel_list)
         print(self.title.format("utel_list"))
         if utel_list:
             return import_status("ERROR_MESSAGE_REPEAT_TELPHONE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_REPEAT_TELPHONE")
+            """
         # 根据电话号码获取时间
         time_up = self.susers.get_uptime_by_utel(Utel)
         print(self.title.format("time_up"))

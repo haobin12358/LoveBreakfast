@@ -45,12 +45,12 @@ class SOrders(SBase):
 
     @closesession
     def get_order_item_by_oid(self, oid):
-        return self.session.query(Orderpart.PRnum, Orderpart.PRid).filter_by(OMid=oid).all()
+        return self.session.query(Orderpart.PRnumber, Orderpart.PRid).filter_by(OMid=oid).all()
 
     @closesession
     def get_order_abo_by_oid(self, oid):
         return self.session.query(Ordermain.OMid, Ordermain.OMtime, Ordermain.OMtotal,
-                                  Ordermain.OMdate, Ordermain.USid, Ordermain.AAid,
+                                  Ordermain.OMdate, Ordermain.AAid,
                                   Ordermain.OMcode, Ordermain.OMabo, Ordermain.OMstatus) \
             .filter_by(OMid=oid).first()
 

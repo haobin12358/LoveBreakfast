@@ -4,8 +4,8 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
 from config.Logs import PRINT_API_NAME
-from control.CProduct import CProduct
 from control.CReview import CReview
+from config.response import APIS_WRONG
 
 class AReview(Resource):
     def __init__(self):
@@ -22,7 +22,7 @@ class AReview(Resource):
         if review in apis:
             return eval(apis[review])
 
-        return
+        return APIS_WRONG
 
     def get(self, review):
         print(PRINT_API_NAME.format(review))
@@ -34,4 +34,4 @@ class AReview(Resource):
         if review in apis:
             return eval(apis[review])
 
-        return
+        return APIS_WRONG

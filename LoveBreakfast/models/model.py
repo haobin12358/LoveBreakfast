@@ -19,10 +19,10 @@ class Users(Base):
     USid = Column(String(64), primary_key=True)
     UStelphone = Column(String(14), nullable=False)  # 用户联系方式
     USpassword = Column(String(32), nullable=False)  # 用户密码
-    USname = Column(String(64))  # 用户昵称
-    USsex = Column(Integer)  # 用户性别 {101男， 102女}
-    UScoin = Column(Float)  # 用户积分，根据用户购买商品生成
-    USinvatecode = Column(String(64))  # 用户邀请码，算法生成待设计
+    USname = Column(String(64))                      # 用户昵称
+    USsex = Column(Integer)                          # 用户性别 {101男， 102女}
+    UScoin = Column(Float)                           # 用户积分，根据用户购买商品生成
+    USinvatecode = Column(String(64))                # 用户邀请码，算法生成待设计
 
 
 class Locations(Base):
@@ -50,12 +50,12 @@ class Products(Base):
 class Review(Base):
     __tablename__ = "Review"
     REid = Column(String(64), primary_key=True)  # 评论id
-    OMid = Column(String(64), nullable=False)  # 对应的订单编号
-    PRid = Column(String(64), nullable=False)  # 对应的商品编号
-    USid = Column(String(64), nullable=False)  # 用户id
-    REscore = Column(Integer, nullable=False)  # 对应的商品评分
-    REcontent = Column(Text)  # 评价内容
-    REstatus = Column(Integer, default=1)  # 对应的评价状态 {1:有效评价 2:无效状态}
+    OMid = Column(String(64), nullable=False)    # 对应的订单编号
+    PRid = Column(String(64), nullable=False)    # 对应的商品编号
+    USid = Column(String(64), nullable=False)    # 用户id
+    REscore = Column(Float, nullable=False)      # 对应的商品评分
+    REcontent = Column(Text)                     # 评价内容
+    REstatus = Column(Integer, default=1)        # 对应的评价状态 {1:有效评价 2:无效状态}
 
 
 class Category(Base):
@@ -97,8 +97,8 @@ class Orderpart(Base):
     __tablename__ = "OrderPart"
     OPid = Column(String(64), primary_key=True)  # 分订单id
     OMid = Column(String(64), nullable=False)    # 主订单id
-    PRid = Column(String(64), nullable=False)     # 商品id
-    PRnum = Column(Integer, nullable=False)       # 商品数量
+    PRid = Column(String(64), nullable=False)    # 商品id
+    PRnumber = Column(Integer, nullable=False)   # 商品数量
 
 
 class Cart(Base):
@@ -125,9 +125,9 @@ class Cardpackage(Base):
     __tablename__ = "Cardpackage"
     CAid = Column(String(64), primary_key=True)
     USid = Column(String(64), nullable=False)
-    CAstatus = Column(Integer, default=1)  # 卡包中优惠券的状态 {1:可使用，2: 不可使用}
-    CAstart = Column(String(14))  # 卡包中优惠券的开始时间
-    CAend = Column(String(14))  # 卡包中的优惠券结束时间
+    CAstatus = Column(Integer, default=1)   # 卡包中优惠券的状态 {1:可使用，2: 不可使用}
+    CAstart = Column(String(14))            # 卡包中优惠券的开始时间
+    CAend = Column(String(14))              # 卡包中的优惠券结束时间
     COid = Column(String(64), nullable=False)
 
 
@@ -135,8 +135,8 @@ class IdentifyingCode(Base):
     __tablename__ = "IdentifyingCode"
     ICid = Column(String(64), primary_key=True)
     ICtelphone = Column(String(14), nullable=False)  # 获取验证码的手机号
-    ICcode = Column(String(8), nullable=False)    # 获取到的验证码
-    ICtime = Column(String(14), nullable=False)    # 获取的时间，格式为20180503100322
+    ICcode = Column(String(8), nullable=False)       # 获取到的验证码
+    ICtime = Column(String(14), nullable=False)      # 获取的时间，格式为20180503100322
 
 
 class BlackUsers(Base):
@@ -155,9 +155,9 @@ class AddCity(Base):
 class AddressFirst(Base):
     __tablename__ = "AddressFirst"
     AFid = Column(String(64), primary_key=True)
-    AFtype = Column(Integer)  # 判断是地铁还是其他园区 {0: "地铁", 1: "生活/办公园区"}
+    AFtype = Column(Integer)     # 判断是地铁还是其他园区 {0: "地铁", 1: "生活/办公园区"}
     AFname = Column(String(64))  # 区域名称/地铁线路
-    ACid = Column(String(64))  # 市id
+    ACid = Column(String(64))    # 市id
 
 
 class AddressSecond(Base):

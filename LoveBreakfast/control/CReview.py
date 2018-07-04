@@ -15,6 +15,8 @@ from services.SOrders import SOrders
 from config.response import PARAMS_MISS, SYSTEM_ERROR
 from common.TransformToList import add_model
 from common.ServiceManager import get_model_return_dict, get_model_return_list
+from common.get_model_return_list import get_model_return_dict, get_model_return_list
+from common.MakeToken import token_to_usid
 
 
 class CReview():
@@ -34,7 +36,8 @@ class CReview():
         if "token" not in args.keys() or "OMid" not in args.keys():
             return PARAMS_MISS
 
-        USid = get_str(args, "token")
+        token = args.get("token")
+        USid = token_to_usid(token)
         OMid = get_str(args, "OMid")
         OMstatus = self.service_order.get_omstatus_by_omid(OMid)
         if OMstatus >= 49:
@@ -52,12 +55,15 @@ class CReview():
             print(self.title.format("data_item"))
             if "PRid" not in row or "REscore" not in row:
                 return PARAMS_MISS
-            if "REcontent" in data:
+            if "REcontent" in row:
                 REcontent = row["REcontent"]
             else:
                 REcontent = None
             PRid = row["PRid"]
             REscore = row["REscore"]
+            print(self.title.format("REscore"))
+            print(REscore)
+            print(self.title.format("REscore"))
             try:
                 add_model("Review",
                           **{
@@ -111,7 +117,8 @@ class CReview():
         if "OMid" not in args.keys() or "token" not in args.keys():
             return PARAMS_MISS
 
-        USid = get_str(args, "token")
+        token = args.get("token")
+        USid = token_to_usid(token)
         # TODO USid的作用？
 
         OMid = get_str(args, "OMid")

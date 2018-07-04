@@ -119,7 +119,7 @@ class AOther(Resource):
             body["time_start"] = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
             body["time_expire"] = (datetime.datetime.now() + datetime.timedelta(hours=2)).strftime("%Y%m%d%H%M%S")
             # TODO 修改响应地址
-            body["notify_url"] = "https://h878.cn/love/breakfast/other/getdata"
+            body["notify_url"] = "http://123.207.97.185:7444/love/breakfast/other/getdata"
             body["trade_type"] = "JSAPI"
             body["openid"] = openid
             key_sign = "appid={0}&body={1}&device_info={2}&mch_id={3}&nonce_str={4}&notify_url={5}&openid={6}" \
@@ -203,17 +203,7 @@ class AOther(Resource):
             s = hashlib.md5()
             s.update(key_sign)
             response["paySign"] = s.hexdigest().upper()
-            order = {"OMstatus": 14}
-            print(self.title.format("order"))
-            print(order)
-            print(self.title.format("order"))
-            try:
-                self.sorders.update_omstatus_by_omid(OMid, order)
-            except Exception as e:
-                print(self.title.format("update order error"))
-                print(e.message)
-                print(self.title.format("update order error"))
-                return SYSTEM_ERROR
+
             return response
 
         if other == "prepayconfig":
@@ -366,9 +356,44 @@ class AOther(Resource):
             data = xmltodict.parse(data)
             import json
             data = json.loads(json.dumps(data))
+
             json_result = data["xml"]
+            print(self.title.format("json_result"))
+            print(json_result)
+            print(self.title.format("json_result"))
+
             if "return_code" not in json_result:
-                return PARAMS_MISS
+                print(self.title.format("error"))
+                print("not find return_code")
+                print(self.title.format("error"))
+                return {
+                    "return_code": "FAIL",
+                    "return_msg": "return_code is not find !!!"
+                }
+
+            if json_result.get("return_code") != "SUCCESS":
+                print(self.title.format("error"))
+                print("return_code is {0}".format(json_result.get("return_code")))
+                print(self.title.format("error"))
+                return {
+                    "return_code": "FAIL",
+                    "return_msg": "return_code is not SUCCESS !!!"
+                }
+            insert_index_list = [8, 13, 18, 23]
+            omid_list = list(json_result.get("out_trade_no"))
+            for index in insert_index_list:
+                omid_list.insert(index, "-")
+            omid = "".join(omid_list)
+            print(self.title.format("OMid"))
+            print(omid)
+            print(self.title.format("OMid"))
+
+            try:
+                self.sorders.update_omstatus_by_omid(omid, {"OMstatus": 14})
+            except Exception as e:
+                print(self.title.format("error"))
+                print(e.message)
+                print(self.title.format("error"))
 
             return {
                 "return_code": "SUCCESS",

@@ -4,17 +4,12 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
 from config.Logs import PRINT_API_NAME
-from config.status import response_system_error
-from config.status_code import error_wrong_apis
-from config.messages import error_messages_wrong_api
 from control.CUsers import CUsers
+from config.response import APIS_WRONG
 
 class AUsers(Resource):
     def __int__(self):
-        self.apis_wrong = {}
-        self.apis_wrong["status"] = response_system_error
-        self.apis_wrong["status_code"] = error_wrong_apis
-        self.apis_wrong["messages"] = error_messages_wrong_api
+        pass
 
     def post(self, users):
         print(PRINT_API_NAME.format(users))
@@ -25,13 +20,14 @@ class AUsers(Resource):
             "login":"control_user.login()",
             "update_info":"control_user.update_info()",
             "update_pwd":"control_user.update_pwd()",
-            "get_inforcode":"control_user.get_inforcode()"
+            "get_inforcode":"control_user.get_inforcode()",
+            "forget_pwd": "control_user.forget_pwd()"
         }
 
         if users in apis:
             return eval(apis[users])
 
-        return self.apis_wrong
+        return APIS_WRONG
 
     def get(self, users):
         print(PRINT_API_NAME.format(users))
@@ -44,4 +40,4 @@ class AUsers(Resource):
         if users in apis:
             return eval(apis[users])
 
-        return self.apis_wrong
+        return APIS_WRONG

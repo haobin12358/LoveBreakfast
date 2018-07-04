@@ -8,8 +8,10 @@ from config.response import SYSTEM_ERROR, PARAMS_MISS
 import datetime
 from common import Tools
 from common.ImportManager import import_status
-from common.ServiceManager import get_model_return_list, get_model_return_dict
+from common.Tools import get_web_time_str, get_db_time_str
+from common.ServiceManager import ServiceManager
 from common.get_str import get_str
+from common.MakeToken import token_to_usid
 
 
 class COrders():
@@ -32,6 +34,10 @@ class COrders():
         print("sorders service", id(self.sorders))
         print("susers service", id(self.susers))
 
+        from services.SMachinery import SMachinery
+        self.smach = SMachinery()
+        from services.SCarts import SCarts
+        self.scart = SCarts()
         global OMstatus_list
         OMstatus_list = ("已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价")
 
@@ -44,7 +50,8 @@ class COrders():
         print(args)
         print(self.title.format("args"))
 
-        Uid = args["token"]
+        token = args.get("token")
+        Uid = token_to_usid(token)
         # 暂时不处理过滤
         order_list = get_model_return_list(self.sorders.get_all_order_by_uid(Uid))
         print(self.title.format("order_list"))
@@ -68,7 +75,10 @@ class COrders():
                 print(self.title.format("order_items"))
                 for raw in order_items:
                     Pid = raw.get("PRid")
+                    PRnumber = raw.get("PRnumber")
                     product = get_model_return_dict(self.sproduct.get_product_all_by_pid(Pid))
+                    product["PRid"] = Pid
+                    product["PRnumber"] = PRnumber
                     print(self.title.format("product"))
                     print(product)
                     print(self.title.format("product"))
@@ -91,7 +101,8 @@ class COrders():
         print(args)
         print(self.title.format("args"))
         Oid = args["OMid"]
-        Uid = args["token"]
+        token = args.get("token")
+        Uid = token_to_usid(token)
         order_abo = get_model_return_dict(self.sorders.get_order_abo_by_oid(Oid))
         print(self.title.format("order_abo"))
         print(order_abo)
@@ -149,49 +160,72 @@ class COrders():
             if params not in data:
                 return PARAMS_MISS
 
-        Uid = args["token"]
-        OMtime = Tools.get_db_time_str(data["OMtime"])
-        OMdate = Tools.get_db_time_str(data["OMdate"])
-        addabo = self.sadd.get_addabo_by_addid(get_str(data, "AAid"))
+        token = args.get("token")
+        Uid = token_to_usid(token)
+        OMtime = timeformate.get_db_time_str(data["OMtime"])
+        if self.checktime():
+            return import_status("error_make_ordermain_time", "LOVEBREAKFAST_ERROR", "error_make_ordermain_time")
+        OMdate = timeformate.get_db_time_str(data["OMdate"])
+        order_item = data["Order_items"]
         OMcode = self.make_code()
         import uuid
+        aaid = get_str(data, "AAid")
         OMid = str(uuid.uuid1())
-        if not addabo:
-            return SYSTEM_ERROR
-        self.sorders.add_model("Ordermain", **{
-            "OMid": OMid,
-            "OMtime": OMtime,
-            "OMdate": OMdate,
-            "OMstatus": 7,
-            "USid": Uid,
-            "AAid": get_str(data, "AAid"),
-            "OMcode": OMcode,
-            "OMabo": get_str(data, "OMabo"),
-            "OMtotal": data.get("OMtotal")
+        try:
+            for op in order_item:
+                prostatus = self.sproduct.get_product_status_by_prid(op.get("PRid"))
+                print(self.title.format("prostatus"))
+                print(prostatus.PRstatus)
+                print(self.title.format("prostatus"))
+                if prostatus.PRstatus != 1:
+                    return import_status("error_no_pro", "LOVEBREAKFAST_ERROR", "error_no_pro")
+                mach = self.smach.get_maid_by_aaid_prid(get_str(data, "AAid"), op.get("PRid"))
+                print(self.title.format("mach"))
+                print(mach)
+                print(self.title.format("mach"))
 
-        })
+                if not mach:
+                    return SYSTEM_ERROR
 
-        order_item = data["Order_items"]
-        for op in order_item:
-            prostatus = self.sproduct.get_product_status_by_prid(op.get("PRid"))
-            print(self.title.format("prostatus"))
-            print(prostatus.PRstatus)
-            print(self.title.format("prostatus"))
-            if prostatus.PRstatus != 1:
-                self.sorders.del_order(OMid)
-                return import_status("error_no_pro", "LOVEBREAKFAST_ERROR", "error_no_pro")
+                self.sorders.add_model("Orderpart", **{
+                    "OPid": str(uuid.uuid1()),
+                    "OMid": OMid,
+                    "PRid": op.get("PRid"),
+                    "PRnumber": op.get("PRnumber")
+                })
 
-            self.sorders.add_model("Orderpart", **{
-                "OPid": str(uuid.uuid1()),
+                cart = get_model_return_dict(
+                    self.scart.get_cart_by_uid_pid(Uid, get_str(op, "PRid")))
+                print(self.title.format("cartt"))
+                print(cart)
+                print(self.title.format("cartt"))
+                self.scart.del_carts(cart.get("CAid"))
+
+            print(self.title.format("success add orderpart"))
+
+            self.sorders.add_model("Ordermain", **{
                 "OMid": OMid,
-                "PRid": op.get("PRid"),
-                "PRnum": op.get("PRnum")
+                "OMtime": OMtime,
+                "OMdate": OMdate,
+                "OMstatus": 7,
+                "USid": Uid,
+                "AAid": aaid,
+                "OMcode": OMcode,
+                "OMabo": get_str(data, "OMabo"),
+                "OMtotal": data.get("OMtotal")
+
             })
-            
-        response_make_main_order = import_status("messages_add_main_order_success", "OK")
-        response_make_main_order["data"] = {}
-        response_make_main_order["data"]["Oid"] = OMid
-        return response_make_main_order
+
+            self.scoupons.update_carbackage(get_str(data, "CAid"))
+            response_make_main_order = import_status("messages_add_main_order_success", "OK")
+            response_make_main_order["data"] = {}
+            response_make_main_order["data"]["OMid"] = OMid
+            return response_make_main_order
+        except Exception as e:
+            print(self.title.format("error"))
+            print(e.message)
+            print(self.title.format("error"))
+            return SYSTEM_ERROR
 
     def update_order_info(self):
         pass
@@ -234,7 +268,8 @@ class COrders():
         print(args)
         print(self.title.format("args"))
 
-        Uid = args["token"]
+        token = args.get("token")
+        Uid = token_to_usid(token)
 
         users_info = self.susers.get_all_users_info(Uid)
 
@@ -374,3 +409,16 @@ class COrders():
 if __name__ == "__main__":
     sorder = COrders()
     print sorder.get_status_by_status_name("未支付")
+"""
+{
+    "status": 200,
+    "message": "获取区域信息成功",
+    "data": [
+        {
+            "ACid": "f9490b5d-1745-47e9-b399-36614a8e10e4",
+            "ACname": "杭州市",
+            "AFtype: ["地铁","生活区"]
+        }
+    ]
+}
+"""

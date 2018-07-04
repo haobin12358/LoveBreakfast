@@ -2,12 +2,9 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-import uuid
-# import DBsession
-from models.model import Cart, Machinery
+from models.model import Cart
 
 from SBase import SBase, closesession
-from common.TransformToList import trans_params
 
 
 class SCarts(SBase):
@@ -44,15 +41,10 @@ class SCarts(SBase):
     def get_cart_by_uid_pid(self, uid, pid):
         return self.session.query(Cart.CAid, Cart.CAnumber, Cart.CAstatus).filter(Cart.USid == uid, Cart.PRid == pid).first()
 
-    @trans_params
-    @closesession
-    def get_address_list_by_prid(self, prid):
-        return self.session.query(Machinery.AAid).filter_by(PRid=prid).all()
-
     @closesession
     def get_pbnumber_by_pbid_and_usid(self, pbid, usid):
         return self.session.query(Cart.CAnumber).filter_by(PRid=pbid).filter_by(USid=usid).scalar()
 
     @closesession
-    def get_cart_by_prid_aaid(self, prid, aaid):
-        return self.session.query(Cart.CAnumber, Cart.USid)
+    def get_prid_by_caid(self, caid):
+        return self.session.query(Cart.PRid).filter(Cart.CAid == caid).scalar()

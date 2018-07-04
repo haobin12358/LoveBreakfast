@@ -9,6 +9,7 @@ ERROR_CODE_NONE_USER = 405305
 ERROR_CODE_GET_CODE_FAST = 405306
 ERROR_NONE_PRODUCT = 405201
 ERROR_CODE_WRONG_REPEAT_PASSWORD = 405307
+ERROR_CODE_WRONG_TELCODE = 405308
 
 error_wrong_apis = 405100
 error_param_miss = 405101
@@ -33,3 +34,4 @@ error_coupon_used = 405701
 error_no_city = 405801
 
 error_no_pro = 405901
+error_make_ordermain_time = 405902

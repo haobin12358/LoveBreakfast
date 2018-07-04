@@ -21,7 +21,7 @@ class SUsers(SBase):
         new_user.USid = str(uuid.uuid1())
         new_user.UStelphone = utel
         new_user.USpassword = upwd
-        new_user.USname = None
+        new_user.USname = "昵称" + utel
         new_user.USsex = None
         new_user.UScoin = 0
         new_user.USinvatecode = usinvatecode

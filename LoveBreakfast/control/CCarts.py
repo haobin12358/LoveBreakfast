@@ -6,10 +6,9 @@ from flask import request
 import json
 import uuid
 from common.ErrorManager import dberror
-from common.TransformToList import add_model
 from config.response import SYSTEM_ERROR, PARAMS_MISS
 from common.ImportManager import import_status
-
+from common.MakeToken import token_to_usid
 
 
 class CCarts():
@@ -25,66 +24,11 @@ class CCarts():
         print("cart service", id(self.scart))
         print("user service", id(self.susers))
         print("product service", id(self.sproduct))
+        from services.SAddress import SAddress
+        self.sadd = SAddress()
+        from services.SMachinery import SMachinery
+        self.smach = SMachinery()
         self.title = '============{0}============'
-
-    def get_carts_by_uid(self):
-        args = request.args.to_dict()
-        print(self.title.format("args"))
-        print(args)
-        print(self.title.format("args"))
-        if "token" not in args or "AAid" not in args:
-            return PARAMS_MISS
-
-        uid = args.get("token")
-        AAid = args.get("AAid")
-        is_user = self.susers.get_user_by_usid(uid)
-        print(self.title.format("is_user"))
-        print(is_user)
-        print(self.title.format("is_user"))
-        if not is_user:
-            return import_status("ERROR_MESSAGE_NONE_USER", "LOVEBREAKFAST_ERROR", "ERROR_CODE_NONE_USER")
-
-        cart_info_list = []
-        cart_list = self.scart.get_carts_by_Uid(uid)
-        print(self.title.format("cartlist"))
-        print(cart_list)
-        print(self.title.format("cartlist"))
-
-        for cart in cart_list:
-            if cart.CAstatus != 1:
-                continue
-            PRid = cart.PRid
-            # address_list = self.scart.get_address_list_by_prid(PRid)
-            # print(self.title.format("address_list"))
-            # print(address_list)
-            # print(self.title.format("address_list"))
-            # if not address_list:
-            #     return SYSTEM_ERROR
-            # if AAid not in address_list:
-            #     continue
-            product = self.scart.get_cart_by_prid_aaid(PRid, AAid)
-
-            cart_service_info = self.sproduct.get_all_pro_fro_carts(PRid)
-            print(self.title.format("cart_service_info"))
-            print(cart_service_info)
-            print(self.title.format("cart_service_info"))
-            if not cart_service_info:
-                return SYSTEM_ERROR
-
-            cart_info = {}
-            cart_info["PRid"] = cart_service_info.PRid
-            cart_info["PRimage"] = cart_service_info.PRimage
-            cart_info["PRname"] = cart_service_info.PRname
-            cart_info["PRstatus"] = cart_service_info.PRstatus
-            cart_info["PRsalesvolume"] = cart_service_info.PRsalesvolume
-            cart_info["PRprice"] = cart_service_info.PRprice
-            cart_info["PRscore"] = cart_service_info.PRscore
-            cart_info["CAnumber"] = cart.CAnumber
-            cart_info_list.append(cart_info)
-
-        back_response = import_status("SUCCESS_GET_MESSAGE", "OK")
-        back_response["data"] = cart_info_list
-        return back_response
 
     def add_or_update_cart(self):
         args = request.args.to_dict()
@@ -98,7 +42,8 @@ class CCarts():
 
         if "token" not in args:
             return PARAMS_MISS
-        uid = args.get("token")
+        token = args.get("token")
+        uid = token_to_usid(token)
         pid = data.get("PRid")
         CAnumber = data.get("CAnumber")
         if CAnumber <= 0:
@@ -162,8 +107,9 @@ class CCarts():
 
         if "PRid" not in data:
             return PARAMS_MISS
-
-        return self.del_cart(args.get("token"), data.get("PRid"))
+        token = args.get("token")
+        uid = token_to_usid(token)
+        return self.del_cart(uid, data.get("PRid"))
 
     def get_carts_by_uid_caid(self):
         args = request.args.to_dict()
@@ -181,8 +127,9 @@ class CCarts():
             print(data)
             print(self.title.format("data"))
             caid_list = data.get("CAid")
-        uid = args.get("token")
-        AAid = args.get("AAid")
+        token = args.get("token")
+        uid = token_to_usid(token)
+        ASid = args.get("ASid")
 
         is_user = self.susers.get_user_by_usid(uid)
         print(self.title.format("is_user"))
@@ -191,6 +138,7 @@ class CCarts():
         if not is_user:
             return import_status("ERROR_MESSAGE_NONE_USER", "LOVEBREAKFAST_ERROR", "ERROR_CODE_NONE_USER")
 
+        aaid_list = [i.AAid for i in self.sadd.get_addabo_by_asid(ASid)]
         cart_info_list = []
         cart_list = self.scart.get_carts_by_Uid(uid)
         print(self.title.format("cartlist"))
@@ -203,16 +151,16 @@ class CCarts():
             if caid_list and cart.CAid not in caid_list:
                 continue
             PRid = cart.PRid
-            address_list = self.scart.get_address_list_by_prid(PRid)
+            address_list = [i.AAid for i in self.smach.get_aaid_by_prid(PRid)]
             print(self.title.format("address_list"))
             print(address_list)
             print(self.title.format("address_list"))
             if not address_list:
                 return SYSTEM_ERROR
-            if AAid not in address_list:
+            if not set(address_list).intersection(aaid_list):
                 continue
 
-            cart_service_info = self.spro.get_all_pro_fro_carts(PRid)
+            cart_service_info = self.sproduct.get_all_pro_fro_carts(PRid)
             print(self.title.format("cart_service_info"))
             print(cart_service_info)
             print(self.title.format("cart_service_info"))

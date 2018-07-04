@@ -4,8 +4,8 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
 import models.model as model
 from common.ErrorManager import dberror
-import sqlalchemy.util._collections.result
-
+from  sqlalchemy.util import _collections
+result = _collections.result
 
 # 装饰器，用来解析数据库获取的内容，将获取到的对象转置为dict，将获取到的单个数据的tuple里的数据解析出来
 def transmodel(func):
@@ -47,19 +47,19 @@ def closesession(fn):
             model_item[key] = model_params[index]
         return model_item
 
-    def resultmanager(result):
-        if isinstance(result, list):
+    def resultmanager(params):
+        if isinstance(params, list):
             returnlist = []
-            for params in result:
+            for params in params:
                 if isinstance(params, (list, tuple)):
                     returnlist.append(params[0])
                 else:
                     returnlist.append(transresulttodict(params))
             return returnlist
-        elif isinstance(result, result):
-            return transresulttodict(result)
+        elif isinstance(params, result):
+            return transresulttodict(params)
 
-        return result
+        return params
 
     def sessionmanager(self, *args, **kwargs):
         try:
