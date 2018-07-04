@@ -16,7 +16,8 @@
             autoplay="{{swiper.autoplay}}" interval="{{swiper.interval}}" duration="{{swiper.duration}}"   bindscroll="scrollHide" style="height:340rpx;width: 670rpx;">
       <block wx:for="{{swiper.imgUrls}}" wx:key="{{index}}">
         <swiper-item>
-          <image mode="aspectFit" src="{{item}}" class="slide-image" wx:if="{{swiper.showIndex + 24 > index && swiper.showIndex - 6 < index}}" style="height:270rpx;width:670rpx; border-radius: 15rpx;"/>
+          <image mode="aspectFit" src="{{item.url}}" class="slide-image" hidden="{{item.hidden}}"
+                 bindload="swiperImgLoad({{index}})" style="height:270rpx;width:670rpx; border-radius: 15rpx;"/>
         </swiper-item>
       </block>
     </swiper>
@@ -41,9 +42,9 @@
 
         ],
         indicatorDots: true,
-        autoplay: true,
+        autoplay: false,
         interval: 5000,
-        duration: 3000,
+        duration: 2000,
         showIndex:0
       },
       scrollData: {
@@ -51,7 +52,8 @@
         height: 80, // px
         colunm: 3
       },
-      indexImg:''
+      indexImg:'',
+      swiperImgs:[]
     }
 
     async getSwiper(position) {
@@ -63,6 +65,18 @@
       if(res.statusCode == 200){
         if(position){
           that.swiper.imgUrls = res.data;
+          if(that.swiper.imgUrls == 0){
+            that.swiper.autoplay = true;
+          }else{
+            that.swiperImgs = [].concat(that.swiper.imgUrls);
+            for(let i =0;i<that.swiper.imgUrls.length;i++){
+              let url = this.swiper.imgUrls[i];
+              this.swiper.imgUrls[i] = {};
+              if (i == 0)
+                this.swiper.imgUrls[i].url = url;
+              this.swiper.imgUrls[i].hidden = true;
+            }
+          }
         }else{
           that.indexImg = res.data;
         }
@@ -81,20 +95,16 @@
           url:'/pages/index/index'
         })
       },
-      scrollHide (e) {
-        let data = [
-          this.data.scrollData.offetHeight,
-          e.detail.scrollTop,
-          this.data.scrollData.height,
-          this.data.scrollData.colunm
-        ]
-
-        let index = wxTools.countIndex(...data)
-
-        this.setData({
-          showIndex: index
-        })
-      }
+      //  轮播图加载
+      swiperImgLoad(index){
+        this.swiper.imgUrls[index].hidden = false;
+       index++;
+        if(index < this.swiperImgs.length){
+          this.swiper.imgUrls[index].url = this.swiperImgs[index];
+        }else{
+          this.swiper.autoplay = true;
+        }
+      },
     }
   }
 </script>
