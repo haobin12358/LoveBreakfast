@@ -337,11 +337,18 @@ class AOther(Resource):
             print("position = ".format(position))
             print("=======================position===================")
             from config import urlconfig
+            htv = "dhdp" if args.get("htv") < 1.6 else "hhdp"
             if position == "top":
-                return urlconfig.home
+                picturelist = [i.format(htv) for i in urlconfig.home]
+                print(self.title.format("piclist"))
+                print(picturelist)
+                print(self.title.format("piclist"))
+
+                return picturelist
+
             else:
                 now = datetime.datetime.now()
-                return urlconfig.weekday_pic[now.weekday()]
+                return urlconfig.weekday_pic[now.weekday()].format(htv)
 
     def post(self, other):
         if other == "getdata":
