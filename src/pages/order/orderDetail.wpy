@@ -6,24 +6,22 @@
     background-color: #f6f5f6;
     width: 100%;
     height: 100%;
-    border: 1px;
     padding-top: 30rpx ;
     box-sizing: border-box;
+
   }
 
   .container{
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
+    height: 100%;
 
     .order-card{
       width: 604rpx;
       /*min-height: 929rpx;*/
       border-radius: 20rpx;
       background: #ffffff;
-      margin-bottom: 38rpx;
       padding-top:56rpx ;
       padding-bottom:79rpx ;
       display: flex;
@@ -70,7 +68,10 @@
         .detail-item{
           margin-bottom: 12rpx;
           display: flex;
-          width: 460rpx;
+          width: 100%;
+          box-sizing: border-box;
+          padding-left: 60rpx;
+          padding-right: 20rpx;
 
           .item-label {
             float:left;
@@ -88,15 +89,23 @@
         }
       }
     }
+    .btn-block{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
 
-    button.cancel-button  {
-      background-color: @main_color;
-      margin: auto;
-      color: #ffffff;
-      width: 442rpx;
-      height: 82rpx;
-      line-height: 82rpx;
+      button.cancel-button  {
+        background-color: @main_color;
+        margin: auto;
+        color: #ffffff;
+        width: 442rpx;
+        height: 82rpx;
+        line-height: 82rpx;
+      }
     }
+
   }
 
   .doc-money{
@@ -148,8 +157,11 @@
           </view>
         </view>
       </view>
+
     </view>
-    <button wx:if="{{order.OMstatus == '未支付'}}" class="cancel-button" @tap="tapCancelOrder">取消订单</button>
+    <view class="btn-block">
+      <button wx:if="{{order.OMstatus == '未支付'}}" class="cancel-button" @tap="tapCancelOrder">取消订单</button>
+    </view>
   </view>
 
 </template>
