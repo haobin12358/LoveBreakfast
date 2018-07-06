@@ -44,8 +44,8 @@
     }
   }
   .m-forget{
-    margin-top: 20rpx;
-    font-size: 24rpx;
+    margin-top: 40rpx;
+    font-size: 28rpx;
     padding-right: 50rpx;
     text-align: right;
     line-height: 40rpx;
@@ -59,20 +59,21 @@
     background-color: @main_color;
     color: #ffffff;
     border-radius: 10px;
+    margin-top: 80rpx;
     width: 668rpx;
     height:85rpx;
     font-size: 38rpx;
-    line-height:80rpx;
+    line-height:85rpx;
   }
   .m-btn-reg{
-    font-size: 28rpx;
-    margin-top: 316rpx;
+    font-size: 38rpx;
+    margin-top: 24rpx;
     background-color: #fff;
     border: 1px solid #B3B3B3;
     color: #B3B3B3;
-    width: 348rpx;
-    height: 83rpx;
-    line-height: 83rpx;
+    width: 668rpx;
+    height: 85rpx;
+    line-height: 85rpx;
     border-radius: 10px;
    }
   .m-btn {
@@ -116,8 +117,11 @@
         </navigator>
 
         <view class="m-btn_confirm">
-          <button class="m-button" formType="submit">登   录</button>
-          <button class="m-btn-reg" @tap="registerTap">注册</button>
+          <button class="m-button" formType="submit">登 录</button>
+          <button class="m-btn-reg" @tap="registerTap">注 册</button>
+          <!--<navigator class="m-item" url="/pages/personal/register">-->
+            <!--<view class="m-forget" >去注册>></view>-->
+          <!--</navigator>-->
         </view>
       </form>
     </view>
