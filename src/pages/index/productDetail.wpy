@@ -120,10 +120,21 @@
           },
           nowTap(v){
             let that = this;
-            console.log(that,'aass')
-            wx.navigateTo({
-              url:'/pages/car/playOneOrder?PRid=' + that.PRid
-            })
+            let res = wx.getStorageSync('token');
+            if(res){
+              wx.navigateTo({
+                url:'/pages/car/playOneOrder?PRid=' + that.PRid
+              })
+            }else{
+              tip.alert('请先登录');
+              setTimeout(function () {
+                wx.navigateTo({
+                  url:'/pages/personal/login'
+                });
+              },600);
+
+            }
+
           }
         }
     }
