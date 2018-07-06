@@ -100,14 +100,19 @@ class CAddress():
 
     def get_addabo(self):
         data = json.loads(request.data)
-        if "CAid" not in data or "ASid" not in data:
+        if "ASid" not in data:
             return PARAMS_MISS
-        caid_list = data.get("CAid")
+        if "CAid" not in data and "PRid" not in data:
+            return PARAMS_MISS
         from services.SCarts import SCarts
         from services.SMachinery import SMachinery
         scarts = SCarts()
         smach = SMachinery()
-        prid_list = [scarts.get_prid_by_caid(caid) for caid in caid_list]
+        if "CAid" in data:
+            caid_list = data.get("CAid")
+            prid_list = [scarts.get_prid_by_caid(caid) for caid in caid_list]
+        elif "PRid" in data:
+            prid_list = [data["PRid"]]
         aaid_mach_list = []
         for prid in prid_list:
             aaid_mach_list.extend([mach.AAid for mach in smach.get_aaid_by_prid(prid)])
