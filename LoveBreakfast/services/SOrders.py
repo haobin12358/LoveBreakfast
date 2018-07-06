@@ -35,7 +35,8 @@ class SOrders(SBase):
     @close_session
     def get_all_order_by_uid(self, uid):
         return self.session.query(Ordermain.OMid, Ordermain.OMtime, Ordermain.OMstatus,
-                                  Ordermain.OMtotal, Ordermain.OMcode).filter_by(USid=uid).all()
+                                  Ordermain.OMtotal, Ordermain.OMcode).filter_by(
+            USid=uid).order_by(Ordermain.OMtime.desc()).all()
 
     @close_session
     def get_order_item_by_oid(self, oid):

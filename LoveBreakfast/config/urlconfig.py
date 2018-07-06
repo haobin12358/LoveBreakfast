@@ -6,8 +6,8 @@ product_url_list = [
 ]
 
 home = [
-    "http://123.207.97.185:7444/imgs/{0}/image_4.png",
-    "http://123.207.97.185:7444/imgs/{0}/image_5.png",
+    "http://123.207.97.185:7444/imgs/{0}/banner1.png",
+    "http://123.207.97.185:7444/imgs/{0}/banner2.png",
 
 ]
 
@@ -16,7 +16,7 @@ weekday_pic = (
     "http://123.207.97.185:7444/imgs/{0}/image_7.jpg",
     "http://123.207.97.185:7444/imgs/{0}/image_8.jpg",
     "http://123.207.97.185:7444/imgs/{0}/image_9.jpg",
-    "http://123.207.97.185:7444/imgs/{0}/image_10.jpg",
+    "http://123.207.97.185:7444/imgs/{0}/image_10.png",
     "http://123.207.97.185:7444/imgs/{0}/image_1.png",
     "http://123.207.97.185:7444/imgs/{0}/image_2.png",
 )
