@@ -21,7 +21,7 @@
       width:250rpx;
       height:242rpx;
       margin-left:85%;
-      margin-top:320%;
+      margin-top:300%;
 
     }
   }
