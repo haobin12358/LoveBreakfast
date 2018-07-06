@@ -120,6 +120,12 @@
       }
     }
   }
+    .m-over{
+      width: 300rpx;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
 </style>
 <template>
   <view class="my-playOneOrder">
@@ -183,7 +189,7 @@
         <view class="my-left">
           <view>{{index + 1}}</view>
           <image src="{{item.PRimage}}" style="width: 90rpx;height: 90rpx;margin: 0 30rpx;"/>
-          <view>{{item.PRname}}</view>
+          <view class="m-over">{{item.PRname}}</view>
         </view>
         <view class="my-price">￥{{item.PRprice}} <span class="my-num">X{{item.CAnumber}}</span></view>
       </view>

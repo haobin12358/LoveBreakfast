@@ -25,6 +25,12 @@
         .my-name{
           font-size: 32rpx;
           margin-bottom: 36rpx;
+          width: 300rpx;
+        }
+        .m-over{
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space:nowrap;
         }
         .my-price{
           line-height: 46rpx;
@@ -60,7 +66,7 @@
       <image class="my-icon-img" wx:else src="/images/icon-radio-select.jpg" catchtap="radioTap({{i}})"></image>
       <image class='my-product-img' src="{{list.PRimage}}" ></image>
       <view class="my-product-info">
-        <view class="my-name">{{list.PRname}}</view>
+        <view class="my-name m-over">{{list.PRname}}</view>
         <view class="my-price">￥{{list.PRprice}}</view>
       </view>
     </view>

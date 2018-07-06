@@ -93,7 +93,12 @@
       color: @main_color;
       font-family: @num_family;
     }
-
+    .m-over{
+      width: 300rpx;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
 </style>
 <template>
     <notLogin :isLogin.sync="isLogin"></notLogin>
@@ -106,7 +111,7 @@
           <view class="item-bd" >
             <image class="good-img" src="{{item.Orderitems[0].PRimage}}"></image>
             <view class="bd-detail" @tap="showDetail({{item.OMid}})">
-              <view class="doc">{{item.Orderitems[0].PRname}}</view>
+              <view class="doc m-over">{{item.Orderitems[0].PRname}}</view>
               <view class="doc doc-small">{{item.OMtime}}</view>
               <view class="doc doc-small">数量: {{item.Orderitems[0].PRnumber}}</view>
               <view class="doc doc-money">￥{{item.OMtotal}}</view>
