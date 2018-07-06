@@ -68,7 +68,10 @@
         .detail-item{
           margin-bottom: 12rpx;
           display: flex;
-          width: 500rpx;
+          width: 100%;
+          box-sizing: border-box;
+          padding-left: 60rpx;
+          padding-right: 20rpx;
 
           .item-label {
             float:left;
