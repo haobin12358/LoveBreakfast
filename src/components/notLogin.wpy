@@ -6,20 +6,32 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 900rpx;
-
+    height: 200rpx;
     view{
       background-color: @main_color;
       color: #fff;
       padding: 20rpx 40rpx;
       border-radius: 10rpx;
-      font-size: 28rpx;
+      font-size:28rpx;
+      margin-top:160%;
+      margin-right:35%;
+
+    }
+    .m-avatar {
+      width:250rpx;
+      height:242rpx;
+      margin-left:85%;
+      margin-top:320%;
+
     }
   }
 </style>
 
 <template>
   <view class="my-login-btn" wx:if="{{!isLogin}}" @tap="goLogin">
+    <div>
+      <image class="m-avatar" src="/images/notlogin.png"></image>
+    </div>
     <view>去登录</view>
   </view>
 </template>
