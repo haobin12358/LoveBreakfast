@@ -57,11 +57,22 @@
     }
 
     async getSwiper(position) {
+      let htv;
+      wx.getSystemInfo({
+        success: res => {
+          htv = res.windowHeight/res.windowWidth
+          console.log("宽高比：", htv)
+        }
+      })
       let that = this;
       tip.loading();
-      let res = await api.picture({method:'GET',query:{
-          position:position ||　''
-        }});
+      let res = await api.picture({
+        method:'GET',
+        query:{
+          position:position ||　'',
+          htv: htv
+        }
+      });
       if(res.statusCode == 200){
         if(position){
           that.swiper.imgUrls = res.data;
