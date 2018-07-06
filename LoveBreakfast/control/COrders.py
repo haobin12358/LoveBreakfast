@@ -159,6 +159,9 @@ class COrders():
         if self.checktime():
             return import_status("error_make_ordermain_time", "LOVEBREAKFAST_ERROR", "error_make_ordermain_time")
         OMdate = timeformate.get_db_time_str(data["OMdate"])
+        if not self.check_order_date(OMdate):
+            return import_status("")
+
         order_item = data["Order_items"]
         OMcode = self.make_code()
         import uuid
@@ -397,6 +400,14 @@ class COrders():
         print(self.title.format("限定两位小数前的omproce"))
         omprice = omprice.quantize(Decimal("0.00"))
         return float(omprice) if omprice >= 0 else 0.00
+
+    def check_order_date(self, order_date):
+        timenow = datetime.datetime.date()
+        time_order = datetime.datetime.strptime(order_date, timeformate.format_forweb_no_second).date()
+
+        if timenow >= time_order:
+            return False
+        return True
 
 
 if __name__ == "__main__":
