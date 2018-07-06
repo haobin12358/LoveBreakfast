@@ -3,6 +3,7 @@
     .my-playOneOrder{
       width: 100%;
       font-size: 28rpx;
+      padding-bottom:80rpx;
       .my-top{
         .my-row{
           width: 630rpx;
@@ -68,6 +69,7 @@
         bottom: 0;
         left: 0;
         background-color: #fff;
+        z-index: 1001;
         border-top: 0.7px solid @border_color;
         width: 630rpx;
         padding: 40rpx 60rpx;
@@ -118,6 +120,12 @@
       }
     }
   }
+    .m-over{
+      width: 300rpx;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
 </style>
 <template>
   <view class="my-playOneOrder">
@@ -181,11 +189,11 @@
         <view class="my-left">
           <view>{{index + 1}}</view>
           <image src="{{item.PRimage}}" style="width: 90rpx;height: 90rpx;margin: 0 30rpx;"/>
-          <view>{{item.PRname}}</view>
+          <view class="m-over">{{item.PRname}}</view>
         </view>
         <view class="my-price">￥{{item.PRprice}} <span class="my-num">X{{item.CAnumber}}</span></view>
       </view>
-      <view class="my-total">合计：<span class="my-price">￥{{total_money}}</span></view>
+      <view class="my-total">合计：<span class="my-price">¥{{total_money}}</span></view>
     </view>
     <view class="my-top my-other">
       <view class="my-row">
@@ -202,11 +210,11 @@
       <view class="my-row">
         <image src="/images/icon-remark.jpg" style="width:40rpx;height:40rpx;"/>
         <view class="my-label">备注</view>
-        <view class="my-pick"><input type="text"></view>
+        <view class="my-pick"><input type="text" bindconfirm="inputChange"></view>
       </view>
     </view>
     <view class="my-foot">
-      <view>合计:<span class="my-price">￥{{total_money}}</span></view>
+      <view>合计:<span class="my-price">¥{{total_money}}</span></view>
       <view class="my-btn" @tap="placeAnOrder">支  付</view>
     </view>
     <view class="my-modal" catchtouchmove="Touch" wx:if="{{show_modal}}" catchtap="cancelModal">
@@ -248,11 +256,12 @@
             point_id:[],
             point_name:[],
             point_img:[],
-            point_index:-1
+            point_index:0
           },
           date:'',
           time:'06:00',
-          nowDate:''
+          nowDate:'',
+          remark:''
         }
         components={
           card:card
@@ -294,12 +303,19 @@
             }, token:token,ASid:ASid });
           if(res.data.status == 200){
             that.all_order = res.data.data;
-            let total = 0;
-            for(let i=0;i<that.all_order.length;i++){
-              total += Number(that.all_order[i].CAnumber * that.all_order[i].PRprice);
+            let len = this.all_order.length;
+            let param = {};
+            param = {
+              "productlist":[]
             }
-            total = total.toFixed(2);
-            that.total_money = total;
+            for(let i=0; i<len; i++){
+              param.productlist[i] = {};
+              param.productlist[i].PRid = this.all_order[i].PRid;
+              param.productlist[i].PRnumber = this.all_order[i].CAnumber;
+            }
+            that.productList = param.productlist;
+              let COid = that.choose_ticket?that.choose_ticket.COid:'';
+            that.order_price(that.productList,COid,token);
             that.$apply();
             tip.loaded();
           }else{
@@ -321,18 +337,17 @@
             tip.error(res.data.message);
           }
         }
-        async get_addabo(ASid) {
+        async get_addabo(ASid,CAid) {
           let that = this;
           tip.loading();
-          let res = await api.get_addabo({method:'GET',query:{
-              ASid:ASid
+          let res = await api.get_addabo({method:'POST',query:{
+              ASid:ASid,
+              CAid:CAid
             }});
           if(res.data.status == 200){
-            for(let i=0;i<res.data.data.length;i++){
-              that.point.point_name.push(res.data.data[i].AAmessage);
-              that.point.point_id.push(res.data.data[i].AAid);
-              that.point.point_img.push(res.data.data[i].AAimage);
-            }
+              that.point.point_name[0] = res.data.data.AAmessage;
+              that.point.point_id[0] = res.data.data.AAid;
+              that.point.point_img[0] = res.data.data.AAimage;
             that.$apply();
             tip.loaded();
           }else{
@@ -341,8 +356,8 @@
         }
         onLoad(options) {
           let now = new Date();
-          this.nowDate = now.getFullYear() +'-'+ (now.getMonth()  <9 ? ('0' + (Number(now.getMonth()) +1)) :( Number(now.getMonth()) +1) ) + '-' + (now.getDate() <10?('0'+ now.getDate()):now.getDate())
-          console.log(this.date)
+          this.nowDate = now.getFullYear() +'-'+ (now.getMonth()  <9 ? ('0' + (Number(now.getMonth()) +1)) :( Number(now.getMonth()) +1) ) + '-' + (now.getDate() <10?('0'+ now.getDate()):now.getDate());
+          this.date = this.nowDate;
           let CAid = [];
           let res = wx.getStorageSync('token');
           let resId = wx.getStorageSync('ASid');
@@ -350,7 +365,7 @@
           this.get_card(res);
           CAid = options.CAid.split(',');
           this.get_select_product(res,resId,CAid);
-          this.get_addabo(resId);
+          this.get_addabo(resId,CAid);
         }
 
         methods = {
@@ -367,6 +382,10 @@
           },
           Touch(e){
             return false;
+          },
+          inputChange(e){
+            this.remark = e.detail.value;
+
           },
           cancelModal(){
             this.show_modal = false;
@@ -389,19 +408,8 @@
               this.choose_ticket = v;
             }
             let token =  wx.getStorageSync('token');
-            let len = this.all_order.length;
-            let param = {};
-            param = {
-              "productlist":[]
-            }
-            for(let i=0; i<len; i++){
-              param.productlist[i] = {};
-              param.productlist[i].PRid = this.all_order[i].PRid;
-              param.productlist[i].PRnumber = this.all_order[i].CAnumber;
-            }
             let COid = that.choose_ticket?that.choose_ticket.COid:'';
-            that.order_price(param.productlist,COid,token);
-
+            that.order_price(that.productList,COid,token);
             that.$apply();
           },
           pointChange(e){
@@ -414,12 +422,69 @@
               tip.error("请选择取餐点");
               return false;
             }
-            if(that.date != ''){
+            if(that.date == ''){
               tip.error("请选择取餐时间");
               return false;
             }
-
-
+            let _date = new Date();
+            let params = {};
+            params ={
+              "OMtime":_date.getFullYear() + '-' + ((_date.getMonth()+1)>=10 ?(_date.getMonth()+1):'0'+(_date.getMonth()+1) ) + '-' +(_date.getDate()>=10?_date.getDate():'0'+_date.getDate())+' '+_date.getHours()+':'+_date.getMinutes(),
+              "OMdate":this.date + ' ' + this.time,
+              "AAid":this.point.point_id[this.point.point_index],
+              "OMabo":this.remark,
+              "OMtotal":this.total_money,
+              "Order_items":this.productList
+            }
+            let resToken = wx.getStorageSync('token');
+            let resOrder = await api.make_main_order({method:'POST',query:params, token:resToken});
+            if(resOrder.data.status == 200){
+              let OMid = resOrder.data.data.OMid;
+              await wx.login({
+                success: function(res) {
+                  if (res.code) {
+                    console.log(res.code, 'this is code')
+                    let successFun = (res3) => {
+                      console.log(res3, 'gg')
+                      let timeStamp = res3.data.timeStamp.toString()
+                      wx.requestPayment({
+                        'appId': res3.data.appId,
+                        'timeStamp': timeStamp,
+                        'nonceStr': res3.data.nonceStr,
+                        'package': res3.data.package,
+                        'signType': res3.data.signType,
+                        'paySign': res3.data.paySign,
+                        'success':function(res){
+                          tip.success("支付成功")
+                          setTimeout( () => {
+                            wepy.navigateTo({
+                              url: '/pages/order/orderDetail?OMid='+OMid
+                            })
+                          }, 1000)
+                        },
+                        'fail':function(res){
+                          tip.error("支付失败")
+                          setTimeout( () => {
+                            wepy.switchTab({
+                              url: '/pages/order/index?OMid='+OMid
+                            })
+                          }, 1000)
+                        }
+                      })
+                    }
+                    let failFun = (res) => {
+                      console.log(res, 'fail!')
+                      tip.error("服务器开小差了")
+                    }
+                    api.payconfig({method:'GET',query: {OMid: OMid, code: res.code }}).then(successFun, failFun)
+                  } else {
+                    console.log('获取用户登录态失败！' + res.errMsg)
+                  }
+                }
+              });
+            }else{
+              tip.alert(resOrder.data.message);
+            }
           },
         }
     }

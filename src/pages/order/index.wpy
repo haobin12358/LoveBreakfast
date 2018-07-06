@@ -11,6 +11,12 @@
       background: #f5f5f5;
       height: 100%;
     }
+    .empty-placeholder {
+      font-size: 26rpx;
+      color: #888888;
+      margin-top: 236rpx;
+      text-align: center;
+    }
     .order-group{
       .fz24();
       padding-bottom: 30rpx;
@@ -87,39 +93,47 @@
       color: @main_color;
       font-family: @num_family;
     }
-
+    .m-over{
+      width: 300rpx;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
 </style>
 <template>
-  <view class="order-group">
-    <block wx:for="{{orderList}}" wx:key="{{OMcode}}" wx:index='index' wx:item='item'>
-      <view class="order-item">
-        <view class="item-bd" >
-          <image class="good-img" src="{{item.Orderitems[0].PRimage}}"></image>
-          <view class="bd-detail" @tap="showDetail({{item.OMid}})">
-            <view class="doc">{{item.Orderitems[0].PRname}}</view>
-            <view class="doc doc-small">{{item.OMtime}}</view>
-            <view class="doc doc-small">数量: {{item.Orderitems[0].PRsalesvolume}}</view>
-            <view class="doc doc-money">￥{{item.OMtotal}}</view>
-          </view>
-          <view class="bd-end">
+    <notLogin :isLogin.sync="isLogin"></notLogin>
+    <view wx:if="{{isLogin && orderList.length == 0}}" class="empty-placeholder">
+      订单数目为空
+    </view>
+    <view wx:else class="order-group">
+      <block wx:for="{{orderList}}" wx:key="{{OMcode}}" wx:index='index' wx:item='item'>
+        <view class="order-item">
+          <view class="item-bd" >
+            <image class="good-img" src="{{item.Orderitems[0].PRimage}}"></image>
+            <view class="bd-detail" @tap="showDetail({{item.OMid}})">
+              <view class="doc m-over">{{item.Orderitems[0].PRname}}</view>
+              <view class="doc doc-small">{{item.OMtime}}</view>
+              <view class="doc doc-small">数量: {{item.Orderitems[0].PRnumber}}</view>
+              <view class="doc doc-money">￥{{item.OMtotal}}</view>
+            </view>
+            <view class="bd-end">
               <view class="orderstate">
                 {{item.OMstatus}}
               </view>
-            <view class="operatorArea">
+              <view class="operatorArea">
 
-              <!--<button @tap="goEvaluatePage({{item.orderId}})" >评价</button>-->
-              <button wx:if="{{item.OMstatus == '未支付'}}" @tap="toPay">立即支付</button>
-              <button wx:elif ="{{item.OMstatus == '已完成'}}" @tap="goEvaluatePage({{item.Orderitems[0].PRid}})">评价</button>
-              <text wx:elif ="{{item.OMstatus == '已评价'}}">评价详情</text>
+                <!--<button @tap="goEvaluatePage({{item.orderId}})" >评价</button>-->
+                <button wx:if="{{item.OMstatus == '未支付'}}" @tap="toPay({{item.OMid}})">立即支付</button>
+                <button wx:elif ="{{item.OMstatus == '已完成'}}"
+                        @tap="goEvaluatePage({{item.OMid}},{{item.Orderitems[0].PRid}},false)">评价</button>
+                <text wx:elif ="{{item.OMstatus == '已评价'}}"　
+                      @tap="goEvaluatePage({{item.OMid}},{{item.Orderitems[0].PRid}},true)">评价详情 ＞</text>
+              </view>
             </view>
           </view>
         </view>
-        <view >
-        </view>
-      </view>
-    </block>
-
-  </view>
+      </block>
+    </view>
 
 </template>
 
@@ -127,6 +141,7 @@
     import wepy from 'wepy';
     import api from '../../api/api';
     import tip from '../../utils/tip';
+    import notLogin from '../../components/notLogin'
 
 
     export default class orderIndex extends wepy.page {
@@ -134,11 +149,16 @@
             navigationBarTitleText: '订单'
         }
         data = {
-          orderList: []
+          orderList: [],
+          emptyOrderTip: '订单数目为空',
+          isLogin: true
+        }
+        computed = {}
+        components={
+          notLogin
         }
 
-        computed = {}
-
+        //  获取订单列表
         async getOrderList(){
           let token = wepy.getStorageSync('token');
           let res;
@@ -148,33 +168,78 @@
               token
             })
 
+            tip.loaded();
             if(res.data.status == 200){
               this.orderList = res.data.data;
               this.$apply();
             }else{
               tip.error(res.data.message)
             }
-          }else{
-            this.$navigate('/pages/personal/login');
           }
         }
 
         onShow(){
+          //  跳转页面时更新订单列表
           this.getOrderList();
+
+          this.isLogin = !!wx.getStorageSync('token')
         }
 
         methods = {
+          //  去订单详情页
           showDetail(omId){
             this.$navigate('./orderDetail',{OMid: omId});
           },
 
-          toPay(){
-            // this.$navigate('../car/payOneOrder',{OMid: omId});
-            console.log('支付');
+          //  支付
+          async toPay(omId) {
+            let OMid = omId;
+
+            await wx.login({
+              success: function (res) {
+                if (res.code) {
+                  console.log(res.code, 'this is code')
+                  let successFun = (res3) => {
+                    console.log(res3, 'gg')
+
+                    let timeStamp = res3.data.timeStamp.toString()
+                    wx.requestPayment({
+                      'appId': res3.data.appId,
+                      'timeStamp': timeStamp,
+                      'nonceStr': res3.data.nonceStr,
+                      'package': res3.data.package,
+                      'signType': res3.data.signType,
+                      'paySign': res3.data.paySign,
+                      'success': function (res) {
+                        tip.success("支付成功")
+                        setTimeout(() => {
+                          wx.navigateTo({url: '/pages/order/orderDetail?OMid=' + OMid});
+                        }, 1000)
+                      },
+                      'fail': function (res) {
+                        tip.error("支付失败")
+                      }
+                    })
+                  }
+                  let failFun = (res) => {
+                    console.log(res, 'fail!')
+                    tip.error("服务器开小差了")
+                  }
+                  api.payconfig({method: 'GET', query: {OMid: OMid, code: res.code}}).then(successFun, failFun)
+                } else {
+                  console.log('获取用户登录态失败！' + res.errMsg)
+                }
+              }
+            });
           },
 
-          goEvaluatePage(prId){
-            this.$navigate('./productEvaluate', {prId});
+          //  去评价页
+          goEvaluatePage(omId, prId, readonly) {
+            if (typeof prId == 'string') {
+              this.$navigate('./productEvaluate', {omId, prId, readonly});
+            } else {
+              tip.error('系统错误');
+            }
           }
         }
     }

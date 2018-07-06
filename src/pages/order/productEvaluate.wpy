@@ -1,10 +1,106 @@
 <style lang="less">
   @import "../../styles/common";
 
+  .form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .block{
+      margin-top: 39rpx;
+      margin-bottom: 39rpx;
+
+      .m-goods-info{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+
+        image{
+          width: 640rpx;
+          height: 480rpx;
+          border-radius: 20rpx;
+        }
+        .m-goods-name {
+          margin-top: 38rpx;
+          text-align: center;
+          color: #666666;
+
+          .fz38();
+        }
+        .m-goods-specification {
+          margin-top: 24rpx;
+          margin-bottom: 24rpx;
+          text-align: center;
+          color: #999999;
+
+          .fz28();
+        }
+      }
+
+      .item-block {
+        display: flex;
+        justify-content: center;
+        margin-top: 60rpx;
+
+        .comment{
+          word-break: break-word;
+          width: 600rpx;
+          /*text-indent: 2em;*/
+          text-align: center;
+          .fz28()
+        }
+
+        textarea{
+          border: 1px solid #cdcdcd ;
+          border-radius: 30rpx;
+          width: 660rpx;
+          height: 145rpx;
+          color: #666666;
+          padding: 30rpx;
+          box-sizing: border-box;;
+        }
+      }
+    }
+
+    .button {
+      background-color: @main_color;
+      color: #fff;
+      width: 450rpx;
+      height: 80rpx;
+      border-radius: 40rpx;
+      margin-bottom: 89rpx;
+    }
+  }
 </style>
 
 <template>
-  <rate :info.sync="product"></rate>
+  <view>
+    <form class="form" bindsubmit="submitEvaluate">
+      <view class="block">
+        <view class="m-goods-info">
+          <image src="{{product.PRimage}}"></image>
+          <view class="m-goods-name">{{product.PRname}}</view>
+          <view class="m-goods-specification">{{product.PRinfo}}</view>
+        </view>
+        <view class="item-block" style="padding-right: 40rpx">
+          <rate :key.sync="rate" :readonly.sync="readonly" @change.user="changeRate"></rate>
+        </view>
+        <view class="item-block">
+          <block wx:if="{{readonly}}" >
+            <view class="comment">
+              {{comment}}
+
+            </view>
+          </block>
+          <block wx:else>
+            <textarea @input="bindText" value="{{word}}" data-index="{{idx}}" style="height: 6em; margin-top: 20rpx" placeholder="  你对宝贝有什么想说的呢"  maxlength="140"/>
+          </block>
+        </view>
+      </view>
+      <button wx:if="{{!readonly}}" class="button type_red" formType="submit">提交评价</button>
+    </form>
+  </view>
 </template>
 
 <script>
@@ -14,32 +110,100 @@
     import Rate from '../../components/rate'
 
     export default class ProductEvaluate extends wepy.page {
-        config = {}
+      config = {}
 
-        data = {
-          product: {}
+      data = {
+        omId: '',
+        product: {},
+        rate: 0,
+        readonly: false,
+        comment: ''
+      }
+
+      components = {
+        rate: Rate
+      }
+      computed = {}
+
+      methods = {
+       async submitEvaluate() {
+
+          if(this.rate == 0){
+            tip.alert('请打分');
+          }else{
+            let query = [{
+              PRid: this.product.PRid,
+              REscore: this.rate,
+              REcontent:this.comment
+            }],
+              token = wx.getStorageSync('token');
+
+           let res = await api.create_review({method: 'POST',token,OMid: this.omId,query});
+
+          if(res.data.status == 200){
+            tip.success('评价成功!').then(
+              ()=>wx.navigateBack()
+            )
+          }else{
+            tip.error('系统错误...',()=>wx.navigateBack());
+          }
+
+
+          }
+        },
+
+        changeRate(rate){
+          this.rate = rate;
+        },
+
+        bindText(e){
+          this.comment = e.detail.value;
         }
-        components={
-          rate: Rate
-        }
-        computed = {}
+      }
 
-        methods = {}
-
+      //  获取商品详情
       async getProductInfo(prId) {
         let res = await api.get_info_by_id({PRid: prId});
 
         if (res.data.status == 200) {
           this.product = res.data.data;
+          this.product.PRid = prId;
           this.$apply();
         } else {
           tip.error(res.data.message)
         }
       }
 
-        onLoad(param) {
+      //  获取评论信息
+      async getReview(omId){
+        let
+          token = wx.getStorageSync('token'),
+          res = await api.get_review({token,OMid:omId}),
+        data = res.data.data[0];
+
+        if(res.data.status == 200){
+          this.getProductInfo(data.PRid);
+          this.comment = data.REcontent != null ? data.REcontent: '没有填写评价';
+          this.rate = data.REscore;
+
+          console.log(this.comment);
+          this.$apply();
+        }
+      }
+
+      onLoad(param) {
+        this.omId = param.omId;
+
+        this.readonly = param.readonly == 'true' ? true: false;
+
+        if(this.readonly){
+          this.getReview(this.omId);
+        }else {
+
           this.getProductInfo(param.prId)
         }
+
+      }
     }
 </script>
 

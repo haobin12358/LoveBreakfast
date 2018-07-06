@@ -16,6 +16,9 @@
       border-top: 1px solid @border_color;
       .flex-row(space-between);
       .my-left{
+        display: flex;
+        flex-flow: row;
+        align-items: center;
         .my-icon-img{
           width: 40rpx;
           height:40rpx;
@@ -40,26 +43,12 @@
       }
     }
   }
-  .my-login-btn{
-    display: flex;
-    align-items: center;
-    width: 100%;
-    justify-content: center;
-    height: 900rpx;
-    view{
-      padding: 20rpx 40rpx;
-      background-color: @main_color;
-      color: #fff;
-      border-radius: 10rpx;
-    }
-  }
 </style>
 <template>
   <view class="my-car-index">
-    <view class="my-login-btn" wx:if="{{!isLogin}}" @tap="goLogin">
-      <view>去登录</view>
 
-    </view>
+    <notLogin :isLogin.sync="isLogin"></notLogin>
+
     <view class="my-car-box" wx:if="{{isLogin}}">
       <repeat for="{{all_data}}" key="index" index="index" item="item">
         <car :list.sync="item" :i.sync="index" @refresh.user="refresh" @radioTap.user="radioTap"></car>
@@ -72,7 +61,7 @@
         <p>全选</p>
       </view>
       <view class="my-right">
-          <view>合计：￥ <span class="my-price">{{total_money}}</span></view>
+          <view>合计：¥ <span class="my-price">{{total_money}}</span></view>
         <view class="my-btn" @tap="playOrder">下单</view>
       </view>
     </view>
@@ -84,12 +73,15 @@
     import api from '../../api/api';
     import tip from '../../utils/tip';
     import car from '../../components/shop';
+    import notLogin from '../../components/notLogin'
+
     export default class carIndex extends wepy.page {
         config = {
             navigationBarTitleText: '购物车'
         }
         components={
-          car:car
+          car:car,
+          notLogin
         }
         data = {
           all_data:[],

@@ -95,6 +95,7 @@
       color: #ffffff;
       width: 442rpx;
       height: 82rpx;
+      line-height: 82rpx;
     }
   }
 
@@ -110,8 +111,8 @@
       <view class="card-icon">
         <image src="../../images/icon-logo.jpg"></image>
       </view>
-      <view class="card-money {{order.AAmessage.length > 30 ? 'card-money-small-margin' : ''}}">
-        {{order.Orderitems[0].PRprice *order.Orderitems[0].PRnum}}
+      <view class="card-money {{order.OMstatus == '未支付' && order.AAmessage.length > 30 ? 'card-money-small-margin' : ''}}">
+        {{order.OMcode}}
       </view>
       <view class="card-detail">
         <view class="detail-hd">
@@ -148,7 +149,7 @@
         </view>
       </view>
     </view>
-    <button class="cancel-button" @tap="tapCancelOrder">取消订单</button>
+    <button wx:if="{{order.OMstatus == '未支付'}}" class="cancel-button" @tap="tapCancelOrder">取消订单</button>
   </view>
 
 </template>
@@ -177,24 +178,9 @@
 
         computed = {}
 
-        checkCardHeight(){
-          let query = wx.createSelectorQuery(),
-              that = this
-
-          query.select('.order-card').boundingClientRect(rect=>{
-            console.log(rect.height );
-
-            if(rect.height > 480){
-              that.minCardMoneyHeight = true;
-              that.$apply()
-            }
-          }).exec();
-
-        }
-
         methods = {
-          tapCancelOrder(){
-            console.log('取消订单');
+          async tapCancelOrder() {
+            this.cancelOrder();
           }
         }
 
@@ -202,7 +188,7 @@
 
         async getOrderAbo(omId){
           let res = await api.get_order_abo({
-            token: '11aa9315-38b4-47c1-a31b-c29ca20aa02c',
+            token: wx.getStorageSync('token'),
             OMid: omId
           });
 
@@ -213,6 +199,34 @@
             tip.error(res.data.message)
           }
         }
+
+      async cancelOrder() {
+        let token = wx.getStorageSync('token'),
+            that = this;
+
+        wx.showModal({
+          title: '提示',
+          content: '是否取消订单?',
+          success: e => {
+            if (e.confirm) {
+              let query = {
+                OMid: this.order.OMid,
+                OMstatus: '已取消'
+              }
+
+              api.update_order_status({method: 'POST', token, query}).then(
+                res => {
+                  if (res.data.status == 200) {
+                    that.order.OMstatus = query.OMstatus;
+                    tip.success('取消成功');
+                    that.$apply();
+                  }
+                }
+              )
+            }
+          }
+        })
+      }
 
         onLoad(param) {
           this.getOrderAbo(param.OMid);
