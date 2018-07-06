@@ -72,58 +72,75 @@
   }
 </style>
 <template>
-  <view class="m-header-box">
-    <view class="m-header-content">
-      <image class="m-avatar" mode="widthFix" src="../../images/icon-image.jpg"></image>
-      <view class="m-nickname">{{ userInfo.USname }}</view>
+  <notLogin :isLogin.sync="isLogin"></notLogin>
+  <block wx:if="{{isLogin}}">
+    <view class="m-header-box">
+      <view class="m-header-content">
+        <image class="m-avatar" mode="widthFix" src="../../images/icon-image.jpg"></image>
+        <view class="m-nickname">{{ userInfo.USname }}</view>
+      </view>
     </view>
-  </view>
-  <view class="m-info_block-list">
-    <navigator class="m-item" url="../personal/baseInfo?name={{userInfo.USname}}&sex={{userInfo.USsex}}">
-      <view class="m-item_content">
-        <image class="m-item_img" src="../../images/icon-edit.jpg"></image>
-        <view class="m-text">基本信息</view>
+    <view class="m-info_block-list">
+      <navigator class="m-item" url="../personal/baseInfo?name={{userInfo.USname}}&sex={{userInfo.USsex}}">
+        <view class="m-item_content">
+          <image class="m-item_img" src="../../images/icon-edit.jpg"></image>
+          <view class="m-text">基本信息</view>
+        </view>
+        <image class="m-arrow" src="../../images/icon-more.jpg"></image>
+      </navigator>
+      <navigator class="m-item" url="../personal/setUp?tel={{userInfo.UStelphone}}&sex={{userInfo.USsex}}">
+        <view class="m-item_content">
+          <image class="m-item_img" src="../../images/icon-set.jpg"></image>
+          <view class="m-text">修改密码</view>
+        </view>
+        <image class="m-arrow" src="../../images/icon-more.jpg"></image>
+      </navigator>
+      <view class="m-item">
+        <view class="m-item_content">
+          <image class="m-item_img" src="../../images/icon-integral.jpg"></image>
+          <view class="m-text">积分</view>
+        </view>
+        <view class="m-item-info">{{ userInfo.UScoin }}</view>
       </view>
-      <image class="m-arrow" src="../../images/icon-more.jpg"></image>
-    </navigator>
-    <navigator class="m-item" url="../personal/setUp?tel={{userInfo.UStelphone}}&sex={{userInfo.USsex}}">
-      <view class="m-item_content">
-        <image class="m-item_img" src="../../images/icon-set.jpg"></image>
-        <view class="m-text">修改密码</view>
+      <view class="m-item">
+        <view class="m-item_content">
+          <image class="m-item_img" src="../../images/icon-code.jpg"></image>
+          <view class="m-text">专属邀请码</view>
+        </view>
+        <view class="m-item-info">{{ userInfo.USinvatecode }}</view>
       </view>
-      <image class="m-arrow" src="../../images/icon-more.jpg"></image>
-    </navigator>
-    <view class="m-item">
-      <view class="m-item_content">
-        <image class="m-item_img" src="../../images/icon-integral.jpg"></image>
-        <view class="m-text">积分</view>
+      <view class="m-item">
+        <view class="m-item_content">
+          <image class="m-item_img" src="../../images/icon-phone.jpg"></image>
+          <view class="m-text">联系我们</view>
+        </view>
+        <view class="m-item-info" @tap="tapCallUs">{{ phoneNumber }}</view>
       </view>
-      <view class="m-item-info">{{ userInfo.UScoin }}</view>
     </view>
-    <view class="m-item">
-      <view class="m-item_content">
-        <image class="m-item_img" src="../../images/icon-code.jpg"></image>
-        <view class="m-text">专属邀请码</view>
-      </view>
-      <view class="m-item-info">{{ userInfo.USinvatecode }}</view>
-    </view>
-  </view>
+  </block>
+
 </template>
 
 <script>
   import wepy from 'wepy';
   import tip from '../../utils/tip';
   import api from '../../api/api';
+  import notLogin from '../../components/notLogin'
 
 
   export default class Personal extends wepy.page {
     config = {
       navigationBarTitleText: '我的'
     }
+    components={
+      notLogin
+    }
     data = {
       userInfo: {USname: '', USsex: '', UScoin: 0, USinvatecode: ''},
       isToken: false,
-      token: ''
+      token: '',
+      phoneNumber: '18657166811',
+      isLogin: true
     }
 
     async getPersonInfo(token) {
@@ -141,19 +158,32 @@
     async onShow() {
       let that = this;
       let token =  wepy.getStorageSync('token')
+
+      this.isLogin = !!wx.getStorageSync('token')
       if(token){
         that.getPersonInfo(token)
         that.$parent.globalData.token = token;
         that.$apply()
-      }else{
-        wx.navigateTo({
-          url: '/pages/personal/login'
-        })
       }
 
     }
 
     methods = {
+      //联系我们
+      tapCallUs(){
+        wepy.showModal({
+          title: `联系我们`,
+          content: `拨打${this.phoneNumber}(工作人员电话)?`,
+        }).then(
+          p => {
+            if (p.confirm) {
+              wx.makePhoneCall({
+                phoneNumber: this.phoneNumber
+              })
+            }
+          }
+        )
+      }
     }
   }
 </script>
