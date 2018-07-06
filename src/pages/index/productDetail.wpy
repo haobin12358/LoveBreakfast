@@ -17,19 +17,28 @@
        }
         padding-bottom: 40rpx;
       }
-      .my-btn{
-        background-color: @main_color;
-        font-size: 32rpx;
-        color: #fff;
-        height: 90rpx;
-        line-height: 90rpx;
-        width: 440rpx;
-        text-align: center;
-        border-radius: 10px;
+      .m-btn-box{
         position: absolute;
         bottom: 120rpx;
         left: 155rpx;
+        .my-btn{
+          /*background-color: @main_color;*/
+          font-size: 32rpx;
+          color: @main_color;
+          border: 1px solid @main_color;
+          height: 90rpx;
+          line-height: 90rpx;
+          width: 440rpx;
+          text-align: center;
+          border-radius: 10px;
+          &.m-now{
+            background-color: @main_color;
+            color: #fff;
+            margin-top: 20rpx;
+          }
+        }
       }
+
     }
 </style>
 <template>
@@ -42,7 +51,11 @@
     </view>
     <view class="my-price">￥{{all_data.PRprice}}</view>
   </view>
-  <view class="my-btn" @tap="carTap">添加购物车</view>
+  <view class="m-btn-box">
+    <view class="my-btn" @tap="carTap">添加购物车</view>
+    <view class="my-btn m-now" @tap="nowTap">立即购买</view>
+  </view>
+
 </view>
 </template>
 
@@ -56,7 +69,8 @@
             navigationBarTitleText: ''
         }
         data = {
-          all_data:null
+          all_data:null,
+          PRid:''
         }
         async get_info_by_id(PRid) {
           let that = this;
@@ -103,6 +117,13 @@
                 url:'/pages/personal/login'
               });
             }
+          },
+          nowTap(v){
+            let that = this;
+            console.log(that,'aass')
+            wx.navigateTo({
+              url:'/pages/car/playOneOrder?PRid=' + that.PRid
+            })
           }
         }
     }

@@ -191,7 +191,7 @@
           <image src="{{item.PRimage}}" style="width: 90rpx;height: 90rpx;margin: 0 30rpx;"/>
           <view class="m-over">{{item.PRname}}</view>
         </view>
-        <view class="my-price">￥{{item.PRprice}} <span class="my-num">X{{item.CAnumber}}</span></view>
+        <view class="my-price">¥{{item.PRprice}} <span class="my-num">X{{item.CAnumber || 1}}</span></view>
       </view>
       <view class="my-total">合计：<span class="my-price">¥{{total_money}}</span></view>
     </view>
@@ -295,11 +295,12 @@
             tip.error(res.data.message);
           }
         }
-        async get_select_product(token,ASid,CAid) {
+        async get_select_product(token,ASid,CAid,PRid) {
           let that = this;
           tip.loading();
           let res = await api.get_select_product({method:'POST',query:{
-              CAid:CAid
+              CAid:CAid,
+              PRid:PRid
             }, token:token,ASid:ASid });
           if(res.data.status == 200){
             that.all_order = res.data.data;
@@ -337,13 +338,18 @@
             tip.error(res.data.message);
           }
         }
-        async get_addabo(ASid,CAid) {
+        async get_addabo(ASid,CAid,PRid) {
           let that = this;
           tip.loading();
-          let res = await api.get_addabo({method:'POST',query:{
-              ASid:ASid,
-              CAid:CAid
-            }});
+          let params = {
+            ASid:ASid
+          };
+            if(CAid){
+            params.CAid = CAid
+          }else if(PRid){
+              params.PRid = PRid
+            }
+          let res = await api.get_addabo({method:'POST',query:params});
           if(res.data.status == 200){
               that.point.point_name[0] = res.data.data.AAmessage;
               that.point.point_id[0] = res.data.data.AAid;
@@ -354,18 +360,52 @@
             tip.error(res.data.message);
           }
         }
+      async get_info_by_id(PRid) {
+        let that = this;
+        tip.loading();
+        let res = await api.get_info_by_id({method:'GET',query:{
+            PRid:PRid
+          }});
+        if(res.data.status == 200){
+          that.all_order[0] = res.data.data;
+          that.total_money = res.data.data.PRprice;
+          let len = this.all_order.length;
+          let param = {};
+          param = {
+            "productlist":[]
+          }
+            console.log(that.all_order)
+            param.productlist[0] = {};
+            param.productlist[0].PRid = PRid;
+            param.productlist[0].PRnumber = 1;
+
+          that.productList = param.productlist;
+          that.$apply();
+          tip.loaded();
+        }else{
+          tip.error(res.data.message);
+        }
+      }
         onLoad(options) {
           let now = new Date();
           this.nowDate = now.getFullYear() +'-'+ (now.getMonth()  <9 ? ('0' + (Number(now.getMonth()) +1)) :( Number(now.getMonth()) +1) ) + '-' + (now.getDate() <10?('0'+ now.getDate()):now.getDate());
           this.date = this.nowDate;
           let CAid = [];
+          let PRid = '';
           let res = wx.getStorageSync('token');
           let resId = wx.getStorageSync('ASid');
           this.get_all_info(res);
           this.get_card(res);
-          CAid = options.CAid.split(',');
-          this.get_select_product(res,resId,CAid);
-          this.get_addabo(resId,CAid);
+          if(options.CAid){
+            CAid = options.CAid.split(',');
+            this.get_select_product(res,resId,CAid);
+            this.get_addabo(resId,CAid);
+          }else if(options.PRid){
+            PRid = options.PRid;
+            this.get_info_by_id(PRid);
+            this.get_addabo(resId,'',PRid);
+          }
+
         }
 
         methods = {
