@@ -119,9 +119,7 @@
         <view class="m-btn_confirm">
           <button class="m-button" formType="submit">登 录</button>
           <button class="m-btn-reg" @tap="registerTap">注 册</button>
-          <!--<navigator class="m-item" url="/pages/personal/register">-->
-            <!--<view class="m-forget" >去注册>></view>-->
-          <!--</navigator>-->
+          <view class="m-forget" @tap="goIndex">再去逛逛>></view>
         </view>
       </form>
     </view>
@@ -147,6 +145,14 @@
       }else{
         tip.error(res.data.message)
       }
+    }
+    async goIndex() {
+      wx.switchTab({
+        url: '../index/index',
+        complete: function (res) {
+          console.log(res)
+        }
+      })
     }
     methods = {
       formSubmit(e){

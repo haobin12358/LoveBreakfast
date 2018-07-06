@@ -17,6 +17,7 @@
         margin-bottom: 260rpx;
       }
       .m-info-prefix{
+        white-space:nowrap;
         color: @personal_color;
         font-size: 24rpx;
         float: left;
