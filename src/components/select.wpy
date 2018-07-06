@@ -82,7 +82,7 @@
           city:{
             city_id:[],
             city_name:[],
-            city_index:-1,
+            city_index:0,
             AFtype_array:[],
             AFtype_index:-1
           },
