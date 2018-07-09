@@ -7,6 +7,13 @@
     }
     .my-img{
       margin: 0 40rpx ;
+      position: relative;
+      .my-marks{
+        height:800rpx;
+        width:670rpx;
+        border-radius: 15rpx;
+        background-color: rgda(255,255,255,0.8);
+      }
     }
   }
 </style>
@@ -22,6 +29,7 @@
       </block>
     </swiper>
     <view class="my-img" @tap="beginTap">
+      <view class="my-marks"></view>
       <image mode="aspectFit" src="{{indexImg}}" style="height:800rpx;width:670rpx; border-radius: 15rpx;"/>
     </view>
   </view>
