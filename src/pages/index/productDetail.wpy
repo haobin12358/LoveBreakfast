@@ -17,19 +17,28 @@
        }
         padding-bottom: 40rpx;
       }
-      .my-btn{
-        background-color: @main_color;
-        font-size: 32rpx;
-        color: #fff;
-        height: 90rpx;
-        line-height: 90rpx;
-        width: 440rpx;
-        text-align: center;
-        border-radius: 10px;
+      .m-btn-box{
         position: absolute;
         bottom: 120rpx;
         left: 155rpx;
+        .my-btn{
+          /*background-color: @main_color;*/
+          font-size: 32rpx;
+          color: @main_color;
+          border: 1px solid @main_color;
+          height: 90rpx;
+          line-height: 90rpx;
+          width: 440rpx;
+          text-align: center;
+          border-radius: 10px;
+          &.m-now{
+            background-color: @main_color;
+            color: #fff;
+            margin-top: 20rpx;
+          }
+        }
       }
+
     }
 </style>
 <template>
@@ -42,7 +51,11 @@
     </view>
     <view class="my-price">￥{{all_data.PRprice}}</view>
   </view>
-  <view class="my-btn" @tap="carTap">添加购物车</view>
+  <view class="m-btn-box">
+    <view class="my-btn" @tap="carTap">添加购物车</view>
+    <view class="my-btn m-now" @tap="nowTap">立即购买</view>
+  </view>
+
 </view>
 </template>
 
@@ -52,82 +65,77 @@
     import tip from '../../utils/tip';
 
     export default class productDetail extends wepy.page {
-      config = {
-        navigationBarTitleText: '商品详情'
-      }
-
-      data = {
-        all_data: null
-      }
-
-      onShareAppMessage(){
-        return {
-          path: `/pages/index/productDetail?PRid=${this.PRid}&share=true`
+        config = {
+            navigationBarTitleText: ''
         }
-      }
-
-      async get_info_by_id(PRid) {
+        data = {
+          all_data:null,
+          PRid:''
+        }
+        async get_info_by_id(PRid) {
+          let that = this;
+          tip.loading();
+          let res = await api.get_info_by_id({method:'GET',query:{
+              PRid:PRid
+            }});
+          if(res.data.status == 200){
+            that.all_data = res.data.data;
+            that.$apply();
+            tip.loaded();
+          }else{
+            tip.error(res.data.message);
+          }
+        }
+      async sale_update(token,PRid,CAnumber) {
         let that = this;
         tip.loading();
-        let res = await api.get_info_by_id({
-          method: 'GET', query: {
-            PRid: PRid
-          }
-        });
-        if (res.data.status == 200) {
-          that.all_data = res.data.data;
-          that.$apply();
-          tip.loaded();
-        } else {
-          tip.error(res.data.message);
-        }
-      }
-
-      async sale_update(token, PRid, CAnumber) {
-        let that = this;
-        tip.loading();
-        let res = await api.sale_update({
-          method: 'POST', query: {
-            PRid: PRid,
-            CAnumber: 1
-          }
-        }, token);
-        if (res.data.status == 200) {
+        let res = await api.sale_update({method:'POST',query:{
+            PRid:PRid,
+            CAnumber:1
+          }},token);
+        if(res.data.status == 200){
           that.$apply();
           tip.loaded();
           tip.toast('添加购物车成功');
-        } else {
+        }else{
           tip.error(res.data.message);
         }
       }
-
-      onLoad(options) {
-        if(options.share == 'true'){
-          wx.showModal({
-            title: '提示',
-            content: '您是分享进来的,可以从右上角回到首页查看更多好货哦',
-            showCancel: false,
-            confirmText: '知道了'
-          })
+        onLoad(options) {
+          this.PRid = options.PRid;
+          this.get_info_by_id(options.PRid);
         }
+        methods = {
+          carTap(){
+            let that = this;
+            let res = wx.getStorageSync('token');
+            if(res){
+              that.sale_update(res,that.PRid)
+            }else{
+              tip.alert('请先登录');
+              wx.navigateTo({
+                url:'/pages/personal/login'
+              });
+            }
+          },
+          nowTap(v){
+            let that = this;
+            let res = wx.getStorageSync('token');
+            if(res){
+              wx.navigateTo({
+                url:'/pages/car/playOneOrder?PRid=' + that.PRid
+              })
+            }else{
+              tip.alert('请先登录');
+              setTimeout(function () {
+                wx.navigateTo({
+                  url:'/pages/personal/login'
+                });
+              },600);
 
-        this.PRid = options.PRid;
-        this.get_info_by_id(options.PRid);
-      }
+            }
 
-      methods = {
-        carTap() {
-          let that = this;
-          let res = wx.getStorageSync('token');
-          if (res) {
-            that.sale_update(res, that.PRid)
-          } else {
-            tip.alert('请先登录');
-            wx.navigateTo({
-              url: '/pages/personal/login'
-            });
           }
         }
-      }
     }
 </script>
