@@ -180,3 +180,26 @@ class Machinery(Base):
     MAid = Column(String(64), primary_key=True)
     AAid = Column(String(64))      # 机器地址
     PRid = Column(String(64))      # 机器里有的商品
+
+
+class Votes(Base):
+    __tablename__ = "Votes"
+    VOid = Column(String(64), primary_key=True)
+    VOtext = Column(Text, nullable=False)
+    VOchoice = Column(Integer, nullable=False)
+    VOno = Column(String(2), nullable=False)
+    VOisnull = Column(Integer, nullable=False)
+
+class Voteitems(Base):
+    __tablename__ = "Voteitems"
+    VIid = Column(String(64), primary_key=True)
+    VOid = Column(String(64), nullable=False)
+    VItext = Column(String(64), nullable=False)
+    VIno = Column(String(2), nullable=False)
+
+class Votenotes(Base):
+    __tablename__ = "Votenotes"
+    VNid = Column(String(64), primary_key=True)
+    VOno = Column(String(2), nullable=False)
+    VNtext = Column(Text)
+    VNtelphone = Column(String(14), nullable=False)

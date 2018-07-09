@@ -12,6 +12,7 @@ from apis.ALocations import ALocations
 from apis.ACoupons import ACoupons
 from apis.AAddress import AAddress
 from apis.AOther import AOther
+from apis.AVotes import AVotes
 
 bk = Flask(__name__)
 api = flask_restful.Api(bk)
@@ -27,6 +28,7 @@ api.add_resource(ALocations, "/love/breakfast/locations/<string:locations>")
 api.add_resource(ACoupons, "/love/breakfast/cardpkg/<string:card>")
 api.add_resource(AAddress, "/love/breakfast/address/<string:address>")
 api.add_resource(AOther, "/love/breakfast/other/<string:other>")
+api.add_resource(AVotes, "/love/breakfast/votes/<string:votes>")
 
 '''
 if __name__ == '__main__':
