@@ -65,77 +65,100 @@
     import tip from '../../utils/tip';
 
     export default class productDetail extends wepy.page {
-        config = {
-            navigationBarTitleText: ''
+      config = {
+        navigationBarTitleText: ''
+      }
+      data = {
+        all_data: null,
+        PRid: ''
+      }
+
+      onShareAppMessage(){
+        return {
+          path: `/pages/index/productDetail?PRid=${this.PRid}&share=true`
         }
-        data = {
-          all_data:null,
-          PRid:''
-        }
-        async get_info_by_id(PRid) {
-          let that = this;
-          tip.loading();
-          let res = await api.get_info_by_id({method:'GET',query:{
-              PRid:PRid
-            }});
-          if(res.data.status == 200){
-            that.all_data = res.data.data;
-            that.$apply();
-            tip.loaded();
-          }else{
-            tip.error(res.data.message);
-          }
-        }
-      async sale_update(token,PRid,CAnumber) {
+      }
+
+      async get_info_by_id(PRid) {
         let that = this;
         tip.loading();
-        let res = await api.sale_update({method:'POST',query:{
-            PRid:PRid,
-            CAnumber:1
-          }},token);
-        if(res.data.status == 200){
+        let res = await api.get_info_by_id({
+          method: 'GET', query: {
+            PRid: PRid
+          }
+        });
+        if (res.data.status == 200) {
+          that.all_data = res.data.data;
           that.$apply();
           tip.loaded();
-          tip.toast('添加购物车成功');
-        }else{
+        } else {
           tip.error(res.data.message);
         }
       }
-        onLoad(options) {
-          this.PRid = options.PRid;
-          this.get_info_by_id(options.PRid);
-        }
-        methods = {
-          carTap(){
-            let that = this;
-            let res = wx.getStorageSync('token');
-            if(res){
-              that.sale_update(res,that.PRid)
-            }else{
-              tip.alert('请先登录');
-              wx.navigateTo({
-                url:'/pages/personal/login'
-              });
-            }
-          },
-          nowTap(v){
-            let that = this;
-            let res = wx.getStorageSync('token');
-            if(res){
-              wx.navigateTo({
-                url:'/pages/car/playOneOrder?PRid=' + that.PRid
-              })
-            }else{
-              tip.alert('请先登录');
-              setTimeout(function () {
-                wx.navigateTo({
-                  url:'/pages/personal/login'
-                });
-              },600);
 
-            }
+      async sale_update(token, PRid, CAnumber) {
+        let that = this;
+        tip.loading();
+        let res = await api.sale_update({
+          method: 'POST', query: {
+            PRid: PRid,
+            CAnumber: 1
+          }
+        }, token);
+        if (res.data.status == 200) {
+          that.$apply();
+          tip.loaded();
+          tip.toast('添加购物车成功');
+        } else {
+          tip.error(res.data.message);
+        }
+      }
+
+      onLoad(options) {
+        if(options.share == 'true'){
+          wx.showModal({
+            title: '提示',
+            content: '您是分享进来的,可以从右上角回到首页查看更多好货哦',
+            showCancel: false,
+            confirmText: '知道了'
+          })
+        }
+
+        this.PRid = options.PRid;
+        this.get_info_by_id(options.PRid);
+      }
+
+      methods = {
+        carTap() {
+          let that = this;
+          let res = wx.getStorageSync('token');
+          if (res) {
+            that.sale_update(res, that.PRid)
+          } else {
+            tip.alert('请先登录');
+            wx.navigateTo({
+              url: '/pages/personal/login'
+            });
+          }
+        },
+        nowTap(v) {
+          let that = this;
+          let res = wx.getStorageSync('token');
+          if (res) {
+            wx.navigateTo({
+              url: '/pages/car/playOneOrder?PRid=' + that.PRid
+            })
+          } else {
+            tip.alert('请先登录');
+            setTimeout(function () {
+              wx.navigateTo({
+                url: '/pages/personal/login'
+              });
+            }, 600);
 
           }
+
         }
+      }
     }
 </script>
