@@ -4,32 +4,32 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
 import json
-from config.response import SYSTEM_ERROR, PARAMS_MISS
+from LoveBreakfast.config.response import SYSTEM_ERROR, PARAMS_MISS
 import datetime
-from common import timeformate
-from common.import_status import import_status
-from common.get_model_return_list import get_model_return_list, get_model_return_dict
-from common.get_str import get_str
-from common.MakeToken import token_to_usid
+from LoveBreakfast.common import timeformate
+from LoveBreakfast.common.import_status import import_status
+from LoveBreakfast.common.get_model_return_list import get_model_return_list, get_model_return_dict
+from LoveBreakfast.common.get_str import get_str
+from LoveBreakfast.common.MakeToken import token_to_usid
 
 
 class COrders():
 
     def __init__(self):
         self.title = "=========={0}=========="
-        from services.SUsers import SUsers
+        from LoveBreakfast.services.SUsers import SUsers
         self.susers = SUsers()
-        from services.SProduct import SProduct
+        from LoveBreakfast.services.SProduct import SProduct
         self.sproduct = SProduct()
-        from services.SOrders import SOrders
+        from LoveBreakfast.services.SOrders import SOrders
         self.sorders = SOrders()
-        from services.SAddress import SAddress
+        from LoveBreakfast.services.SAddress import SAddress
         self.sadd = SAddress()
-        from services.SCoupons import SCoupons
+        from LoveBreakfast.services.SCoupons import SCoupons
         self.scoupons = SCoupons()
-        from services.SMachinery import SMachinery
+        from LoveBreakfast.services.SMachinery import SMachinery
         self.smach = SMachinery()
-        from services.SCarts import SCarts
+        from LoveBreakfast.services.SCarts import SCarts
         self.scart = SCarts()
         global OMstatus_list
         OMstatus_list = ("已取消", "未支付", "已支付", "已接单", "已配送", "已装箱", "已完成", "已评价")
@@ -79,7 +79,7 @@ class COrders():
                 data.append(row)
 
         response_make_main_order = import_status("messages_get_item_ok", "OK")
-        from config.urlconfig import product_url_list
+        from LoveBreakfast.config.urlconfig import product_url_list
         response_make_main_order["sowing"] = product_url_list
         response_make_main_order["data"] = data
 

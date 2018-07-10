@@ -4,11 +4,11 @@ import os
 import json
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import request
-from common.get_model_return_list import get_model_return_dict, get_model_return_list
-from common.get_str import get_str
-from common.import_status import import_status
-from config.response import PARAMS_MISS, SYSTEM_ERROR
-from config.cityconfig import AFTYPE
+from LoveBreakfast.common.get_model_return_list import get_model_return_dict, get_model_return_list
+from LoveBreakfast.common.get_str import get_str
+from LoveBreakfast.common.import_status import import_status
+from LoveBreakfast.config.response import PARAMS_MISS, SYSTEM_ERROR
+from LoveBreakfast.config.cityconfig import AFTYPE
 
 
 class CAddress():
@@ -104,8 +104,8 @@ class CAddress():
             return PARAMS_MISS
         if "CAid" not in data and "PRid" not in data:
             return PARAMS_MISS
-        from services.SCarts import SCarts
-        from services.SMachinery import SMachinery
+        from LoveBreakfast.services.SCarts import SCarts
+        from LoveBreakfast.services.SMachinery import SMachinery
         scarts = SCarts()
         smach = SMachinery()
         if "CAid" in data:

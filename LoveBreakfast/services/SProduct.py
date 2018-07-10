@@ -2,12 +2,9 @@
 # 兼容linux系统
 import sys
 import os
-
-sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
-# 引用项目类
-from models.model import Products
-from services.SBase import SBase, close_session
-
+sys.path.append(os.path.dirname(os.getcwd()))
+from LoveBreakfast.models.model import Products
+from LoveBreakfast.services.SBase import SBase, close_session
 
 # 操作user表的相关方法
 class SProduct(SBase):

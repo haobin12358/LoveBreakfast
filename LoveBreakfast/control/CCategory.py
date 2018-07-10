@@ -1,22 +1,17 @@
 # *- coding:utf8 *-
-# *- coding:utf8 *-
-# 兼容linux系统
 import sys
 import os
-sys.path.append(os.path.dirname(os.getcwd())) # 增加系统路径
-#引用python类
+sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
-import json
-#引用项目类
-from services.SProduct import SProduct
-from common.get_str import get_str
-from common.import_status import import_status
-from services.SCategory import SCategory
+from LoveBreakfast.services.SProduct import SProduct
+from LoveBreakfast.common.get_str import get_str
+from LoveBreakfast.common.import_status import import_status
+from LoveBreakfast.services.SCategory import SCategory
 
 class CCategory():
     def __init__(self):
         self.service_product = SProduct()
-        self.service_category =SCategory()
+        self.service_category = SCategory()
 
     # 获取所有的分类名称与id
     def get_all_category(self):
@@ -26,9 +21,6 @@ class CCategory():
             "message": "get all_category success !",
             "data": category_list
         }
-
-
-
 
     # 根据店铺id获取所有的分类名称与id
     def get_category_by_sid(self):

@@ -2,9 +2,9 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-from models.model import Cardpackage
-from SBase import SBase, close_session
-from models.model import Coupons
+from LoveBreakfast.models.model import Cardpackage
+from LoveBreakfast.services.SBase import SBase, close_session
+from LoveBreakfast.models.model import Coupons
 
 
 class SCoupons(SBase):

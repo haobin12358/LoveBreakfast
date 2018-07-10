@@ -7,9 +7,9 @@ sys.setdefaultencoding('utf-8')
 
 sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
 # 引用项目类
-import models.model as models
+import LoveBreakfast.models.model as models
 import DBSession
-from common.TransformToList import trans_params
+from LoveBreakfast.common.TransformToList import trans_params
 
 
 # 操作user表的相关方法

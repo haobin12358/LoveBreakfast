@@ -4,8 +4,8 @@ import os
 
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
-from control.CAddress import CAddress
-from config.response import APIS_WRONG
+from LoveBreakfast.control.CAddress import CAddress
+from LoveBreakfast.config.response import APIS_WRONG
 
 
 class AAddress(Resource):

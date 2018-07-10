@@ -1,21 +1,13 @@
 # *- coding:utf8 *-
-# 兼容linux系统
 import sys
 import os
-sys.path.append(os.path.dirname(os.getcwd())) # 增加系统路径
-# 引用python类
+sys.path.append(os.path.dirname(os.getcwd()))
 from sqlalchemy.orm import sessionmaker
-# 引用项目类
-from models import model
+from LoveBreakfast.models import model
 
-# db_session = sessionmaker(bind=model.mysql_engine)
-# 实例化session
 db_session = sessionmaker(bind=model.mysql_engine)
 
-#db_log_session = sessionmaker(bind=log_model.mysql_engine)
 
-
-# 获取数据库连接session
 def get_session():
     try:
         session = db_session()

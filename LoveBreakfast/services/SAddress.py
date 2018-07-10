@@ -4,7 +4,7 @@ import os
 
 sys.path.append(os.path.dirname(os.getcwd()))
 from SBase import SBase, close_session
-from models.model import AddCity, AddressAbo, AddressFirst, AddressSecond
+from LoveBreakfast.models.model import AddCity, AddressAbo, AddressFirst, AddressSecond
 
 
 class SAddress(SBase):

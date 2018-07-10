@@ -3,9 +3,9 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
-from config.Logs import PRINT_API_NAME
-from control.Clocations import Clocations
-from config.response import APIS_WRONG
+from LoveBreakfast.config.Logs import PRINT_API_NAME
+from LoveBreakfast.control.Clocations import Clocations
+from LoveBreakfast.config.response import APIS_WRONG
 
 class ALocations(Resource):
     def __int__(self):

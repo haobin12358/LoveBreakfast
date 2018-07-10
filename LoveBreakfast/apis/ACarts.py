@@ -3,9 +3,9 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
-from config.Logs import PRINT_API_NAME
-from control.CCarts import CCarts
-from config.response import APIS_WRONG
+from LoveBreakfast.config.Logs import PRINT_API_NAME
+from LoveBreakfast.control.CCarts import CCarts
+from LoveBreakfast.config.response import APIS_WRONG
 
 class ACarts(Resource):
     def __int__(self):

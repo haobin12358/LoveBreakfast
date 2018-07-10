@@ -3,9 +3,9 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
-from config.Logs import PRINT_API_NAME
-from control.CUsers import CUsers
-from config.response import APIS_WRONG
+from LoveBreakfast.config.Logs import PRINT_API_NAME
+from LoveBreakfast.control.CUsers import CUsers
+from LoveBreakfast.config.response import APIS_WRONG
 
 class AUsers(Resource):
     def __init__(self):

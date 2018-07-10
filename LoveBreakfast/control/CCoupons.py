@@ -6,16 +6,16 @@ from flask import request
 import json
 import datetime
 import uuid
-from common.lovebreakfast_error import dberror
-from common.timeformate import get_db_time_str, get_web_time_str, format_forweb_no_HMS
-from config.response import SYSTEM_ERROR, PARAMS_MISS
-from common.import_status import import_status
-from common.MakeToken import token_to_usid
+from LoveBreakfast.common.lovebreakfast_error import dberror
+from LoveBreakfast.common.timeformate import get_db_time_str, get_web_time_str, format_forweb_no_HMS
+from LoveBreakfast.config.response import SYSTEM_ERROR, PARAMS_MISS
+from LoveBreakfast.common.import_status import import_status
+from LoveBreakfast.common.MakeToken import token_to_usid
 
 class CCoupons():
     def __init__(self):
         self.title = "============{0}==============="
-        from services.SCoupons import SCoupons
+        from LoveBreakfast.services.SCoupons import SCoupons
         self.scoupons = SCoupons()
 
     def add_cardpackage(self):

@@ -5,15 +5,15 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
 import json
 import uuid
-from config.response import SYSTEM_ERROR, PARAMS_MISS
-from common.import_status import import_status
-from common.TransformToList import add_model
+from LoveBreakfast.config.response import SYSTEM_ERROR, PARAMS_MISS
+from LoveBreakfast.common.import_status import import_status
+from LoveBreakfast.common.TransformToList import add_model
 
 class CVotes():
     def __init__(self):
-        from services.SVotes import SVotes
+        from LoveBreakfast.services.SVotes import SVotes
         self.svotes = SVotes()
-        from services.SUsers import SUsers
+        from LoveBreakfast.services.SUsers import SUsers
         self.susers = SUsers()
         self.title = '============{0}============'
 

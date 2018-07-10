@@ -1,10 +1,9 @@
 # *- coding:utf8 *-
 import sys
 import os
-
-sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
-from services.SBase import SBase, close_session
-from models.model import Machinery
+sys.path.append(os.path.dirname(os.getcwd()))
+from LoveBreakfast.services.SBase import SBase, close_session
+from LoveBreakfast.models.model import Machinery
 
 
 class SMachinery(SBase):

@@ -3,8 +3,8 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
-from config.Logs import PRINT_API_NAME
-from services.SCategory import SCategory
+from LoveBreakfast.config.Logs import PRINT_API_NAME
+from LoveBreakfast.services.SCategory import SCategory
 
 class ACategory(Resource):
     def __init__(self):

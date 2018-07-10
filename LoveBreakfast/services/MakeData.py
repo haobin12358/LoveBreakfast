@@ -7,15 +7,15 @@ if len(args) > 1:
     path = args[1]  # /opt/LoveBreakfast
 print(path)
 sys.path.append(os.path.dirname(path))  # 增加系统路径
-from common.TransformToList import add_model
+from LoveBreakfast.common.TransformToList import add_model
 import uuid
 
 
 class MakeData():
     def __init__(self):
-        from services.SUsers import SUsers
+        from LoveBreakfast.services.SUsers import SUsers
         self.users = SUsers()
-        from services.SCoupons import SCoupons
+        from LoveBreakfast.services.SCoupons import SCoupons
         self.scoupons = SCoupons()
 
     def setUid(self):

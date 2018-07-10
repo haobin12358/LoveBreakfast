@@ -5,14 +5,14 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
 import json
 import uuid
-from config.response import SYSTEM_ERROR, PARAMS_MISS
-from common.import_status import import_status
-from common.get_model_return_list import get_model_return_dict
-from common.MakeToken import token_to_usid
+from LoveBreakfast.config.response import SYSTEM_ERROR, PARAMS_MISS
+from LoveBreakfast.common.import_status import import_status
+from LoveBreakfast.common.get_model_return_list import get_model_return_dict
+from LoveBreakfast.common.MakeToken import token_to_usid
 
 class CUsers():
     def __init__(self):
-        from services.SUsers import SUsers
+        from LoveBreakfast.services.SUsers import SUsers
         self.susers = SUsers()
         self.title = '============{0}============'
 
@@ -101,7 +101,7 @@ class CUsers():
             return import_status("ERROR_MESSAGE_WRONG_PASSWORD", "LOVEBREAKFAST_ERROR", "ERROR_CODE_WRONG_PASSWORD")
 
         back_response = import_status("SUCCESS_MESSAGE_LOGIN", "OK")
-        from common.MakeToken import usid_to_token
+        from LoveBreakfast.common.MakeToken import usid_to_token
         token = usid_to_token(usid.get("USid"))
         back_response["data"] = {}
         back_response["data"]["token"] = token
@@ -245,7 +245,7 @@ class CUsers():
 
         # 获取当前时间，与上一次获取的时间进行比较，小于60秒的获取直接报错
         import datetime
-        from common.timeformate import format_for_db
+        from LoveBreakfast.common.timeformate import format_for_db
         time_time = datetime.datetime.now()
         time_str = datetime.datetime.strftime(time_time, format_for_db)
 
@@ -276,8 +276,8 @@ class CUsers():
 
         if not new_inforcode:
             return SYSTEM_ERROR
-        from config.Inforcode import SignName, TemplateCode
-        from common.Inforsend import send_sms
+        from LoveBreakfast.config.Inforcode import SignName, TemplateCode
+        from LoveBreakfast.common.Inforsend import send_sms
         params = '{\"code\":\"' + code + '\",\"product\":\"etech\"}'
 
         # params = u'{"name":"wqb","code":"12345678","address":"bz","phone":"13000000000"}'
@@ -313,7 +313,7 @@ class CUsers():
         print self.title.format("list_utel")
         print list_utel
         print self.title.format("list_utel")
-        if list_utel == False:
+        if not list_utel:
             return SYSTEM_ERROR
 
         if Utel not in list_utel:
@@ -343,4 +343,5 @@ class CUsers():
             return SYSTEM_ERROR
 
         response_of_update_users = import_status("SUCCESS_MESSAGE_UPDATE_PASSWORD", "OK")
+
         return response_of_update_users

@@ -2,15 +2,10 @@
 # 兼容linux系统
 import sys
 import os
-
-sys.path.append(os.path.dirname(os.getcwd()))  # 增加系统路径
-# 引用项目类
-from models import model
+sys.path.append(os.path.dirname(os.getcwd()))
+from LoveBreakfast.models import model
 import DBSession
-from common.TransformToList import trans_params
 
-
-# 操作user表的相关方法
 class SCategory():
     def __init__(self):
         """

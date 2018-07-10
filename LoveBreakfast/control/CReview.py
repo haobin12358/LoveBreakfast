@@ -5,17 +5,17 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
 import uuid
 import json
-from services.SProduct import SProduct
-from common.get_str import get_str
-from common.import_status import import_status
-from services.SReview import SReview
-from control.COrders import COrders
-from services.SUsers import SUsers
-from services.SOrders import SOrders
-from config.response import PARAMS_MISS, SYSTEM_ERROR
-from common.TransformToList import add_model
-from common.get_model_return_list import get_model_return_dict, get_model_return_list
-from common.MakeToken import token_to_usid
+from LoveBreakfast.services.SProduct import SProduct
+from LoveBreakfast.common.get_str import get_str
+from LoveBreakfast.common.import_status import import_status
+from LoveBreakfast.services.SReview import SReview
+from LoveBreakfast.control.COrders import COrders
+from LoveBreakfast.services.SUsers import SUsers
+from LoveBreakfast.services.SOrders import SOrders
+from LoveBreakfast.config.response import PARAMS_MISS, SYSTEM_ERROR
+from LoveBreakfast.common.TransformToList import add_model
+from LoveBreakfast.common.get_model_return_list import get_model_return_dict, get_model_return_list
+from LoveBreakfast.common.MakeToken import token_to_usid
 
 class CReview():
     def __init__(self):
@@ -170,7 +170,7 @@ class CReview():
                 "statuscode": statuscode,
             }
         result = self.service_review.delete_user_review(rid_to_str)
-        print(request)
+        print(result)
         return {
             "message": "delete review success !",
             "status": 200,

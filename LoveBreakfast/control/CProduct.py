@@ -4,14 +4,14 @@ import os
 
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
-from services.SProduct import SProduct
-from common.get_str import get_str
-from config.response import PARAMS_MISS, SYSTEM_ERROR
-from common.import_status import import_status
-from services.SCategory import SCategory
-from services.SMachinery import SMachinery
-from services.SAddress import SAddress
-from common.get_model_return_list import get_model_return_list, get_model_return_dict
+from LoveBreakfast.services.SProduct import SProduct
+from LoveBreakfast.common.get_str import get_str
+from LoveBreakfast.config.response import PARAMS_MISS, SYSTEM_ERROR
+from LoveBreakfast.common.import_status import import_status
+from LoveBreakfast.services.SCategory import SCategory
+from LoveBreakfast.services.SMachinery import SMachinery
+from LoveBreakfast.services.SAddress import SAddress
+from LoveBreakfast.common.get_model_return_list import get_model_return_list, get_model_return_dict
 
 
 class CProduct():

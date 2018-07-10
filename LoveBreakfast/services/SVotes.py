@@ -2,9 +2,8 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-import uuid
-from models.model import Votes, Voteitems, Votenotes
-from SBase import SBase, close_session
+from LoveBreakfast.models.model import Votes, Voteitems, Votenotes
+from LoveBreakfast.services.SBase import SBase, close_session
 
 class SVotes(SBase):
 

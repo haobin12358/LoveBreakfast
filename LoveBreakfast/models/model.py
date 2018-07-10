@@ -6,7 +6,7 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, create_engine, Integer, String, Text, Float
-from config import dbconfig as cfg
+from LoveBreakfast.config import dbconfig as cfg
 
 DB_PARAMS = "{0}://{1}:{2}@{3}/{4}?charset={5}".format(
     cfg.sqlenginename, cfg.username, cfg.password, cfg.host, cfg.database, cfg.charset)
@@ -190,12 +190,14 @@ class Votes(Base):
     VOno = Column(String(2), nullable=False)
     VOisnull = Column(Integer, nullable=False)
 
+
 class Voteitems(Base):
     __tablename__ = "Voteitems"
     VIid = Column(String(64), primary_key=True)
     VOid = Column(String(64), nullable=False)
     VItext = Column(String(64), nullable=False)
     VIno = Column(String(2), nullable=False)
+
 
 class Votenotes(Base):
     __tablename__ = "Votenotes"

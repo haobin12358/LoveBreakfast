@@ -2,8 +2,8 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-from models import model
-from services.SBase import SBase, close_session
+from LoveBreakfast.models import model
+from LoveBreakfast.services.SBase import SBase, close_session
 
 class SReview(SBase):
 

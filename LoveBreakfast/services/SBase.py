@@ -3,8 +3,8 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 import DBSession
-from common.lovebreakfast_error import dberror
-import models.model as models
+from LoveBreakfast.common.lovebreakfast_error import dberror
+import LoveBreakfast.models.model as models
 
 
 def close_session(fn):

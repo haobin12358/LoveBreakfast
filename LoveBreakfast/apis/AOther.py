@@ -3,14 +3,14 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource, request
-from config.response import PARAMS_MISS
-from common.import_status import import_status
-from config.response import SYSTEM_ERROR
+from LoveBreakfast.config.response import PARAMS_MISS
+from LoveBreakfast.common.import_status import import_status
+from LoveBreakfast.config.response import SYSTEM_ERROR
 import datetime
 
 class AOther(Resource):
     def __init__(self):
-        from services.SOrders import SOrders
+        from LoveBreakfast.services.SOrders import SOrders
         self.sorders = SOrders()
         self.title = '============{0}============'
 
@@ -68,7 +68,7 @@ class AOther(Resource):
             print(args)
             print("=======================args===================")
             code = args["code"]
-            from config.Inforcode import APP_ID, APP_SECRET_KEY
+            from LoveBreakfast.config.Inforcode import APP_ID, APP_SECRET_KEY
             request_url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type={3}" \
                 .format(APP_ID, APP_SECRET_KEY, code, "authorization_code")
             print("=======================request_url===================")
@@ -103,7 +103,7 @@ class AOther(Resource):
             data = {}
             body = {}
             body["appid"] = APP_ID
-            from config.Inforcode import mch_id
+            from LoveBreakfast.config.Inforcode import mch_id
             body["mch_id"] = mch_id
             body["device_info"] = "WEB"
             body["nonce_str"] = str(uuid.uuid1()).replace("-", "")
@@ -114,7 +114,7 @@ class AOther(Resource):
             print OMprice
             print("============OMprice=========")
             body["total_fee"] = int(OMprice * 100)
-            from config.Inforcode import NETWORK_IP
+            from LoveBreakfast.config.Inforcode import NETWORK_IP
             body["spbill_create_ip"] = NETWORK_IP
             body["time_start"] = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
             body["time_expire"] = (datetime.datetime.now() + datetime.timedelta(hours=2)).strftime("%Y%m%d%H%M%S")
@@ -128,7 +128,7 @@ class AOther(Resource):
                 body["notify_url"], body["openid"], body["out_trade_no"], body["time_expire"], body["time_start"],
                 body["total_fee"], body["trade_type"]
             )
-            from config.Inforcode import mch_key
+            from LoveBreakfast.config.Inforcode import mch_key
             key_sign = key_sign + "&key={0}".format(mch_key)
 
             import hashlib
@@ -219,7 +219,7 @@ class AOther(Resource):
             openid = args["openid"]
             OMid = args["OMid"]
             response = {}
-            from config.Inforcode import APP_ID, mch_id
+            from LoveBreakfast.config.Inforcode import APP_ID, mch_id
             response["appid"] = APP_ID
             response["openid"] = openid
             import time
@@ -235,7 +235,7 @@ class AOther(Resource):
             body["body"] = "Beauty mirror"
             body["out_trade_no"] = OMid.replace("-", "")
             body["total_fee"] = 1
-            from config.Inforcode import NETWORK_IP
+            from LoveBreakfast.config.Inforcode import NETWORK_IP
             body["spbill_create_ip"] = NETWORK_IP
 
             body["time_start"] = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
@@ -249,7 +249,7 @@ class AOther(Resource):
                 body["notify_url"], body["openid"], body["out_trade_no"], body["time_expire"], body["time_start"],
                 body["total_fee"], body["trade_type"]
             )
-            from config.Inforcode import mch_key
+            from LoveBreakfast.config.Inforcode import mch_key
             key_sign = key_sign + "&key={0}".format(mch_key)
 
             import hashlib
@@ -336,7 +336,7 @@ class AOther(Resource):
             print("=======================position===================")
             print("position = ".format(position))
             print("=======================position===================")
-            from config import urlconfig
+            from LoveBreakfast.config import urlconfig
             htv = "dhdp" if args.get("htv") < 1.6 else "hhdp"
             if position == "top":
                 picturelist = [i.format(htv) for i in urlconfig.home]
