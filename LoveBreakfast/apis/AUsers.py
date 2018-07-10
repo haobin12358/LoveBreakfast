@@ -8,7 +8,7 @@ from control.CUsers import CUsers
 from config.response import APIS_WRONG
 
 class AUsers(Resource):
-    def __int__(self):
+    def __init__(self):
         pass
 
     def post(self, users):
