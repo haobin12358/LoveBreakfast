@@ -7,7 +7,7 @@ from LoveBreakfast.config.Logs import PRINT_API_NAME
 from LoveBreakfast.control.CVotes import CVotes
 from LoveBreakfast.config.response import APIS_WRONG
 
-class AVotes(Resource):
+class LBVotes(Resource):
     def __init__(self):
         self.cvote = CVotes()
 

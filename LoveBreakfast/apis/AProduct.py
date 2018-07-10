@@ -7,7 +7,7 @@ from LoveBreakfast.config.Logs import PRINT_API_NAME
 from LoveBreakfast.control.CProduct import CProduct
 from LoveBreakfast.config.response import APIS_WRONG
 
-class AProduct(Resource):
+class LBProduct(Resource):
     def __init__(self):
         self.control_product = CProduct()
 

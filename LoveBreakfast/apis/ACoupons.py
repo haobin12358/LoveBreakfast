@@ -7,7 +7,7 @@ from LoveBreakfast.config.Logs import PRINT_API_NAME
 from LoveBreakfast.control.CCoupons import CCoupons
 from LoveBreakfast.config.response import APIS_WRONG
 
-class ACoupons(Resource):
+class LBCoupons(Resource):
 
     def __init__(self):
         pass

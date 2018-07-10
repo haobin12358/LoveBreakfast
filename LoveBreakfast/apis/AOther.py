@@ -8,7 +8,7 @@ from LoveBreakfast.common.import_status import import_status
 from LoveBreakfast.config.response import SYSTEM_ERROR
 import datetime
 
-class AOther(Resource):
+class LBOther(Resource):
     def __init__(self):
         from LoveBreakfast.services.SOrders import SOrders
         self.sorders = SOrders()

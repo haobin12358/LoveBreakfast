@@ -6,7 +6,7 @@ from flask_restful import Resource
 from LoveBreakfast.config.Logs import PRINT_API_NAME
 from LoveBreakfast.control.CShop import CShop
 
-class AShop(Resource):
+class LBShop(Resource):
     def __init__(self):
         self.control_shop = CShop()
 

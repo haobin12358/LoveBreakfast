@@ -7,8 +7,8 @@ from LoveBreakfast.config.Logs import PRINT_API_NAME
 from LoveBreakfast.control.COrders import COrders
 from LoveBreakfast.config.response import APIS_WRONG
 
-class AOrders(Resource):
-    def __int__(self):
+class LBOrders(Resource):
+    def __init__(self):
         pass
 
     def get(self, orders):

@@ -7,7 +7,7 @@ from LoveBreakfast.config.Logs import PRINT_API_NAME
 from LoveBreakfast.control.CReview import CReview
 from LoveBreakfast.config.response import APIS_WRONG
 
-class AReview(Resource):
+class LBReview(Resource):
     def __init__(self):
         self.control_review = CReview()
 

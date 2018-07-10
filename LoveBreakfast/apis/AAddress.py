@@ -1,28 +1,25 @@
 # *- coding:utf8 *-
 import sys
 import os
-
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask_restful import Resource
 from LoveBreakfast.control.CAddress import CAddress
 from LoveBreakfast.config.response import APIS_WRONG
 
-
-class AAddress(Resource):
-    def __int__(self):
-        pass
+class LBAddress(Resource):
+    def __init__(self):
+        self.cadd = CAddress()
+        self.title = "=========={0}=========="
 
     def get(self, address):
-        print("=======================api===================")
+        print(self.title.format("api"))
         print("接口名称是{0}，接口方法是get".format(address))
-        print("=======================api===================")
+        print(self.title.format("api"))
 
-        control_cadd = CAddress()
         apis = {
-            "get_citys": "control_cadd.get_citys()",
-            "get_addfirst": "control_cadd.get_addfirst()",
-            "get_addsecond": "control_cadd.get_addsecond()",
-
+            "get_citys": "self.cadd.get_citys()",
+            "get_addfirst": "self.cadd.get_addfirst()",
+            "get_addsecond": "self.cadd.get_addsecond()"
         }
 
         if address in apis:
@@ -31,12 +28,12 @@ class AAddress(Resource):
         return APIS_WRONG
 
     def post(self, address):
-        print("=======================api===================")
-        print("接口名称是{0}，接口方法是get".format(address))
-        print("=======================api===================")
-        control_cadd = CAddress()
+        print(self.title.format("api"))
+        print("接口名称是{0}，接口方法是post".format(address))
+        print(self.title.format("api"))
+
         apis = {
-            "get_addabo": "control_cadd.get_addabo()",
+            "get_addabo": "self.cadd.get_addabo()"
         }
 
         if address in apis:

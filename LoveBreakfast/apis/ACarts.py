@@ -7,18 +7,19 @@ from LoveBreakfast.config.Logs import PRINT_API_NAME
 from LoveBreakfast.control.CCarts import CCarts
 from LoveBreakfast.config.response import APIS_WRONG
 
-class ACarts(Resource):
+class LBCarts(Resource):
     def __int__(self):
-        pass
+        self.ccart = CCarts()
+        self.title = "=========={0}=========="
 
     def post(self, cart):
+        print()
         print(PRINT_API_NAME.format(cart))
 
-        control_cart = CCarts()
         apis = {
-            "delete_product": "control_cart.del_product()",
-            "update": "control_cart.add_or_update_cart()",
-            "get_select_product": "control_cart.get_carts_by_uid_caid()"
+            "delete_product": "self.ccart.del_product()",
+            "update": "self.ccart.add_or_update_cart()",
+            "get_select_product": "self.ccart.get_carts_by_uid_caid()"
         }
 
         if cart in apis:
@@ -29,9 +30,8 @@ class ACarts(Resource):
     def get(self, cart):
         print(PRINT_API_NAME.format(cart))
 
-        control_cart = CCarts()
         apis = {
-            "get_all": "control_cart.get_carts_by_uid_caid()"
+            "get_all": "self.ccart.get_carts_by_uid_caid()"
         }
 
         if cart in apis:

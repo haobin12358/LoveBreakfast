@@ -31,6 +31,8 @@ class CProduct():
         args = request.args.to_dict()
         if "ASid" not in args:
             return PARAMS_MISS
+        if "VNtelphone" in args:
+            pass
         try:
             pro_list_of_product = get_model_return_list(self.sproduct.get_all())
             print(self.title.format("pro_list_of_product"))

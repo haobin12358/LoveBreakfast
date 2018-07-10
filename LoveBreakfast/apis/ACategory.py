@@ -6,7 +6,7 @@ from flask_restful import Resource
 from LoveBreakfast.config.Logs import PRINT_API_NAME
 from LoveBreakfast.services.SCategory import SCategory
 
-class ACategory(Resource):
+class LBCategory(Resource):
     def __init__(self):
         self.control_category = SCategory()
 

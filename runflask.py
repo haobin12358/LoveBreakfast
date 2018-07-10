@@ -1,18 +1,18 @@
 # *- coding:utf8 *-
 from flask import Flask
 import flask_restful
-from LoveBreakfast.apis.AUsers import AUsers as lbuser
-from LoveBreakfast.apis.AProduct import AProduct as lbproduct
-from LoveBreakfast.apis.ACarts import ACarts as lbcarts
-from LoveBreakfast.apis.ACategory import ACategory as lbcategory
-#from LoveBreakfast.apis.AShop import AShop as lbshop
-from LoveBreakfast.apis.AReview import AReview as lbreview
-from LoveBreakfast.apis.AOrders import AOrders as lborder
-from LoveBreakfast.apis.ALocations import ALocations as lblocations
-from LoveBreakfast.apis.ACoupons import ACoupons as lbcoupons
-from LoveBreakfast.apis.AAddress import AAddress as lbaddress
-from LoveBreakfast.apis.AOther import AOther as lbother
-from LoveBreakfast.apis.AVotes import AVotes as lbvote
+from LoveBreakfast.apis.AUsers import LBUsers as lbuser
+from LoveBreakfast.apis.AProduct import LBProduct as lbproduct
+from LoveBreakfast.apis.ACarts import LBCarts as lbcarts
+from LoveBreakfast.apis.ACategory import LBCategory as lbcategory
+# from LoveBreakfast.apis.AShop import AShop as lbshop
+from LoveBreakfast.apis.AReview import LBReview as lbreview
+from LoveBreakfast.apis.AOrders import LBOrders as lborder
+from LoveBreakfast.apis.ALocations import LBLocations as lblocations
+from LoveBreakfast.apis.ACoupons import LBCoupons as lbcoupons
+from LoveBreakfast.apis.AAddress import LBAddress as lbaddress
+from LoveBreakfast.apis.AOther import LBOther as lbother
+from LoveBreakfast.apis.AVotes import LBVotes as lbvote
 from SharpGoods.apis.AUsers import AUsers as sguser
 from SharpGoods.apis.AProducts import AProducts as sgproduct
 from SharpGoods.apis.ACarts import ACarts as sgcarts
@@ -31,7 +31,7 @@ api.add_resource(lbproduct, "/love/breakfast/product/<string:product>")
 api.add_resource(lbcarts, "/love/breakfast/salelist/<string:cart>")
 api.add_resource(lbreview, "/love/breakfast/review/<string:review>")
 api.add_resource(lbcategory, "/love/breakfast/category/<string:category>")
-#api.add_resource(AShop, "/love/breakfast/shop/<string:shop>")
+# api.add_resource(AShop, "/love/breakfast/shop/<string:shop>")
 api.add_resource(lborder, "/love/breakfast/orders/<string:orders>")
 api.add_resource(lblocations, "/love/breakfast/locations/<string:locations>")
 api.add_resource(lbcoupons, "/love/breakfast/cardpkg/<string:card>")

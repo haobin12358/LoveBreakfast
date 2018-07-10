@@ -7,7 +7,7 @@ from LoveBreakfast.config.Logs import PRINT_API_NAME
 from LoveBreakfast.control.Clocations import Clocations
 from LoveBreakfast.config.response import APIS_WRONG
 
-class ALocations(Resource):
+class LBLocations(Resource):
     def __int__(self):
         self.apis_wrong = []
 
@@ -16,9 +16,6 @@ class ALocations(Resource):
 
         control_location = Clocations()
         apis = {
-            "get_all_location":"control_location.get_all_location()",
-            "get_lno": "control_location.get_lno()",
-            "get_lline": "control_location.get_lline()",
             "get_city_location": "control_location.get_city_location()"
         }
 
