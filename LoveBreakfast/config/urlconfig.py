@@ -1,22 +1,30 @@
 # *- coding:utf8 *-
+header = "https://"
+ip = "h878.cn/"
+nginx_dir = "imgs/LoveBreakfast"
+
+address = header + ip + nginx_dir
+
 product_url_list = [
-    "http://123.207.97.185:7444/imgs/image_1.png",
-    "http://123.207.97.185:7444/imgs/image_2.png",
-    "http://123.207.97.185:7444/imgs/image_3.png",
+    address + "/image_1.png",
+    address + "/image_2.png",
+    address + "/image_3.png",
 ]
+
 
 home = [
-    "http://123.207.97.185:7444/imgs/{0}/banner1.png",
-    "http://123.207.97.185:7444/imgs/{0}/banner2.png",
-
+    address + "/{0}/banner1.png",
+    address + "/{0}/banner2.png",
+    address + "/{0}/question.png"
 ]
 
+
 weekday_pic = (
-    "http://123.207.97.185:7444/imgs/{0}/image_6.jpg",
-    "http://123.207.97.185:7444/imgs/{0}/image_7.jpg",
-    "http://123.207.97.185:7444/imgs/{0}/image_8.jpg",
-    "http://123.207.97.185:7444/imgs/{0}/image_9.jpg",
-    "http://123.207.97.185:7444/imgs/{0}/image_10.png",
-    "http://123.207.97.185:7444/imgs/{0}/image_1.png",
-    "http://123.207.97.185:7444/imgs/{0}/image_2.png",
+    address + "/{0}/image_6.jpg",
+    address + "/{0}/image_7.jpg",
+    address + "/{0}/image_8.jpg",
+    address + "/{0}/image_9.jpg",
+    address + "/{0}/image_10.png",
+    address + "/{0}/image_1.png",
+    address + "/{0}/image_2.png",
 )
