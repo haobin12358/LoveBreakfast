@@ -13,13 +13,14 @@
         /*justify-content: center;*/
         margin-top: 20rpx;
         .my-label{
-          width: 200rpx;
+          width: 250rpx;
           text-align: center;
         }
         .my-input{
           border: 1px solid @border_color;
           padding: 10rpx;
           color: #999;
+          width: 300rpx;
         }
       }
     }
@@ -45,7 +46,7 @@
     }
     .my-submit{
       text-align: center;
-      margin: 80rpx 120rpx;
+      margin: 80rpx 120rpx 160rpx;
       span{
         padding: 20rpx 40rpx;
         color: #fff;
