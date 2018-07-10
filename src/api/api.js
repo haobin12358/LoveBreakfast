@@ -42,11 +42,15 @@ const picture = (params) => wxRequest(params, api + '/love/breakfast/other/pictu
 const order_price = (params) => wxRequest(params,api + '/love/breakfast/orders/order_price?token=' + params.token);//获取商品总价
 const get_select_product = (params) => wxRequest(params,api + '/love/breakfast/salelist/get_select_product?token=' + params.token + '&ASid=' + params.ASid);//获取已选择商品
 const payconfig = (params) => wxRequest(params,api + '/love/breakfast/other/payconfig');///支付
+const get_all_votes = (params) => wxRequest(params,api +'/love/breakfast/votes/get_all');//获取调查问卷
+const make_vote = (params) => wxRequest(params,api +'/love/breakfast/votes/make_vote');//提交问卷
+
 export default {
   getValidate,register,login,getText,forgetPwd,update_info,update_pwd,all_info,make_main_order,
   update_order_status,get_order_list,get_order_abo,get_all_location,
   get_lno,sale_update,get_all_car,delete_product,get_all_product,get_info_by_id,
   get_cardpkg,update_coupons,get_citys,get_addfirst,get_addsecond,get_addabo,
-  get_city_location,picture,create_review,get_review,order_price,get_select_product,payconfig
+  get_city_location,picture,create_review,get_review,order_price,get_select_product,payconfig,
+  get_all_votes,make_vote
 
 }

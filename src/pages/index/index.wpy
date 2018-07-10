@@ -98,11 +98,12 @@
             tip.error(res.data.message);
           }
         }
-        async get_all_product(asid) {
+        async get_all_product(asid,tel) {
           let that = this;
           tip.loading();
           let res = await api.get_all_product({method:'GET',query:{
-              ASid:asid
+              ASid:asid,
+              VNtelphone:tel
             }});
           if(res.data.status == 200){
             that.all_data = res.data.data;
@@ -172,7 +173,8 @@
           locChange(v){
             this.point = v;
             wx.setStorageSync('ASid', v.point_id[v.point_index]);
-            this.get_all_product(this.point.point_id[this.point.point_index]);
+            let res =  wx.getStorageSync('VNtelphone');
+            this.get_all_product(this.point.point_id[this.point.point_index],res);
             this.showModal = false;
           }
         }

@@ -11,6 +11,7 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+
       'pages/index',
       'pages/index/index',
       'pages/index/productDetail',
@@ -24,7 +25,9 @@ export default class extends wepy.app {
       'pages/personal/setUp',
       'pages/personal/login',
       'pages/personal/forgetPwd',
-      'pages/personal/register'
+      'pages/personal/register',
+      'pages/questionnaire/question',
+      'pages/questionnaire/questionResult'
     ],
     window: {
       backgroundTextStyle: 'dark',

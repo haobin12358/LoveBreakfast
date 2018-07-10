@@ -1,0 +1,111 @@
+<template>
+  <view class="my-question-result">
+      <view class="my-code-box">
+        <p>您的初始密码：</p>
+        <view class="my-pwd">{{USpassword}}</view>
+      </view>
+    <view class="my-code-box">
+      <p>活动码(可免费兑换一次早餐)：</p>
+      <view class="my-pwd active">{{UScode}}</view>
+    </view>
+
+    <view class="my-submit">
+      <span @tap="comfirTap">确定</span>
+      <button  class="my-share" open-type="share" @tap="shareTap">
+          分享给朋友
+      </button>
+    </view>
+  </view>
+</template>
+<script>
+    import wepy from 'wepy';
+
+    export default class QuestionResult extends wepy.page {
+        config = {
+            navigationBarTitleText: '提交成功'
+        }
+        data = {
+          UScode:'',
+          USpassword:''
+        }
+      onShareAppMessage(res) {
+        var _this = this;
+        let _res = wx.getStorageSync('tel');
+        return {
+          title: '早餐起义',
+          path: '/pages/index?VNtelphone=' +_res,
+          success: function (res1) {
+            // console.log
+            wx.getShareInfo({
+              shareTicket: res.shareTickets[0],
+              success: function (res) { console.log(res) },
+              fail: function (res) { console.log(res) },
+              complete: function (res) { console.log(res) }
+            })
+          },
+          fail: function (res) {
+            // 分享失败
+            console.log(res)
+          }
+        }
+
+      }
+      onLoad(options) {
+        this.UScode = options.UScode;
+        this.USpassword = options.USpassword;
+      }
+        methods = {
+          comfirTap(){
+            wx.navigateTo({
+              url:'/pages/index'
+            });
+          }
+        }
+    }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .my-question-result{
+    padding: 40rpx 60rpx;
+    color: #999999;
+    p{
+      margin: 20rpx 0;
+      line-height: 80rpx;
+    }
+    .my-pwd{
+      margin: 20rpx 0;
+      height: 90rpx;
+      line-height: 90rpx;
+      text-align: center;
+      box-shadow: 2px 2px 2px @border_color;
+      &.active{
+        background-color: @main_color;
+        color: #fff;
+      }
+    }
+  }
+  .my-submit{
+    text-align: center;
+    margin: 80rpx 60rpx;
+    span{
+      display: inline-block;
+     width: 100%;
+      height: 80rpx;
+      line-height: 80rpx;
+      color: @main_color;
+      border: 1px solid @main_color;
+      border-radius: 5px;
+      cursor: pointer;
+
+    }
+    .my-share{
+      padding: 0;
+      width: 100%;
+      height: 80rpx;
+      line-height: 80rpx;
+      color: #fff;
+      background-color: @main_color;
+      margin-top: 60rpx;
+    }
+  }
+</style>
