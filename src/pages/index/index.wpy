@@ -36,6 +36,8 @@
         top:62rpx;
         left:0;
         background-color: rgba(255,255,255,0.8);
+        overflow: hidden;
+
 
       }
     }
@@ -59,7 +61,11 @@
       </repeat>
     </view>
     <view class="my-modal-state" wx:if="{{showModal}}" catchtouchmove="modalTap">
-      <city @locChange.user="locChange"></city>
+
+        <city @locChange.user="locChange"></city>
+
+
+
     </view>
   </view>
 </template>

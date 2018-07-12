@@ -140,7 +140,7 @@
             // }, 600);
           }else if(!resId){
             this.isLogin = true;
-            tip.alert('请先选择具体点位',600);
+            tip.alert('请先选具体点位',600);
             setTimeout(() => {
               wx.switchTab({
                 url:'/pages/index/index'

@@ -1,8 +1,13 @@
 <style scoped lang="less" rel="stylesheet/less">
     @import "../styles/common";
     .my-modal{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
       padding:20rpx 90rpx;
       background-color: #fff;
+      z-index: 11;
       .my-pick-box{
         .flex-row(flex-start);
         padding: 20rpx 0;
