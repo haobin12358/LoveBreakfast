@@ -27,14 +27,15 @@
       }
       .my-content{
         width: 100%;
+        margin-bottom: 20rpx;
       }
       .my-modal-state{
         width: 100%;
         height: 100%;
-        position: absolute;
+        position: fixed;
         top:62rpx;
         left:0;
-        background-color: rgba(255,255,255,0.9);
+        background-color: rgba(255,255,255,0.8);
 
       }
     }
@@ -57,7 +58,7 @@
         <product :list.sync="item" @productTap.user="productTap" @addTap.user="addTap"></product>
       </repeat>
     </view>
-    <view class="my-modal-state" wx:if="{{showModal}}">
+    <view class="my-modal-state" wx:if="{{showModal}}" catchtouchmove="modalTap">
       <city @locChange.user="locChange"></city>
     </view>
   </view>
@@ -98,12 +99,13 @@
             tip.error(res.data.message);
           }
         }
-        async get_all_product(asid,tel) {
+        async get_all_product(asid,tel,host) {
           let that = this;
           tip.loading();
           let res = await api.get_all_product({method:'GET',query:{
               ASid:asid,
-              VNtelphone:tel
+              VNtelphone:tel,
+              PRhost:host
             }});
           if(res.data.status == 200){
             that.all_data = res.data.data;
@@ -136,6 +138,7 @@
               _this.get_city_location(data.latitude,data.longitude)
             }
           });
+          _this.get_all_product('','','host');
         }
         methods = {
           modalChange(){
@@ -176,6 +179,9 @@
             let res =  wx.getStorageSync('VNtelphone');
             this.get_all_product(this.point.point_id[this.point.point_index],res);
             this.showModal = false;
+          },
+          modalTap(){
+            return false;
           }
         }
     }
