@@ -14,15 +14,15 @@ from LoveBreakfast.apis.AAddress import LBAddress as lbaddress
 from LoveBreakfast.apis.AOther import LBOther as lbother
 from LoveBreakfast.apis.AVotes import LBVotes as lbvote
 
-from SharpGoods.apis.AUsers import AUsers as sguser
-from SharpGoods.apis.AProducts import AProducts as sgproduct
-from SharpGoods.apis.ACarts import ACarts as sgcarts
-from SharpGoods.apis.AReviews import AReviews as sgreview
-from SharpGoods.apis.AOrders import AOrders as sgorder
-from SharpGoods.apis.ALocations import ALocations as sglocations
-from SharpGoods.apis.ACoupons import ACoupons as sgcoupons
-from SharpGoods.apis.AOther import AOther as sgother
-from SharpGoods.apis.ACards import ACards as sgcards
+from SharpGoods.apis.AUsers import SGUsers as sguser
+from SharpGoods.apis.AProducts import SGProducts as sgproduct
+from SharpGoods.apis.ACarts import SGCarts as sgcarts
+from SharpGoods.apis.AReviews import SGReviews as sgreview
+from SharpGoods.apis.AOrders import SGOrders as sgorder
+from SharpGoods.apis.ALocations import SGLocations as sglocations
+from SharpGoods.apis.ACoupons import SGCoupons as sgcoupons
+from SharpGoods.apis.AOther import SGOther as sgother
+from SharpGoods.apis.ACards import SGCards as sgcards
 
 from GroupMeal.apis.AMeals import GMMeals
 from GroupMeal.apis.AUsers import GMUsers
