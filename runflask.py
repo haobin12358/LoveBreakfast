@@ -13,6 +13,7 @@ from LoveBreakfast.apis.ACoupons import LBCoupons as lbcoupons
 from LoveBreakfast.apis.AAddress import LBAddress as lbaddress
 from LoveBreakfast.apis.AOther import LBOther as lbother
 from LoveBreakfast.apis.AVotes import LBVotes as lbvote
+
 from SharpGoods.apis.AUsers import AUsers as sguser
 from SharpGoods.apis.AProducts import AProducts as sgproduct
 from SharpGoods.apis.ACarts import ACarts as sgcarts
@@ -23,6 +24,14 @@ from SharpGoods.apis.ACoupons import ACoupons as sgcoupons
 from SharpGoods.apis.AOther import AOther as sgother
 from SharpGoods.apis.ACards import ACards as sgcards
 
+from GroupMeal.apis.AMeals import GMMeals
+from GroupMeal.apis.AUsers import GMUsers
+from GroupMeal.apis.AMess import GMMess
+from GroupMeal.apis.ACarts import GMCarts
+from GroupMeal.apis.AOrders import GMOrders
+from GroupMeal.apis.AReview import GMReview
+from GroupMeal.apis.ACoupons import GMCoupons
+from GroupMeal.apis.AOther import GMOther
 bk = Flask(__name__)
 api = flask_restful.Api(bk)
 
@@ -49,6 +58,14 @@ api.add_resource(sgcoupons, "/sharp/goods/card/<string:card>")
 api.add_resource(sgother, "/sharp/goods/other/<string:other>")
 api.add_resource(sgcards, "/card/<string:card>")
 
+api.add_resource(GMUsers, "/group/meal/user/<string:users>")
+api.add_resource(GMMeals, "/group/meal/meal/<string:meals>")
+api.add_resource(GMMess, "/group/meal/mess/<string:mess>")
+api.add_resource(GMCarts, "/group/meal/cart/<string:cart>")
+api.add_resource(GMOrders, "/group/meal/order/<string:orders>")
+api.add_resource(GMReview, "/group/meal/order/<string:review>")
+api.add_resource(GMCoupons, "/group/meal/coupon/<string:card>")
+api.add_resource(GMOther, "/group/meal/other/<string:other>")
 if __name__ == '__main__':
     bk.run('0.0.0.0', 443, debug=True, ssl_context=(
         "/etc/nginx/cert/1525609592348.pem"
