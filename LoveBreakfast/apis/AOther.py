@@ -334,7 +334,7 @@ class LBOther(Resource):
             args = request.args.to_dict()
             position = args.get("position")
             print("=======================position===================")
-            print("position = ".format(position))
+            print("position = {0}".format(position))
             print("=======================position===================")
             from LoveBreakfast.config import urlconfig
             htv = "dhdp" if args.get("htv") < 1.6 else "hhdp"

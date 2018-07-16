@@ -7,8 +7,9 @@ from LoveBreakfast.config.Logs import PRINT_API_NAME
 from LoveBreakfast.control.CCarts import CCarts
 from LoveBreakfast.config.response import APIS_WRONG
 
+
 class LBCarts(Resource):
-    def __int__(self):
+    def __init__(self):
         self.ccart = CCarts()
         self.title = "=========={0}=========="
 

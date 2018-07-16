@@ -29,8 +29,6 @@ class CProduct():
 
     def get_all(self):
         args = request.args.to_dict()
-        if "ASid" not in args:
-            return PARAMS_MISS
         if "VNtelphone" in args:
             pass
         try:
@@ -38,20 +36,28 @@ class CProduct():
             print(self.title.format("pro_list_of_product"))
             print(pro_list_of_product)
             print(self.title.format("pro_list_of_product"))
-            aaid_list = get_model_return_list(self.sadd.get_addabo_by_asid(get_str(args, "ASid")))
-            print(self.title.format("aaid_list"))
-            print(aaid_list)
-            print(self.title.format("aaid_list"))
-            pro_list_of_addabo = []
-            for aaid in aaid_list:
-                pro_list_of_addabo.extend([i.PRid for i in self.smach.get_pro_by_aaid(aaid.get("AAid"))])
+            if "PRhost" in args and args.get("PRhost") == "host":
+                prolist = pro_list_of_product[:]
+            elif "ASid" in args and args.get("ASid"):
+                aaid_list = get_model_return_list(self.sadd.get_addabo_by_asid(get_str(args, "ASid")))
+                print(self.title.format("aaid_list"))
+                print(aaid_list)
+                print(self.title.format("aaid_list"))
+                pro_list_of_addabo = []
+                for aaid in aaid_list:
+                    pro_list_of_addabo.extend([i.PRid for i in self.smach.get_pro_by_aaid(aaid.get("AAid"))])
 
-            pro_list_of_addabo = {}.fromkeys(pro_list_of_addabo).keys()
-            print(self.title.format("pro_list_of_addabo"))
-            print(pro_list_of_addabo)
-            print(self.title.format("pro_list_of_addabo"))
+                pro_list_of_addabo = {}.fromkeys(pro_list_of_addabo).keys()
+                print(self.title.format("pro_list_of_addabo"))
+                print(pro_list_of_addabo)
+                print(self.title.format("pro_list_of_addabo"))
 
-            prolist = [pro for pro in pro_list_of_product if pro.get("PRid") in pro_list_of_addabo]
+                prolist = [pro for pro in pro_list_of_product if pro.get("PRid") in pro_list_of_addabo]
+            elif "ASid" not in args:
+                return PARAMS_MISS
+            else:
+                return SYSTEM_ERROR
+
             print(self.title.format("prolist"))
             print(prolist)
             print(self.title.format("prolist"))

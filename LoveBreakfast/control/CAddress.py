@@ -14,7 +14,7 @@ from LoveBreakfast.config.cityconfig import AFTYPE
 class CAddress():
     def __init__(self):
         self.title = "========={0}========="
-        from services.SAddress import SAddress
+        from LoveBreakfast.services.SAddress import SAddress
         self.sadd = SAddress()
 
     def get_addfirst(self):

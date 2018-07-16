@@ -13,18 +13,31 @@ product_url_list = [
 
 
 home = [
-    address + "/{0}/banner1.png",
-    address + "/{0}/banner2.png",
+
     address + "/{0}/question.png"
 ]
 
+"""
+address + "/{0}/banner1.png",
+address + "/{0}/banner2.png",
+"""
 
 weekday_pic = (
-    address + "/{0}/image_6.jpg",
-    address + "/{0}/image_7.jpg",
-    address + "/{0}/image_8.jpg",
-    address + "/{0}/image_9.jpg",
-    address + "/{0}/image_10.png",
-    address + "/{0}/image_1.png",
-    address + "/{0}/image_2.png",
+    address + "/{0}/timg.gif",
+    address + "/{0}/timg.gif",
+    address + "/{0}/timg.gif",
+    address + "/{0}/timg.gif",
+    address + "/{0}/timg.gif",
+    address + "/{0}/timg.gif",
+    address + "/{0}/timg.gif"
 )
+
+"""
+   address + "/{0}/image_1.jpg",
+   address + "/{0}/image_2.jpg",
+   address + "/{0}/image_3.jpg",
+   address + "/{0}/image_4.jpg",
+   address + "/{0}/image_5.png",
+   address + "/{0}/image_6.png",
+   address + "/{0}/image_7.png",
+   """

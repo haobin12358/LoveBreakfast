@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="47.104.228.112">
+    <serverData>
+      <paths name="47.104.228.112">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/LoveBreakfast" local="$PROJECT_DIR$/LoveBreakfast" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
