@@ -402,8 +402,10 @@ class COrders():
         return float(omprice) if omprice >= 0 else 0.00
 
     def check_order_date(self, order_date):
-        timenow = datetime.datetime.date()
-        time_order = datetime.datetime.strptime(order_date, timeformate.format_forweb_no_second).date()
+        print(self.title.format("order_date"))
+        print(order_date)
+        timenow = datetime.datetime.now().date()
+        time_order = datetime.datetime.strptime(order_date, timeformate.format_for_db).date()
 
         if timenow >= time_order:
             return False
@@ -412,7 +414,8 @@ class COrders():
 
 if __name__ == "__main__":
     sorder = COrders()
-    print sorder.get_status_by_status_name("未支付")
+    # print sorder.get_status_by_status_name("未支付")
+    print(sorder.check_order_date("2018-07-27 06:00"))
 """
 {
     "status": 200,
