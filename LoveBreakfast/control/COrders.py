@@ -228,8 +228,14 @@ class COrders():
 
     def update_order_status(self):
         args = request.args.to_dict()
+        print(self.title.format("args"))
+        print(args)
+        print(self.title.format("args"))
         data = request.data
         data = json.loads(data)
+        print(self.title.format("data"))
+        print(data)
+        print(self.title.format("data"))
 
         if "token" not in args:
             return PARAMS_MISS
@@ -237,7 +243,7 @@ class COrders():
             return PARAMS_MISS
         # 处理token过程，这里未设计
 
-        OMstatus = data["OMstatus"]
+        OMstatus = get_str(data, "OMstatus")
 
         if OMstatus not in OMstatus_list:
             return import_status(
