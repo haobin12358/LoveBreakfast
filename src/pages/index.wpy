@@ -39,7 +39,7 @@
       </block>
     </swiper>
     <view class="my-img" >
-      <view class="my-marks">八月中旬火爆上线，敬请期待...</view>
+      <!--<view class="my-marks">八月中旬火爆上线，敬请期待...</view>-->
       <image mode="aspectFit" @tap="beginTap" src="{{indexImg}}"  style="height:800rpx;width:670rpx; border-radius: 15rpx;position: absolute;top:0;left:0;"/>
     </view>
   </view>

@@ -4,7 +4,7 @@ import {
 
 let env = "-test" //-dev 或者 -test
 // const api= 'http://123.207.97.185:7444';
-const api ='https://h878.cn';
+const api ='https://daaiti.cn';
 /**
  * 获取发现好商品接口
  * @param  {[type]} params [description]

@@ -85,7 +85,7 @@
           city:city
         }
         data = {
-          showModal:true,
+          showModal:false,
           all_data:[],
           select_city:'',
           point:''
@@ -155,6 +155,17 @@
             }
           },
           productTap(v){
+            let _ASid = wx.getStorageSync('ASid');
+            if(!_ASid){
+              wx.showToast({
+                title: '请先选择具体地址',
+                icon: "none",
+                mask: true,
+                duration: 600
+              });
+              this.showModal = true;
+              return false;
+            }
             wx.navigateTo({
               url:'/pages/index/productDetail?PRid=' + v.PRid
             })
@@ -162,6 +173,17 @@
           addTap(v){
             let that = this;
             let res = wx.getStorageSync('token');
+            let _ASid = wx.getStorageSync('ASid');
+            if(!_ASid){
+              wx.showToast({
+                title: '请先选择具体地址',
+                icon: "none",
+                mask: true,
+                duration: 600
+              });
+             that.showModal = true;
+             return false;
+            }
             if(res){
               that.sale_update(res,v.PRid);
             }else{
