@@ -148,11 +148,11 @@
         }
         methods = {
           modalChange(){
-            if(this.point == ''){
-              tip.alert('请先选择准确点位');
-            }else{
+            // if(this.point == ''){
+            //   tip.alert('请先选择准确点位');
+            // }else{
               this.showModal = !this.showModal;
-            }
+            // }
           },
           productTap(v){
             let _ASid = wx.getStorageSync('ASid');
