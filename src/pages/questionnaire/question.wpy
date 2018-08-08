@@ -148,8 +148,10 @@
           }});
         if(res.data.status == 200){
           that.question_data = res.data.data;
-          for(let i=0;i<that.question_data.votechoice.length;i++){
-            that.question_data.votechoice[i].click = false;
+          if(that.question_data.VOtype != '填空题'){
+            for(let i=0;i<that.question_data.votechoice.length;i++){
+              that.question_data.votechoice[i].click = false;
+            }
           }
           that.back = res.data.data.VObackgroud;
           that.$apply();
