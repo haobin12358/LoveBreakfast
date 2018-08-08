@@ -33,8 +33,8 @@
             autoplay="{{swiper.autoplay}}" interval="{{swiper.interval}}" duration="{{swiper.duration}}"   bindscroll="scrollHide" style="height:340rpx;width: 670rpx;">
       <block wx:for="{{swiper.imgUrls}}" wx:key="{{index}}">
         <swiper-item>
-          <image mode="aspectFit" src="{{item.url}}" class="slide-image" hidden="{{item.hidden}}"
-                 bindload="swiperImgLoad({{index}})" @tap="imgTap({{item.url}})" style="height:270rpx;width:670rpx; border-radius: 15rpx;"/>
+          <image mode="aspectFit" src="{{item.src}}" class="slide-image" hidden="{{item.hidden}}"
+                 bindload="swiperImgLoad({{index}})" @tap="imgTap({{item}})" style="height:270rpx;width:670rpx; border-radius: 15rpx;"/>
         </swiper-item>
       </block>
     </swiper>
@@ -97,13 +97,20 @@
           if(that.swiper.imgUrls == 0){
             that.swiper.autoplay = true;
           }else{
-            that.swiperImgs = [].concat(that.swiper.imgUrls);
+            that.swiperImgs = [].concat(res.data);
             for(let i =0;i<that.swiper.imgUrls.length;i++){
-              let url = this.swiper.imgUrls[i];
+              let src = this.swiper.imgUrls[i].banner;
+              let url = this.swiper.imgUrls[i].url;
+              let VSid = this.swiper.imgUrls[i].VSid;
               this.swiper.imgUrls[i] = {};
-              if (i == 0)
+              if (i == 0){
+                this.swiper.imgUrls[i].src = src;
+                this.swiper.imgUrls[i].hidden = true;
+              }
+                this.swiper.imgUrls[i].src = src;
                 this.swiper.imgUrls[i].url = url;
-              this.swiper.imgUrls[i].hidden = true;
+                this.swiper.imgUrls[i].VSid = VSid;
+
             }
           }
         }else{
@@ -131,15 +138,15 @@
         this.swiper.imgUrls[index].hidden = false;
        index++;
         if(index < this.swiperImgs.length){
-          this.swiper.imgUrls[index].url = this.swiperImgs[index];
+          this.swiper.imgUrls[index].src = this.swiperImgs[index].banner;
         }else{
           this.swiper.autoplay = true;
         }
       },
       imgTap(v){
-        if(v.indexOf("question") != -1){
+        if(v.url != ''){
           wx.navigateTo({
-            url:'/pages/questionnaire/question'
+            url:v.url+'?VSid='+ v.VSid
           })
         }
       }

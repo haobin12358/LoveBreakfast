@@ -1,0 +1,176 @@
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../styles/common";
+  .my-question{
+    color: #999;
+    padding: 10rpx 60rpx;
+    font-size: 32rpx;
+    font-weight: 500;
+    .my-person-info{
+      view{
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        /*justify-content: center;*/
+        margin-top: 20rpx;
+        .my-label{
+          width: 250rpx;
+          text-align: center;
+        }
+        .my-input{
+          border: 1px solid @border_color;
+          padding: 10rpx;
+          color: #999;
+          width: 300rpx;
+        }
+      }
+    }
+    .m-one-question{
+      line-height: 60rpx;
+      .my-num{
+        color: @main_color;
+        font-size: 36rpx;
+      }
+      .my-name{
+        padding-left: 10rpx;
+      }
+      .my-btn{
+        /*background-color: #fee1bf;*/
+        border: 1px solid @main_color;
+        margin : 20rpx 0;
+        padding: 10rpx 20rpx;
+        &.active{
+          background-color: @main_color;
+          color: #fff;
+        }
+      }
+    }
+    .my-submit{
+      text-align: center;
+      margin: 80rpx 120rpx 160rpx;
+      span{
+        padding: 20rpx 40rpx;
+        color: #fff;
+        background-color: @main_color;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    }
+  }
+</style>
+<template>
+  <view class="my-question">
+    <view class="my-person-info">
+      <view>
+        <span class="my-label">姓名：</span>
+        <input class="my-input" bindinput="nameInput"/>
+      </view>
+      <view>
+        <span class="my-label">联系方式：</span>
+        <input class="my-input" type="number" maxlength="11" bindinput="telInput"/>
+      </view>
+    </view>
+    <view class="m-one-question" wx:for="{{question_data}}" wx:key="item">
+      <view class="my-num">Q{{index + 1}}:</view>
+      <p class="my-name">{{item.VOtext}}</p>
+      <view >
+        <view class="my-btn {{item.choose == item.choice_items[0].VItext?'active':''}}" @tap="radioTap({{index}},0)">{{item.choice_items[0].VIno}}、{{item.choice_items[0].VItext}}</view>
+        <view class="my-btn {{item.choose == item.choice_items[1].VItext?'active':''}}" @tap="radioTap({{index}},1)">{{item.choice_items[1].VIno}}、{{item.choice_items[1].VItext}}</view>
+      </view>
+    </view>
+
+    <view class="my-submit">
+      <span @tap="submitTap">提交</span>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
+  export default class Question extends wepy.page {
+    config = {
+      navigationBarTitleText: '问卷调查'
+    }
+    data = {
+      question_data:[],
+      name:'',
+      tel:'',
+      form_data:{
+
+      }
+    }
+    async get_all_votes() {
+      let that = this;
+      tip.loading();
+      let res = await api.get_all_votes({method:'GET'});
+      if(res.data.status == 200){
+        that.question_data = res.data.data.slice(2);
+        that.$apply();
+        tip.loaded();
+      }else{
+        tip.error(res.data.message);
+      }
+    }
+    async make_vote(params) {
+      let that = this;
+      tip.loading();
+      let res = await api.make_vote({method:'POST',query:params});
+      if(res.data.status == 200){
+        wx.setStorageSync('tel', params.UStelphone);
+        tip.success('提交成功');
+        wx.navigateTo({
+          url:'/pages/questionnaire/questionResult?UScode=' + res.data.data.UScode + '&USpassword=' + res.data.data.USpassword
+        })
+        that.$apply();
+        tip.loaded();
+      }else{
+        tip.error(res.data.message);
+      }
+    }
+    onLoad() {
+      this.get_all_votes();
+    }
+    methods = {
+      radioTap(j,v){
+        for(let i=0;i<this.question_data.length;i++){
+          this.question_data[j].choose = this.question_data[j].choice_items[v].VItext;
+        }
+      },
+      nameInput(e){
+        this.name = e.detail.value
+      },
+      telInput(e){
+        this.tel = e.detail.value
+      },
+      submitTap(){
+        if(this.name == ''){
+          tip.alert('请填写姓名');
+          return false
+        }
+        if(this.tel == ''){
+          tip.alert('请填写联系方式');
+          return false
+        }
+        let params = {};
+        params.USname = this.name;
+        params.UStelphone = this.tel;
+        params.USchoose = [];
+        for(let i=0;i<this.question_data.length;i++){
+          if(!this.question_data[i].choose){
+            tip.alert('请选择问题' + (i + 1 ));
+            return false;
+          }
+        }
+        for(let i=0;i<this.question_data.length;i++){
+          if(this.question_data[i].choose){
+            params.USchoose[i] = {};
+            params.USchoose[i].VOno = this.question_data[i].VOno;
+            params.USchoose[i].VNtext = this.question_data[i].choose;
+          }
+        }
+        this.make_vote(params);
+      }
+    }
+  }
+</script>
+

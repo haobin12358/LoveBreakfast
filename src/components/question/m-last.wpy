@@ -1,0 +1,45 @@
+<style  lang="less" rel="stylesheet/less">
+.m-info{
+  position: fixed;
+  top: 40%;
+  margin-left: 30rpx;
+  /*transform: translateY();*/
+}
+</style>
+<template>
+  <view class="m-one m-info">
+    <view class="m-input-box">
+      <input type="text" class="m-input" placeholder="怎么称呼您？">
+    </view>
+    <view class="m-input-box">
+      <input type="text" class="m-input" placeholder="联系电话呢？">
+    </view>
+   <view class="m-submit-btn">
+     <span>提交</span>
+    </view>
+
+    <view class="m-last-content">
+      谢谢主人的回答，
+      主人上班辛苦啦~
+      咱们天天见！
+    </view>
+  </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class FirstIndex extends wepy.page {
+        config = {
+            navigationBarTitleText: ''
+        }
+        data = {}
+
+
+        onLoad(options) {
+
+        }
+
+        methods = {}
+    }
+</script>

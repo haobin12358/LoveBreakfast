@@ -1,0 +1,44 @@
+<style scoped lang="less" rel="stylesheet/less">
+
+</style>
+<template>
+  <view  class="m-one-question">
+    <view class="m-title">{{list.VOno}}.
+      {{list.VOtext}}</view>
+    <view class="m-question-content">
+      <view class="m-one" wx:for="">
+        <span class="m-label">A.</span>
+        <span>网上预约，站点提货</span>
+      </view>
+      <view class="m-one">
+        <view>
+          <span class="m-label">A.</span>
+          <span>网上预约，站点提货</span>
+        </view>
+        <view>
+          <span class="m-label other"> </span>
+          <input type="text" class="m-input">
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class FirstIndex extends wepy.page {
+    config = {
+      navigationBarTitleText: ''
+    }
+    data = {}
+    props = {
+      list:{
+        type:Object,
+        default:null
+      }
+    }
+
+    methods = {}
+  }
+</script>

@@ -1,0 +1,51 @@
+<style  lang="less" rel="stylesheet/less">
+  .m-input{
+    width: 420rpx;
+    background-color: #fff;
+    border: 1px solid #eee;
+    color: #c1c1c1;
+    padding: 5rpx 20rpx ;
+    font-size: 24rpx;
+  }
+</style>
+<template>
+  <view  class="m-one-question">
+    <view class="m-title">{{list.VOno}}.
+      {{list.VOtext}}</view>
+    <view class="m-question-content">
+
+      <view class="m-one">
+        <view class="flex-row-start m-input-box">
+          <input type="text" class="m-input"><span>站</span>
+        </view>
+        <view class="m-alert">{{list.VOappend}}
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class FirstIndex extends wepy.page {
+        config = {
+            navigationBarTitleText: ''
+        }
+        props={
+          list:{
+            type:Object,
+            default:null
+          }
+        }
+
+        data = {}
+
+
+        onLoad(options) {
+
+        }
+
+        methods = {}
+    }
+</script>
