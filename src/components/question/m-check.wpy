@@ -6,20 +6,17 @@
     <view class="m-title">{{list.VOno}}.
       {{list.VOtext}}</view>
     <view class="m-question-content">
-      <view class="m-one" wx:for="">
-        <span class="m-label">A.</span>
-        <span>网上预约，站点提货</span>
-      </view>
-      <view class="m-one">
-        <view>
-          <span class="m-label">A.</span>
-          <span>网上预约，站点提货</span>
+      <view class="m-one"  wx:for="{{list.votechoice}}" @tap="oneType({{index}})">
+        <view class="{{item.click ? 'active':''}}">
+          <span class="m-label " >{{item.VCno}}</span>
+          <span>{{item.VCtext}}</span>
         </view>
-        <view>
+        <view wx:if="{{item.VCtype == '1201'}}">
           <span class="m-label other"> </span>
           <input type="text" class="m-input">
         </view>
       </view>
+
     </view>
   </view>
 </template>
@@ -36,9 +33,17 @@
       list:{
         type:Object,
         default:null
+      },
+      select:{
+        type:Object,
+        default:null
       }
     }
 
-    methods = {}
+    methods = {
+      oneType(item){
+        this.$emit('oneSelect',item,this.list)
+      }
+    }
   }
 </script>

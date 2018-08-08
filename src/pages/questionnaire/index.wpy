@@ -81,7 +81,8 @@
         }
         data = {
           logo:'',
-          back:''
+          back:'',
+          VSid:''
         }
       async get_host(id) {
         let that = this;
@@ -101,14 +102,15 @@
 
         onLoad(options) {
             if(options.VSid){
-              this.get_host(options.VSid)
+              this.get_host(options.VSid);
+              this.VSid = options.VSid;
             }
         }
 
         methods = {
           enterTap(){
             wx.navigateTo({
-              url:'/pages/questionnaire/question'
+              url:'/pages/questionnaire/question?VSid=' + this.VSid
             })
           }
         }

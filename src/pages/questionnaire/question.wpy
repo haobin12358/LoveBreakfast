@@ -48,7 +48,7 @@
         width: 420rpx;
         margin-left: 30rpx;
       }
-      &.active{
+      .active{
         color: #f6d500;
       }
       .m-submit-btn{
@@ -100,14 +100,14 @@
   <view class="my-question">
     <image src="{{back}}" class="m-back"></image>
     <view class="m-content">
-      <!--<mInput></mInput>-->
-        <!--<mCheck></mCheck>-->
+      <mInput wx:if="{{question_data.VOtype == '填空题'}}" :list.sync="question_data"></mInput>
+        <mCheck wx:if="{{question_data.VOtype == '单选题' || question_data.VOtype == '多选题'}}" :select.sync="now_select" :list.sync="question_data" @oneSelect.user="oneSelect"></mCheck>
 
-      <mLast></mLast>
+          <!--<mLast></mLast>-->
 
     </view>
 
-    <image src="../../images/icon-next.png" class="m-icon-next"></image>
+    <image src="../../images/icon-next.png" class="m-icon-next" @tap="nextTap"></image>
     <view class="m-progress">
       <progress percent="0" color="#fff" activeColor="#f6d500"/>
     </view>
@@ -128,23 +128,30 @@
             navigationBarTitleText: ''
         }
         data = {
-          question_data:[],
+          question_data:{},
           back:'',
-          form_data:{
-
-          }
+          form_data:[],
+          now_index:-1,
+          now_select:null
         }
       components ={
           mInput,
-        mCheck,
-        mLast
+          mCheck,
+          mLast
       }
-      async get_all_votes() {
+      async get_votes(id,no) {
         let that = this;
         tip.loading();
-        let res = await api.get_all_votes({method:'GET'});
+        let res = await api.get_votes({method:'GET',query:{
+          VSid: id,
+            VOno:no
+          }});
         if(res.data.status == 200){
-          that.question_data = res.data.data.slice(2);
+          that.question_data = res.data.data;
+          for(let i=0;i<that.question_data.votechoice.length;i++){
+            that.question_data.votechoice[i].click = false;
+          }
+          that.back = res.data.data.VObackgroud;
           that.$apply();
           tip.loaded();
         }else{
@@ -168,7 +175,10 @@
         }
       }
       onLoad(options) {
-        this.get_all_votes();
+          if(options.VSid){
+            this.get_votes(options.VSid,'');
+            this.VSid = options.VSid;
+          }
       }
       methods = {
         radioTap(j,v){
@@ -209,6 +219,37 @@
             }
           }
           this.make_vote(params);
+        },
+        nextTap(){
+          if(this.now_index == -1 ){
+            tip.error('请先选择选项');
+            return false;
+          }
+          if(this.form_data[this.now_index] == ''){
+              tip.error('请先选择选项');
+              return false;
+          }
+          this.get_votes(this.VSid,this.now_select.VCnext);
+        },
+        oneSelect(i,list){
+          let _arr = [].concat(this.form_data);
+          let a = null;
+          // for(let j=0;i<this.form_data.length;j++){
+          //   if(list.VSid == this.form_data[j].VSid){
+          //
+          //   }
+          // }
+          if(list.VOtype == '单选题'){
+            for(let x = 0;x<list.votechoice.length;x++){
+              list.votechoice[x].click = false;
+            }
+          }
+          list.votechoice[i].click = true;
+          _arr.push(list);
+          this.now_index = Number(this.now_index) +1 ;
+          this.form_data = [].concat(_arr);
+          this.now_select = list.votechoice[i];
+          this.$apply();
         }
       }
     }
