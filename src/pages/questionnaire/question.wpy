@@ -101,11 +101,11 @@
     <image src="{{back}}" class="m-back"></image>
     <view class="m-content">
       <view wx:if="{{!show_last}}">
-        <mInput wx:if="{{question_data.VOtype == '填空题'}}" :list.sync="question_data"></mInput>
+        <mInput wx:if="{{question_data.VOtype == '填空题'}}" :list.sync="question_data" @inputChange.user="inputChange"></mInput>
         <mCheck wx:if="{{question_data.VOtype == '单选题' || question_data.VOtype == '多选题'}}" :select.sync="now_select" :list.sync="question_data" @oneSelect.user="oneSelect"></mCheck>
       </view>
 
-      <mLast wx:if="{{show_last}}"></mLast>
+      <mLast wx:if="{{show_last}}" @submitTap.user="submitTap"></mLast>
 
     </view>
 
@@ -152,10 +152,13 @@
         if(res.data.status == 200){
           that.question_data = res.data.data;
           that.now_index = Number(that.now_index) +1 ;
-          if(that.question_data.VOtype != '填空题'){
+          if(that.question_data.VOtype != '填空题' && that.question_data.votechoice){
             for(let i=0;i<that.question_data.votechoice.length;i++){
               that.question_data.votechoice[i].click = false;
+              that.question_data.votechoice[i].VRabo = '';
             }
+          }else if(that.question_data.VOtype == '填空题'){
+            that.question_data.VRabo = '';
           }
           that.back = res.data.data.VObackgroud;
           that.$apply();
@@ -187,41 +190,45 @@
           }
       }
       methods = {
-        radioTap(j,v){
-          for(let i=0;i<this.question_data.length;i++){
-            this.question_data[j].choose = this.question_data[j].choice_items[v].VItext;
-          }
-        },
-        nameInput(e){
-          this.name = e.detail.value
-        },
-        telInput(e){
-          this.tel = e.detail.value
-        },
-        submitTap(){
-          if(this.name == ''){
-            tip.alert('请填写姓名');
-            return false
-          }
-          if(this.tel == ''){
-            tip.alert('请填写联系方式');
-            return false
-          }
+        submitTap(name,tel){
           let params = {};
-          params.USname = this.name;
-          params.UStelphone = this.tel;
+          params.USname = name;
+          params.UStelphone = tel;
+          params.VSid = this.VSid;
           params.USchoose = [];
-          for(let i=0;i<this.question_data.length;i++){
-            if(!this.question_data[i].choose){
-              tip.alert('请选择问题' + (i + 1 ));
-              return false;
-            }
-          }
-          for(let i=0;i<this.question_data.length;i++){
-            if(this.question_data[i].choose){
-              params.USchoose[i] = {};
-              params.USchoose[i].VOno = this.question_data[i].VOno;
-              params.USchoose[i].VNtext = this.question_data[i].choose;
+
+
+          for(let i=0;i<this.form_data.length;i++){
+            params.USchoose[i] = {};
+            let _VOid = this.form_data[i].VOid;
+            params.USchoose[i].VOid = _VOid;
+            if(this.form_data[i].VOtype != '填空题'){
+              for(let j=0;j<this.form_data[i].votechoice.length;i++){
+                // if(this.form_data[i].VOtype == '多选题'){
+                //   params.USchoose[i].VRchoice =[];
+                // }else{
+                //   params.USchoose[i].VRchoice ='';
+                // }
+
+                console.log(this.form_data[i],i,params.USchoose[i])
+
+                if(this.form_data[i].votechoice[j].click){
+                  let VCno = this.form_data[i].votechoice[j].VCno;
+                  let VRabo = this.form_data[i].votechoice[j].VRabo;
+                  if(this.form_data[i].VOtype == '多选题'){
+                    params.USchoose[i].VRchoice = params.USchoose[i].VRchoice + ',' + VCno;
+                    params.USchoose[i].VRabo =  VRabo;
+                  }else{
+                    params.USchoose[i].VRchoice =  VCno;
+                    params.USchoose[i].VRabo =  VRabo;
+                  }
+
+                }
+              }
+            }else if(this.form_data[i].VOtype == '填空题'){
+              params.USchoose[i].VOid = this.form_data[i].VOid;
+              params.USchoose[i].VRchoice =  this.form_data[i].VCno;
+              params.USchoose[i].VRabo =  this.form_data[i].VRabo;
             }
           }
           this.make_vote(params);
@@ -242,8 +249,6 @@
         },
         oneSelect(i,list){
           let _arr = [].concat(this.form_data);
-          let a = null;
-
           if(list.VOtype == '单选题'){
             for(let x = 0;x<list.votechoice.length;x++){
               list.votechoice[x].click = false;
@@ -254,6 +259,14 @@
           this.form_data = [].concat(_arr);
           this.now_select = list.votechoice[i];
           this.$apply();
+        },
+        inputChange(e){
+          let _arr = [].concat(this.form_data);
+          this.question_data.VRabo = e;
+          _arr.push(this.question_data);
+          this.form_data = [].concat(_arr);
+          this.now_select = this.question_data;
+
         }
       }
     }

@@ -6,14 +6,14 @@
     <view class="m-title">{{list.VOno}}.
       {{list.VOtext}}</view>
     <view class="m-question-content">
-      <view class="m-one"  wx:for="{{list.votechoice}}" @tap="oneType({{index}})">
-        <view class="{{item.click ? 'active':''}}">
+      <view class="m-one"  wx:for="{{list.votechoice}}" >
+        <view class="{{item.click ? 'active':''}}" @tap="oneType({{index}})">
           <span class="m-label " >{{item.VCno}}</span>
           <span>{{item.VCtext}}</span>
         </view>
         <view wx:if="{{item.VCtype == '1201'}}">
           <span class="m-label "> </span>
-          <input type="text" class="m-input other">
+          <input type="text" class="m-input other" bindinput="inputTap({{$event}},{{index}})">
         </view>
       </view>
 
@@ -43,6 +43,9 @@
     methods = {
       oneType(item){
         this.$emit('oneSelect',item,this.list)
+      },
+      inputTap(e,v){
+        console.log(e,v)
       }
     }
   }

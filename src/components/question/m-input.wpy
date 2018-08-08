@@ -16,7 +16,7 @@
 
       <view class="m-one">
         <view class="flex-row-start m-input-box">
-          <input type="text" class="m-input"><span>站</span>
+          <input type="text" class="m-input" bindinput="inputValue"><span>站</span>
         </view>
         <view class="m-alert">{{list.VOappend}}
         </view>
@@ -46,6 +46,10 @@
 
         }
 
-        methods = {}
+        methods = {
+          inputValue(e){
+            this.$emit('inputChange',e.detail.value);
+          }
+        }
     }
 </script>
