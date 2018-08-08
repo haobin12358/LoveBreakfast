@@ -100,16 +100,18 @@
   <view class="my-question">
     <image src="{{back}}" class="m-back"></image>
     <view class="m-content">
-      <mInput wx:if="{{question_data.VOtype == '填空题'}}" :list.sync="question_data"></mInput>
+      <view wx:if="{{!show_last}}">
+        <mInput wx:if="{{question_data.VOtype == '填空题'}}" :list.sync="question_data"></mInput>
         <mCheck wx:if="{{question_data.VOtype == '单选题' || question_data.VOtype == '多选题'}}" :select.sync="now_select" :list.sync="question_data" @oneSelect.user="oneSelect"></mCheck>
+      </view>
 
-          <!--<mLast></mLast>-->
+      <mLast wx:if="{{show_last}}"></mLast>
 
     </view>
 
-    <image src="../../images/icon-next.png" class="m-icon-next" @tap="nextTap"></image>
-    <view class="m-progress">
-      <progress percent="0" color="#fff" activeColor="#f6d500"/>
+    <image src="../../images/icon-next.png" class="m-icon-next" @tap="nextTap" wx:if="{{!show_last}}"></image>
+    <view class="m-progress" wx:if="{{!show_last}}">
+      <progress percent="{{question_data.progress}}" color="#fff" activeColor="#f6d500"/>
     </view>
 
 
@@ -131,8 +133,9 @@
           question_data:{},
           back:'',
           form_data:[],
-          now_index:-1,
-          now_select:null
+          now_index:0,
+          now_select:null,
+          show_last:false
         }
       components ={
           mInput,
@@ -148,6 +151,7 @@
           }});
         if(res.data.status == 200){
           that.question_data = res.data.data;
+          that.now_index = Number(that.now_index) +1 ;
           if(that.question_data.VOtype != '填空题'){
             for(let i=0;i<that.question_data.votechoice.length;i++){
               that.question_data.votechoice[i].click = false;
@@ -223,24 +227,23 @@
           this.make_vote(params);
         },
         nextTap(){
-          if(this.now_index == -1 ){
+          if(this.form_data.length <1 ){
             tip.error('请先选择选项');
             return false;
           }
-          if(this.form_data[this.now_index] == ''){
-              tip.error('请先选择选项');
-              return false;
+          if(this.form_data.length < this.now_index){
+            tip.error('请先选择选项');
+            return false;
+          }
+          if(this.now_select.VCnext == ''){
+            this.show_last = true;
           }
           this.get_votes(this.VSid,this.now_select.VCnext);
         },
         oneSelect(i,list){
           let _arr = [].concat(this.form_data);
           let a = null;
-          // for(let j=0;i<this.form_data.length;j++){
-          //   if(list.VSid == this.form_data[j].VSid){
-          //
-          //   }
-          // }
+
           if(list.VOtype == '单选题'){
             for(let x = 0;x<list.votechoice.length;x++){
               list.votechoice[x].click = false;
@@ -248,7 +251,6 @@
           }
           list.votechoice[i].click = true;
           _arr.push(list);
-          this.now_index = Number(this.now_index) +1 ;
           this.form_data = [].concat(_arr);
           this.now_select = list.votechoice[i];
           this.$apply();

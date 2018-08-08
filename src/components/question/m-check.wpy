@@ -12,8 +12,8 @@
           <span>{{item.VCtext}}</span>
         </view>
         <view wx:if="{{item.VCtype == '1201'}}">
-          <span class="m-label other"> </span>
-          <input type="text" class="m-input">
+          <span class="m-label "> </span>
+          <input type="text" class="m-input other">
         </view>
       </view>
 
