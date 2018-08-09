@@ -183,7 +183,7 @@
           wx.setStorageSync('tel', params.UStelphone);
           tip.success('提交成功');
           wx.navigateTo({
-            url:'/pages/questionnaire/questionResult?UScode=' + res.data.data.UScode + '&USpassword=' + res.data.data.USpassword
+            url:'/pages/questionnaire/questionResult?UStelphone=' + res.data.data.UStelphone + '&USpassword=' + res.data.data.USpassword + '&back=' +that.back
           })
           that.$apply();
           tip.loaded();

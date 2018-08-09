@@ -1,12 +1,14 @@
 <template>
   <view class="my-question-result">
+    <image src="{{back}}" class="m-back"></image>
+    <view class="m-mark"></view>
       <view class="my-code-box">
         <p>您的初始密码：</p>
         <view class="my-pwd">{{USpassword}}</view>
       </view>
     <view class="my-code-box">
-      <p>活动码(可免费兑换一次早餐)：</p>
-      <view class="my-pwd active">{{UScode}}</view>
+      <p>您的账号：</p>
+      <view class="my-pwd active">{{UStelphone}}</view>
     </view>
 
     <view class="my-submit">
@@ -25,8 +27,9 @@
             navigationBarTitleText: '提交成功'
         }
         data = {
-          UScode:'',
-          USpassword:''
+          UStelphone:'',
+          USpassword:'',
+          back:''
         }
       onShareAppMessage(res) {
         var _this = this;
@@ -51,8 +54,9 @@
 
       }
       onLoad(options) {
-        this.UScode = options.UScode;
+        this.UStelphone = options.UStelphone;
         this.USpassword = options.USpassword;
+        this.back = options.back;
       }
         methods = {
           comfirTap(){
@@ -65,46 +69,59 @@
 </script>
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../styles/common";
+  .m-back{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left: 0;
+    z-index: -2;
+  }
+  .m-mark{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left: 0;
+    z-index: -1;
+    background-color: rgba(0,0,0,0.4);
+  }
   .my-question-result{
-    padding: 40rpx 60rpx;
-    color: #999999;
+    padding: 110rpx 165rpx 0;
+    color: #c1c1c1;
+    font-size: 30rpx;
     p{
       margin: 20rpx 0;
-      line-height: 80rpx;
+      line-height: 56rpx;
     }
     .my-pwd{
       margin: 20rpx 0;
-      height: 90rpx;
-      line-height: 90rpx;
+      height: 60rpx;
+      line-height: 60rpx;
       text-align: center;
-      box-shadow: 2px 2px 2px @border_color;
-      &.active{
-        background-color: @main_color;
-        color: #fff;
-      }
+      background-color: #fff;
     }
   }
   .my-submit{
     text-align: center;
-    margin: 80rpx 60rpx;
+    margin-top: 260rpx;
     span{
       display: inline-block;
      width: 100%;
-      height: 80rpx;
-      line-height: 80rpx;
-      color: @main_color;
-      border: 1px solid @main_color;
-      border-radius: 5px;
+      height: 56rpx;
+      line-height: 56rpx;
+      color: #fff;
       cursor: pointer;
-
+      background-color: rgba(0,0,0,0.16);
     }
     .my-share{
       padding: 0;
+      font-size: 30rpx;
       width: 100%;
-      height: 80rpx;
-      line-height: 80rpx;
-      color: #fff;
-      background-color: @main_color;
+      height: 56rpx;
+      line-height: 56rpx;
+      color: #707070;
+      background-color: #f2efef;
       margin-top: 60rpx;
     }
   }

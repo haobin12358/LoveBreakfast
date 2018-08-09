@@ -67,7 +67,7 @@
     <view class="m-strong">
          <view>HI主人！</view>
         <view>我是你的御用小厨，</view>
-        <view>8月X日起，你的早餐都交给我吧~</view>
+        <view>{{date}}起，你的早餐都交给我吧~</view>
     </view>
     <view class="m-normal">
       <view>在此之前，</view>
@@ -90,7 +90,9 @@
         data = {
           logo:'',
           back:'',
-          VSid:''
+          VSid:'',
+          date:'',
+          timestatus:''
         }
       async get_host(id) {
         let that = this;
@@ -101,6 +103,8 @@
         if(res.data.status == 200){
          that.back = res.data.data.VScontent;
          that.logo = res.data.data.VShead;
+         that.date = res.data.data.VStime.slice(5,7) + '月' + res.data.data.VStime.slice(8) +'日';
+         that.timestatus = res.data.data.TimeStatus;
           that.$apply();
           tip.loaded();
         }else{
@@ -117,9 +121,14 @@
 
         methods = {
           enterTap(){
-            wx.navigateTo({
-              url:'/pages/questionnaire/question?VSid=' + this.VSid
-            })
+            if(this.timestatus == '时间没问题'){
+              wx.navigateTo({
+                url:'/pages/questionnaire/question?VSid=' + this.VSid
+              })
+            }else{
+              tip.error(this.timestatus);
+            }
+
           }
         }
     }
