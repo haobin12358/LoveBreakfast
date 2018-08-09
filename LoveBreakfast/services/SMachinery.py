@@ -18,3 +18,11 @@ class SMachinery(SBase):
     @close_session
     def get_maid_by_aaid_prid(self, aaid, prid):
         return self.session.query(Machinery.MAid).filter(Machinery.PRid == prid, Machinery.AAid == aaid).scalar()
+
+
+if __name__ == "__main__":
+    sma = SMachinery()
+    import uuid
+    prname = "周一早餐"
+    prid = str(uuid.uuid1())
+    

@@ -36,3 +36,5 @@ error_no_city = 405801
 
 error_no_pro = 405901
 error_make_ordermain_time = 405902
+error_vote_time_start = 405903
+error_vote_time_end = 405904

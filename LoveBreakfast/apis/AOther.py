@@ -339,7 +339,21 @@ class LBOther(Resource):
             from LoveBreakfast.config import urlconfig
             htv = "dhdp" if args.get("htv") < 1.6 else "hhdp"
             if position == "top":
-                picturelist = [i.format(htv) for i in urlconfig.home]
+                picturelist = []
+
+                from LoveBreakfast.services.SVotes import SVotes
+                from LoveBreakfast.common.get_model_return_list import get_model_return_list as tolist
+                svotes = SVotes()
+                votes = tolist(svotes.get_all_votes())
+                for vote in votes:
+                    picturelist.append({
+                        "banner": vote.get("VSbannel").format(htv),
+                        "url": vote.get("VSurl"),
+                        "VSid": vote.get("VSid"),
+                    })
+                for banner in urlconfig.home:
+                    banner["banner"] = banner.get("banner").format(htv)
+                    picturelist.append(banner)
                 print(self.title.format("piclist"))
                 print(picturelist)
                 print(self.title.format("piclist"))

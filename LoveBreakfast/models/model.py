@@ -181,27 +181,79 @@ class Machinery(Base):
     AAid = Column(String(64))      # 机器地址
     PRid = Column(String(64))      # 机器里有的商品
 
+#
+# class Votes(Base):
+#     __tablename__ = "Votes"
+#     VOid = Column(String(64), primary_key=True)
+#     VOtext = Column(Text, nullable=False)
+#     VOchoice = Column(Integer, nullable=False)
+#     VOno = Column(String(2), nullable=False)
+#     VOisnull = Column(Integer, nullable=False)
+#
+#
+# class Voteitems(Base):
+#     __tablename__ = "Voteitems"
+#     VIid = Column(String(64), primary_key=True)
+#     VOid = Column(String(64), nullable=False)
+#     VItext = Column(String(64), nullable=False)
+#     VIno = Column(String(2), nullable=False)
+#
+#
+# class Votenotes(Base):
+#     __tablename__ = "Votenotes"
+#     VNid = Column(String(64), primary_key=True)
+#     VOno = Column(String(2), nullable=False)
+#     VNtext = Column(Text)
+#     VNtelphone = Column(String(14), nullable=False)
+
 
 class Votes(Base):
     __tablename__ = "Votes"
+    VSid = Column(String(64), primary_key=True)
+    VSname = Column(Text, nullable=False)  # 问卷名称
+    VScontent = Column(Text)               # 问卷描述
+    VSstartTime = Column(String(14))       # 起始时间
+    VSendTime = Column(String(14))         # 结束时间
+    VSurl = Column(Text)                   # 前端路由
+    VShead = Column(Text)                  # 问卷icon
+    VSbannel = Column(Text)                # 问卷宣传banner
+
+
+class Vote(Base):
+    __tablename__ = "Vote"
     VOid = Column(String(64), primary_key=True)
     VOtext = Column(Text, nullable=False)
-    VOchoice = Column(Integer, nullable=False)
-    VOno = Column(String(2), nullable=False)
-    VOisnull = Column(Integer, nullable=False)
+    VOtype = Column(Integer, nullable=False)    # 问题类型 {1001：单选题，1002： 多选题， 1003： 填空题}
+    VOno = Column(String(2), nullable=False)    # 问题编号
+    VOisnull = Column(Integer, nullable=False)  # 是否可空 {1100： 不可空， 1101：可空}
+    VOunit = Column(Integer)                    # 填空题后可能涉及的单位 {1300: 站}
+    VOappend = Column(Text)                     # 如果是填空题，后面的补充内容
+    VSid = Column(String(64), nullable=False)   # 问卷id
+    VObackgroud = Column(Text)                  # 背景图
 
 
-class Voteitems(Base):
-    __tablename__ = "Voteitems"
-    VIid = Column(String(64), primary_key=True)
-    VOid = Column(String(64), nullable=False)
-    VItext = Column(String(64), nullable=False)
-    VIno = Column(String(2), nullable=False)
+class VoteChoice(Base):
+    __tablename__ = "VoteChoice"
+    VCid = Column(String(64), primary_key=True)
+    VCno = Column(String(2), nullable=False)   # 选项编号
+    VCtext = Column(Text, nullable=False)      # 选项描述
+    VCnext = Column(String(2))                 # 选项对应下一题，可空，默认为VOid对应VOno+1
+    VCtype = Column(Integer)                   # 选项类型 是否需要增加文本框{1200: 不需要，1201：需要}
+    VOid = Column(String(64))                  # 问题id
 
 
 class Votenotes(Base):
     __tablename__ = "Votenotes"
     VNid = Column(String(64), primary_key=True)
-    VOno = Column(String(2), nullable=False)
-    VNtext = Column(Text)
-    VNtelphone = Column(String(14), nullable=False)
+    VSid = Column(String(64))
+    USid = Column(String(64))    # 用户ID
+    VNtime = Column(String(14))  # 答题时间
+
+
+class VoteResult(Base):
+    __tablename__ = "VoteResult"
+    VRid = Column(String(64), primary_key=True)
+    VNid = Column(String(64))     # 答题记录id
+    VOid = Column(String(64))     # 问题id
+    VRchoice = Column(String(16))  # 选项
+    VRabo = Column(Text)          # 详情： 填空和其他用

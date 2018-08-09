@@ -27,7 +27,10 @@ class LBVotes(Resource):
         print(PRINT_API_NAME.format(votes))
 
         apis = {
-            "get_all":"self.cvote.get_all()"
+            "get_all": "self.cvote.get_all()",
+            "get_host": "self.cvote.get_host()",
+            "get_vote": "self.cvote.get_vote()",
+
         }
 
         if votes in apis:

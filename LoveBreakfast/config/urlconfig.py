@@ -1,6 +1,6 @@
 # *- coding:utf8 *-
 header = "https://"
-ip = "h878.cn/"
+ip = "daaiti.cn/"
 nginx_dir = "imgs/LoveBreakfast"
 
 address = header + ip + nginx_dir
@@ -13,21 +13,29 @@ product_url_list = [
 
 
 home = [
-
-    address + "/{0}/question.png"
+    {
+        "banner": address + "/{0}/question.png",
+        "url": "",
+        "VSid": "",
+     },
+    {
+        "banner": address + "/{0}/banner1.png",
+        "url": "",
+        "VSid": "",
+     },
+    {
+        "banner": address + "/{0}/banner2.png",
+        "url": "",
+        "VSid": "",
+    },
 ]
 
-"""
-address + "/{0}/banner1.png",
-address + "/{0}/banner2.png",
-"""
-
 weekday_pic = (
-    address + "/{0}/timg.gif",
-    address + "/{0}/timg.gif",
-    address + "/{0}/timg.gif",
-    address + "/{0}/timg.gif",
-    address + "/{0}/timg.gif",
+    address + "/{0}/weekpic1.png",
+    address + "/{0}/weekpic2.png",
+    address + "/{0}/weekpic3.png",
+    address + "/{0}/weekpic4.png",
+    address + "/{0}/weekpic5.png",
     address + "/{0}/timg.gif",
     address + "/{0}/timg.gif"
 )
