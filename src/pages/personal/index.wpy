@@ -171,7 +171,7 @@
   <block wx:if="{{!isLogin}}">
     <view class="container">
       <view class="m-top">
-        <image class="m-avatar-register" src="../../images/icon-logo.jpg"></image>
+        <image class="m-avatar-register" src="../../images/icon-logo.png"></image>
         <form bindsubmit="formSubmit">
           <view class="m-section">
             <image class="m-icon" src='/images/icon-tel.jpg'></image>

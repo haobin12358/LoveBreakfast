@@ -30,7 +30,7 @@
 <template>
   <view class="my-index">
     <swiper indicator-dots="{{swiper.indicatorDots}}"
-            autoplay="{{swiper.autoplay}}" interval="{{swiper.interval}}" duration="{{swiper.duration}}"   bindscroll="scrollHide" style="height:340rpx;width: 670rpx;">
+            autoplay="{{swiper.autoplay}}" interval="{{swiper.interval}}" duration="{{swiper.duration}}"  circular="true"  bindscroll="scrollHide" style="height:340rpx;width: 670rpx;">
       <block wx:for="{{swiper.imgUrls}}" wx:key="{{index}}">
         <swiper-item>
           <image mode="aspectFit" src="{{item.src}}" class="slide-image" hidden="{{item.hidden}}"
@@ -52,7 +52,7 @@
   let wxTools = require('../utils/wxTools.js');
   export default class FirstIndex extends wepy.page {
     config = {
-      navigationBarTitleText: '早餐起义'
+      navigationBarTitleText: '早安city'
     }
     data = {
       swiper:{
