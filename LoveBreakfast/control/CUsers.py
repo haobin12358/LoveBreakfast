@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
 import json
 import uuid
-from LoveBreakfast.config.response import SYSTEM_ERROR, PARAMS_MISS
+from LoveBreakfast.config.response import SYSTEM_ERROR, PARAMS_MISS, TIME_ERROR
 from LoveBreakfast.common.import_status import import_status
 from LoveBreakfast.common.get_model_return_list import get_model_return_dict
 from LoveBreakfast.common.MakeToken import token_to_usid
@@ -17,6 +17,7 @@ class CUsers():
         self.title = '============{0}============'
 
     def register(self):
+        return TIME_ERROR
         data = request.data
         data = json.loads(data)
         print(self.title.format("data"))
@@ -228,6 +229,7 @@ class CUsers():
         return back_response
 
     def get_inforcode(self):
+        return TIME_ERROR
         data = request.data
         data = json.loads(data)
         print(self.title.format("data"))

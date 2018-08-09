@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from flask import request
 import json
-from LoveBreakfast.config.response import SYSTEM_ERROR, PARAMS_MISS
+from LoveBreakfast.config.response import SYSTEM_ERROR, PARAMS_MISS, TIME_ERROR
 import datetime
 from LoveBreakfast.common import timeformate
 from LoveBreakfast.common.import_status import import_status
@@ -135,6 +135,7 @@ class COrders():
         return response_make_main_order
 
     def make_main_order(self):
+        return TIME_ERROR
         args = request.args.to_dict()
         data = request.data
         data = json.loads(data)
