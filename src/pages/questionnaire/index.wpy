@@ -44,14 +44,23 @@
       height: 100%;
       top:0;
       left: 0;
+      z-index: -2;
+    }
+    .m-mark{
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top:0;
+      left: 0;
       z-index: -1;
-      background-color: #000;
+      background-color: rgba(0,0,0,0.4);
     }
   }
 </style>
 <template>
   <view class="m-question-index">
     <image src="{{back}}" class="m-back"></image>
+    <view class="m-mark"></view>
     <view class="m-logo">
       <image src="{{logo}}" class="m-logo-image" />
     </view>
