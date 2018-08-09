@@ -102,7 +102,7 @@
     <view class="m-content">
       <view wx:if="{{!show_last}}">
         <mInput wx:if="{{question_data.VOtype == '填空题'}}" :list.sync="question_data" @inputChange.user="inputChange"></mInput>
-        <mCheck wx:if="{{question_data.VOtype == '单选题' || question_data.VOtype == '多选题'}}" :select.sync="now_select" :list.sync="question_data" @oneSelect.user="oneSelect"></mCheck>
+        <mCheck wx:if="{{question_data.VOtype == '单选题' || question_data.VOtype == '多选题'}}" :select.sync="now_select" :list.sync="question_data" @oneSelect.user="oneSelect" @selectInput.user="selectInput"></mCheck>
       </view>
 
       <mLast wx:if="{{show_last}}" @submitTap.user="submitTap"></mLast>
@@ -113,8 +113,6 @@
     <view class="m-progress" wx:if="{{!show_last}}">
       <progress percent="{{question_data.progress}}" color="#fff" activeColor="#f6d500"/>
     </view>
-
-
 
   </view>
 </template>
@@ -135,7 +133,8 @@
           form_data:[],
           now_index:0,
           now_select:null,
-          show_last:false
+          show_last:false,
+          params:[]
         }
       components ={
           mInput,
@@ -195,42 +194,7 @@
           params.USname = name;
           params.UStelphone = tel;
           params.VSid = this.VSid;
-          params.USchoose = [];
-
-
-          for(let i=0;i<this.form_data.length;i++){
-            params.USchoose[i] = {};
-            let _VOid = this.form_data[i].VOid;
-            params.USchoose[i].VOid = _VOid;
-            if(this.form_data[i].VOtype != '填空题'){
-              for(let j=0;j<this.form_data[i].votechoice.length;i++){
-                // if(this.form_data[i].VOtype == '多选题'){
-                //   params.USchoose[i].VRchoice =[];
-                // }else{
-                //   params.USchoose[i].VRchoice ='';
-                // }
-
-                console.log(this.form_data[i],i,params.USchoose[i])
-
-                if(this.form_data[i].votechoice[j].click){
-                  let VCno = this.form_data[i].votechoice[j].VCno;
-                  let VRabo = this.form_data[i].votechoice[j].VRabo;
-                  if(this.form_data[i].VOtype == '多选题'){
-                    params.USchoose[i].VRchoice = params.USchoose[i].VRchoice + ',' + VCno;
-                    params.USchoose[i].VRabo =  VRabo;
-                  }else{
-                    params.USchoose[i].VRchoice =  VCno;
-                    params.USchoose[i].VRabo =  VRabo;
-                  }
-
-                }
-              }
-            }else if(this.form_data[i].VOtype == '填空题'){
-              params.USchoose[i].VOid = this.form_data[i].VOid;
-              params.USchoose[i].VRchoice =  this.form_data[i].VCno;
-              params.USchoose[i].VRabo =  this.form_data[i].VRabo;
-            }
-          }
+          params.USchoose = this.params;
           this.make_vote(params);
         },
         nextTap(){
@@ -245,6 +209,38 @@
           if(this.now_select.VCnext == ''){
             this.show_last = true;
           }
+
+          let _i = this.now_index-1;
+          let row =this.form_data[_i];
+          this.params[_i] = {};
+          this.params[_i].VOid = this.form_data[_i].VOid;
+          this.params[_i].VRabo ='';
+          if(row.VOtype != '填空题'){
+            if(row.VOtype == '多选题'){
+              this.params[_i].VRchoice = [];
+            }else{
+              this.params[_i].VRchoice = '';
+            }
+            for(let x=0;x<row['votechoice'].length;x++){
+              let VCno = row['votechoice'][x].VCno;
+              let VRabo = row['votechoice'][x].VRabo;
+              if(row['votechoice'][x].click){
+                if(row.VOtype == '多选题'){
+                  this.params[_i].VRchoice.push(VCno);
+                  if(VRabo != ''){
+                    this.params[_i].VRabo = VRabo;
+                  }
+                }else{
+                  this.params[_i].VRchoice = VCno;
+                  this.params[_i].VRabo = VRabo;
+                }
+              }
+            }
+          }else{
+              this.params[_i].VRchoice = '';
+              this.params[_i].VRabo = row.VRabo;
+          }
+          console.log(this.params)
           this.get_votes(this.VSid,this.now_select.VCnext);
         },
         oneSelect(i,list){
@@ -254,8 +250,17 @@
               list.votechoice[x].click = false;
             }
           }
-          list.votechoice[i].click = true;
-          _arr.push(list);
+          if(list.VOtype == '多选题'){
+            if(_arr[_arr.length -1].VOid == list.VOid){
+              _arr[_arr.length -1].votechoice[i].click = !_arr[_arr.length -1].votechoice[i].click;
+            }else{
+              list.votechoice[i].click = !list.votechoice[i].click;
+              _arr.push(list);
+            }
+          }else{
+            list.votechoice[i].click = true;
+            _arr.push(list);
+          }
           this.form_data = [].concat(_arr);
           this.now_select = list.votechoice[i];
           this.$apply();
@@ -266,7 +271,20 @@
           _arr.push(this.question_data);
           this.form_data = [].concat(_arr);
           this.now_select = this.question_data;
-
+        },
+        selectInput(list,i){
+          console.log(list);
+          let _arr = [].concat(this.form_data);
+          if(list.VOtype == '多选题'){
+            if(_arr[_arr.length -1].VOid == list.VOid){
+              _arr[_arr.length -1] = list;
+            }else{
+              _arr.push(list);
+            }
+          }
+          this.form_data = [].concat(_arr);
+          this.now_select = list.votechoice[i];
+          this.$apply();
         }
       }
     }
