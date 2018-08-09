@@ -285,8 +285,8 @@ class CVotes():
         })
         VoteResult = data.get("USchoose")
         for vr in VoteResult:
-            if not isinstance(vr.get("VRabo"), str):
-                vr["VRabo"] = json.dumps(vr.get("VRabo"))
+            if not isinstance(vr.get("VRchoice"), basestring):
+                vr["VRchoice"] = json.dumps(vr.get("VRchoice"))
 
             self.svotes.add_model("VoteResult", **{
                 "VRid": str(uuid.uuid1()),
