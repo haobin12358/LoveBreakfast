@@ -249,7 +249,6 @@
               this.params[_i].VRchoice = '';
               this.params[_i].VRabo = row.VRabo;
           }
-          console.log(this.params)
           this.get_votes(this.VSid,this.now_select.VCnext);
         },
         oneSelect(i,list){

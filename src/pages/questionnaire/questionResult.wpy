@@ -17,6 +17,7 @@
           分享给朋友
       </button>
     </view>
+    <view class="m-alert">完成问卷，回到小程序领取优惠券</view>
   </view>
 </template>
 <script>
@@ -37,8 +38,10 @@
         return {
           title: '早餐起义',
           path: '/pages/index?VNtelphone=' +_res,
+          imageUrl: 'https://daaiti.cn/imgs/LoveBreakfast/vote/bg.png',
           success: function (res1) {
             // console.log
+
             wx.getShareInfo({
               shareTicket: res.shareTickets[0],
               success: function (res) { console.log(res) },
@@ -122,7 +125,12 @@
       line-height: 56rpx;
       color: #707070;
       background-color: #f2efef;
+      border-radius: 0;
       margin-top: 60rpx;
     }
+  }
+  .m-alert{
+    position: absolute;
+    bottom: 200rpx;
   }
 </style>
